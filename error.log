@@ -1,0 +1,315 @@
+Error while inserting single company: 900392832 LibsqlError: SQLITE_CONSTRAINT_UNIQUE: UNIQUE constraint failed: companies.nit
+    at mapSqliteError (/Users/mauricio/Developer/rues-app/node_modules/@libsql/client/lib-cjs/sqlite3.js:396:16)
+    at executeStmt (/Users/mauricio/Developer/rues-app/node_modules/@libsql/client/lib-cjs/sqlite3.js:301:15)
+    at Sqlite3Client.execute (/Users/mauricio/Developer/rues-app/node_modules/@libsql/client/lib-cjs/sqlite3.js:101:16)
+    ... 3 lines matching cause stack trace ...
+    at QueryPromise.then (/Users/mauricio/Developer/rues-app/node_modules/src/query-promise.ts:31:15) {
+  code: 'SQLITE_CONSTRAINT_UNIQUE',
+  rawCode: 2067,
+  [cause]: SqliteError: UNIQUE constraint failed: companies.nit
+      at convertError (/Users/mauricio/Developer/rues-app/node_modules/libsql/index.js:51:12)
+      at Statement.run (/Users/mauricio/Developer/rues-app/node_modules/libsql/index.js:301:13)
+      at executeStmt (/Users/mauricio/Developer/rues-app/node_modules/@libsql/client/lib-cjs/sqlite3.js:294:34)
+      at Sqlite3Client.execute (/Users/mauricio/Developer/rues-app/node_modules/@libsql/client/lib-cjs/sqlite3.js:101:16)
+      at LibSQLPreparedQuery.run (/Users/mauricio/Developer/rues-app/node_modules/src/libsql/session.ts:179:56)
+      at QueryPromise.run (/Users/mauricio/Developer/rues-app/node_modules/src/sqlite-core/query-builders/insert.ts:385:26)
+      at QueryPromise.execute (/Users/mauricio/Developer/rues-app/node_modules/src/sqlite-core/query-builders/insert.ts:401:53)
+      at QueryPromise.then (/Users/mauricio/Developer/rues-app/node_modules/src/query-promise.ts:31:15) {
+    code: 'SQLITE_CONSTRAINT_UNIQUE',
+    rawCode: 2067
+  }
+}
+Error while inserting single company: 900553304 LibsqlError: SQLITE_CONSTRAINT_UNIQUE: UNIQUE constraint failed: companies.nit
+    at executeStmt (/Users/mauricio/Developer/rues-app/node_modules/@libsql/client/lib-cjs/sqlite3.js:301:15)
+    at mapSqliteError (/Users/mauricio/Developer/rues-app/node_modules/@libsql/client/lib-cjs/sqlite3.js:396:16)
+    at Sqlite3Client.execute (/Users/mauricio/Developer/rues-app/node_modules/@libsql/client/lib-cjs/sqlite3.js:101:16)
+    ... 3 lines matching cause stack trace ...
+    at QueryPromise.then (/Users/mauricio/Developer/rues-app/node_modules/src/query-promise.ts:31:15) {
+  code: 'SQLITE_CONSTRAINT_UNIQUE',
+  rawCode: 2067,
+  [cause]: SqliteError: UNIQUE constraint failed: companies.nit
+      at convertError (/Users/mauricio/Developer/rues-app/node_modules/libsql/index.js:51:12)
+      at Statement.run (/Users/mauricio/Developer/rues-app/node_modules/libsql/index.js:301:13)
+      at executeStmt (/Users/mauricio/Developer/rues-app/node_modules/@libsql/client/lib-cjs/sqlite3.js:294:34)
+      at Sqlite3Client.execute (/Users/mauricio/Developer/rues-app/node_modules/@libsql/client/lib-cjs/sqlite3.js:101:16)
+      at LibSQLPreparedQuery.run (/Users/mauricio/Developer/rues-app/node_modules/src/libsql/session.ts:179:56)
+      at QueryPromise.run (/Users/mauricio/Developer/rues-app/node_modules/src/sqlite-core/query-builders/insert.ts:385:26)
+      at QueryPromise.execute (/Users/mauricio/Developer/rues-app/node_modules/src/sqlite-core/query-builders/insert.ts:401:53)
+      at QueryPromise.then (/Users/mauricio/Developer/rues-app/node_modules/src/query-promise.ts:31:15) {
+    code: 'SQLITE_CONSTRAINT_UNIQUE',
+    rawCode: 2067
+  }
+}
+Error while inserting single company: 901006539 LibsqlError: SQLITE_CONSTRAINT_UNIQUE: UNIQUE constraint failed: companies.nit
+    at mapSqliteError (/Users/mauricio/Developer/rues-app/node_modules/@libsql/client/lib-cjs/sqlite3.js:396:16)
+    at executeStmt (/Users/mauricio/Developer/rues-app/node_modules/@libsql/client/lib-cjs/sqlite3.js:301:15)
+    at Sqlite3Client.execute (/Users/mauricio/Developer/rues-app/node_modules/@libsql/client/lib-cjs/sqlite3.js:101:16)
+    ... 3 lines matching cause stack trace ...
+    at QueryPromise.then (/Users/mauricio/Developer/rues-app/node_modules/src/query-promise.ts:31:15) {
+  code: 'SQLITE_CONSTRAINT_UNIQUE',
+  rawCode: 2067,
+  [cause]: SqliteError: UNIQUE constraint failed: companies.nit
+      at convertError (/Users/mauricio/Developer/rues-app/node_modules/libsql/index.js:51:12)
+      at Statement.run (/Users/mauricio/Developer/rues-app/node_modules/libsql/index.js:301:13)
+      at executeStmt (/Users/mauricio/Developer/rues-app/node_modules/@libsql/client/lib-cjs/sqlite3.js:294:34)
+      at Sqlite3Client.execute (/Users/mauricio/Developer/rues-app/node_modules/@libsql/client/lib-cjs/sqlite3.js:101:16)
+      at LibSQLPreparedQuery.run (/Users/mauricio/Developer/rues-app/node_modules/src/libsql/session.ts:179:56)
+      at QueryPromise.run (/Users/mauricio/Developer/rues-app/node_modules/src/sqlite-core/query-builders/insert.ts:385:26)
+      at QueryPromise.execute (/Users/mauricio/Developer/rues-app/node_modules/src/sqlite-core/query-builders/insert.ts:401:53)
+      at QueryPromise.then (/Users/mauricio/Developer/rues-app/node_modules/src/query-promise.ts:31:15) {
+    code: 'SQLITE_CONSTRAINT_UNIQUE',
+    rawCode: 2067
+  }
+}
+Error while inserting single company: 900520510 LibsqlError: SQLITE_CONSTRAINT_UNIQUE: UNIQUE constraint failed: companies.nit
+    at mapSqliteError (/Users/mauricio/Developer/rues-app/node_modules/@libsql/client/lib-cjs/sqlite3.js:396:16)
+    at executeStmt (/Users/mauricio/Developer/rues-app/node_modules/@libsql/client/lib-cjs/sqlite3.js:301:15)
+    at Sqlite3Client.execute (/Users/mauricio/Developer/rues-app/node_modules/@libsql/client/lib-cjs/sqlite3.js:101:16)
+    ... 3 lines matching cause stack trace ...
+    at QueryPromise.then (/Users/mauricio/Developer/rues-app/node_modules/src/query-promise.ts:31:15) {
+  code: 'SQLITE_CONSTRAINT_UNIQUE',
+  rawCode: 2067,
+  [cause]: SqliteError: UNIQUE constraint failed: companies.nit
+      at convertError (/Users/mauricio/Developer/rues-app/node_modules/libsql/index.js:51:12)
+      at Statement.run (/Users/mauricio/Developer/rues-app/node_modules/libsql/index.js:301:13)
+      at executeStmt (/Users/mauricio/Developer/rues-app/node_modules/@libsql/client/lib-cjs/sqlite3.js:294:34)
+      at Sqlite3Client.execute (/Users/mauricio/Developer/rues-app/node_modules/@libsql/client/lib-cjs/sqlite3.js:101:16)
+      at LibSQLPreparedQuery.run (/Users/mauricio/Developer/rues-app/node_modules/src/libsql/session.ts:179:56)
+      at QueryPromise.run (/Users/mauricio/Developer/rues-app/node_modules/src/sqlite-core/query-builders/insert.ts:385:26)
+      at QueryPromise.execute (/Users/mauricio/Developer/rues-app/node_modules/src/sqlite-core/query-builders/insert.ts:401:53)
+      at QueryPromise.then (/Users/mauricio/Developer/rues-app/node_modules/src/query-promise.ts:31:15) {
+    code: 'SQLITE_CONSTRAINT_UNIQUE',
+    rawCode: 2067
+  }
+}
+Error while inserting single company: 800243085 LibsqlError: SQLITE_CONSTRAINT_UNIQUE: UNIQUE constraint failed: companies.nit
+    at mapSqliteError (/Users/mauricio/Developer/rues-app/node_modules/@libsql/client/lib-cjs/sqlite3.js:396:16)
+    at executeStmt (/Users/mauricio/Developer/rues-app/node_modules/@libsql/client/lib-cjs/sqlite3.js:301:15)
+    at Sqlite3Client.execute (/Users/mauricio/Developer/rues-app/node_modules/@libsql/client/lib-cjs/sqlite3.js:101:16)
+    ... 3 lines matching cause stack trace ...
+    at QueryPromise.then (/Users/mauricio/Developer/rues-app/node_modules/src/query-promise.ts:31:15) {
+  code: 'SQLITE_CONSTRAINT_UNIQUE',
+  rawCode: 2067,
+  [cause]: SqliteError: UNIQUE constraint failed: companies.nit
+      at convertError (/Users/mauricio/Developer/rues-app/node_modules/libsql/index.js:51:12)
+      at Statement.run (/Users/mauricio/Developer/rues-app/node_modules/libsql/index.js:301:13)
+      at executeStmt (/Users/mauricio/Developer/rues-app/node_modules/@libsql/client/lib-cjs/sqlite3.js:294:34)
+      at Sqlite3Client.execute (/Users/mauricio/Developer/rues-app/node_modules/@libsql/client/lib-cjs/sqlite3.js:101:16)
+      at LibSQLPreparedQuery.run (/Users/mauricio/Developer/rues-app/node_modules/src/libsql/session.ts:179:56)
+      at QueryPromise.run (/Users/mauricio/Developer/rues-app/node_modules/src/sqlite-core/query-builders/insert.ts:385:26)
+      at QueryPromise.execute (/Users/mauricio/Developer/rues-app/node_modules/src/sqlite-core/query-builders/insert.ts:401:53)
+      at QueryPromise.then (/Users/mauricio/Developer/rues-app/node_modules/src/query-promise.ts:31:15) {
+    code: 'SQLITE_CONSTRAINT_UNIQUE',
+    rawCode: 2067
+  }
+}
+Error while inserting single company: 901590109 LibsqlError: SQLITE_CONSTRAINT_UNIQUE: UNIQUE constraint failed: companies.nit
+    at mapSqliteError (/Users/mauricio/Developer/rues-app/node_modules/@libsql/client/lib-cjs/sqlite3.js:396:16)
+    at executeStmt (/Users/mauricio/Developer/rues-app/node_modules/@libsql/client/lib-cjs/sqlite3.js:301:15)
+    at Sqlite3Client.execute (/Users/mauricio/Developer/rues-app/node_modules/@libsql/client/lib-cjs/sqlite3.js:101:16)
+    ... 3 lines matching cause stack trace ...
+    at QueryPromise.then (/Users/mauricio/Developer/rues-app/node_modules/src/query-promise.ts:31:15) {
+  code: 'SQLITE_CONSTRAINT_UNIQUE',
+  rawCode: 2067,
+  [cause]: SqliteError: UNIQUE constraint failed: companies.nit
+      at convertError (/Users/mauricio/Developer/rues-app/node_modules/libsql/index.js:51:12)
+      at Statement.run (/Users/mauricio/Developer/rues-app/node_modules/libsql/index.js:301:13)
+      at executeStmt (/Users/mauricio/Developer/rues-app/node_modules/@libsql/client/lib-cjs/sqlite3.js:294:34)
+      at Sqlite3Client.execute (/Users/mauricio/Developer/rues-app/node_modules/@libsql/client/lib-cjs/sqlite3.js:101:16)
+      at LibSQLPreparedQuery.run (/Users/mauricio/Developer/rues-app/node_modules/src/libsql/session.ts:179:56)
+      at QueryPromise.run (/Users/mauricio/Developer/rues-app/node_modules/src/sqlite-core/query-builders/insert.ts:385:26)
+      at QueryPromise.execute (/Users/mauricio/Developer/rues-app/node_modules/src/sqlite-core/query-builders/insert.ts:401:53)
+      at QueryPromise.then (/Users/mauricio/Developer/rues-app/node_modules/src/query-promise.ts:31:15) {
+    code: 'SQLITE_CONSTRAINT_UNIQUE',
+    rawCode: 2067
+  }
+}
+Error while inserting single company: 901467430 LibsqlError: SQLITE_CONSTRAINT_UNIQUE: UNIQUE constraint failed: companies.nit
+    at mapSqliteError (/Users/mauricio/Developer/rues-app/node_modules/@libsql/client/lib-cjs/sqlite3.js:396:16)
+    at executeStmt (/Users/mauricio/Developer/rues-app/node_modules/@libsql/client/lib-cjs/sqlite3.js:301:15)
+    at Sqlite3Client.execute (/Users/mauricio/Developer/rues-app/node_modules/@libsql/client/lib-cjs/sqlite3.js:101:16)
+    ... 3 lines matching cause stack trace ...
+    at QueryPromise.then (/Users/mauricio/Developer/rues-app/node_modules/src/query-promise.ts:31:15) {
+  code: 'SQLITE_CONSTRAINT_UNIQUE',
+  rawCode: 2067,
+  [cause]: SqliteError: UNIQUE constraint failed: companies.nit
+      at convertError (/Users/mauricio/Developer/rues-app/node_modules/libsql/index.js:51:12)
+      at Statement.run (/Users/mauricio/Developer/rues-app/node_modules/libsql/index.js:301:13)
+      at executeStmt (/Users/mauricio/Developer/rues-app/node_modules/@libsql/client/lib-cjs/sqlite3.js:294:34)
+      at Sqlite3Client.execute (/Users/mauricio/Developer/rues-app/node_modules/@libsql/client/lib-cjs/sqlite3.js:101:16)
+      at LibSQLPreparedQuery.run (/Users/mauricio/Developer/rues-app/node_modules/src/libsql/session.ts:179:56)
+      at QueryPromise.run (/Users/mauricio/Developer/rues-app/node_modules/src/sqlite-core/query-builders/insert.ts:385:26)
+      at QueryPromise.execute (/Users/mauricio/Developer/rues-app/node_modules/src/sqlite-core/query-builders/insert.ts:401:53)
+      at QueryPromise.then (/Users/mauricio/Developer/rues-app/node_modules/src/query-promise.ts:31:15) {
+    code: 'SQLITE_CONSTRAINT_UNIQUE',
+    rawCode: 2067
+  }
+}
+Error while inserting single company: 900876543 LibsqlError: SQLITE_CONSTRAINT_UNIQUE: UNIQUE constraint failed: companies.nit
+    at mapSqliteError (/Users/mauricio/Developer/rues-app/node_modules/@libsql/client/lib-cjs/sqlite3.js:396:16)
+    at executeStmt (/Users/mauricio/Developer/rues-app/node_modules/@libsql/client/lib-cjs/sqlite3.js:301:15)
+    at Sqlite3Client.execute (/Users/mauricio/Developer/rues-app/node_modules/@libsql/client/lib-cjs/sqlite3.js:101:16)
+    ... 3 lines matching cause stack trace ...
+    at QueryPromise.then (/Users/mauricio/Developer/rues-app/node_modules/src/query-promise.ts:31:15) {
+  code: 'SQLITE_CONSTRAINT_UNIQUE',
+  rawCode: 2067,
+  [cause]: SqliteError: UNIQUE constraint failed: companies.nit
+      at convertError (/Users/mauricio/Developer/rues-app/node_modules/libsql/index.js:51:12)
+      at Statement.run (/Users/mauricio/Developer/rues-app/node_modules/libsql/index.js:301:13)
+      at executeStmt (/Users/mauricio/Developer/rues-app/node_modules/@libsql/client/lib-cjs/sqlite3.js:294:34)
+      at Sqlite3Client.execute (/Users/mauricio/Developer/rues-app/node_modules/@libsql/client/lib-cjs/sqlite3.js:101:16)
+      at LibSQLPreparedQuery.run (/Users/mauricio/Developer/rues-app/node_modules/src/libsql/session.ts:179:56)
+      at QueryPromise.run (/Users/mauricio/Developer/rues-app/node_modules/src/sqlite-core/query-builders/insert.ts:385:26)
+      at QueryPromise.execute (/Users/mauricio/Developer/rues-app/node_modules/src/sqlite-core/query-builders/insert.ts:401:53)
+      at QueryPromise.then (/Users/mauricio/Developer/rues-app/node_modules/src/query-promise.ts:31:15) {
+    code: 'SQLITE_CONSTRAINT_UNIQUE',
+    rawCode: 2067
+  }
+}
+Error while inserting single company: 901650650 LibsqlError: SQLITE_CONSTRAINT_UNIQUE: UNIQUE constraint failed: companies.nit
+    at mapSqliteError (/Users/mauricio/Developer/rues-app/node_modules/@libsql/client/lib-cjs/sqlite3.js:396:16)
+    at executeStmt (/Users/mauricio/Developer/rues-app/node_modules/@libsql/client/lib-cjs/sqlite3.js:301:15)
+    at Sqlite3Client.execute (/Users/mauricio/Developer/rues-app/node_modules/@libsql/client/lib-cjs/sqlite3.js:101:16)
+    ... 3 lines matching cause stack trace ...
+    at QueryPromise.then (/Users/mauricio/Developer/rues-app/node_modules/src/query-promise.ts:31:15) {
+  code: 'SQLITE_CONSTRAINT_UNIQUE',
+  rawCode: 2067,
+  [cause]: SqliteError: UNIQUE constraint failed: companies.nit
+      at convertError (/Users/mauricio/Developer/rues-app/node_modules/libsql/index.js:51:12)
+      at Statement.run (/Users/mauricio/Developer/rues-app/node_modules/libsql/index.js:301:13)
+      at executeStmt (/Users/mauricio/Developer/rues-app/node_modules/@libsql/client/lib-cjs/sqlite3.js:294:34)
+      at Sqlite3Client.execute (/Users/mauricio/Developer/rues-app/node_modules/@libsql/client/lib-cjs/sqlite3.js:101:16)
+      at LibSQLPreparedQuery.run (/Users/mauricio/Developer/rues-app/node_modules/src/libsql/session.ts:179:56)
+      at QueryPromise.run (/Users/mauricio/Developer/rues-app/node_modules/src/sqlite-core/query-builders/insert.ts:385:26)
+      at QueryPromise.execute (/Users/mauricio/Developer/rues-app/node_modules/src/sqlite-core/query-builders/insert.ts:401:53)
+      at QueryPromise.then (/Users/mauricio/Developer/rues-app/node_modules/src/query-promise.ts:31:15) {
+    code: 'SQLITE_CONSTRAINT_UNIQUE',
+    rawCode: 2067
+  }
+}
+Error while inserting single company: 901709862 LibsqlError: SQLITE_CONSTRAINT_UNIQUE: UNIQUE constraint failed: companies.nit
+    at mapSqliteError (/Users/mauricio/Developer/rues-app/node_modules/@libsql/client/lib-cjs/sqlite3.js:396:16)
+    at executeStmt (/Users/mauricio/Developer/rues-app/node_modules/@libsql/client/lib-cjs/sqlite3.js:301:15)
+    at Sqlite3Client.execute (/Users/mauricio/Developer/rues-app/node_modules/@libsql/client/lib-cjs/sqlite3.js:101:16)
+    ... 3 lines matching cause stack trace ...
+    at QueryPromise.then (/Users/mauricio/Developer/rues-app/node_modules/src/query-promise.ts:31:15) {
+  code: 'SQLITE_CONSTRAINT_UNIQUE',
+  rawCode: 2067,
+  [cause]: SqliteError: UNIQUE constraint failed: companies.nit
+      at convertError (/Users/mauricio/Developer/rues-app/node_modules/libsql/index.js:51:12)
+      at Statement.run (/Users/mauricio/Developer/rues-app/node_modules/libsql/index.js:301:13)
+      at executeStmt (/Users/mauricio/Developer/rues-app/node_modules/@libsql/client/lib-cjs/sqlite3.js:294:34)
+      at Sqlite3Client.execute (/Users/mauricio/Developer/rues-app/node_modules/@libsql/client/lib-cjs/sqlite3.js:101:16)
+      at LibSQLPreparedQuery.run (/Users/mauricio/Developer/rues-app/node_modules/src/libsql/session.ts:179:56)
+      at QueryPromise.run (/Users/mauricio/Developer/rues-app/node_modules/src/sqlite-core/query-builders/insert.ts:385:26)
+      at QueryPromise.execute (/Users/mauricio/Developer/rues-app/node_modules/src/sqlite-core/query-builders/insert.ts:401:53)
+      at QueryPromise.then (/Users/mauricio/Developer/rues-app/node_modules/src/query-promise.ts:31:15) {
+    code: 'SQLITE_CONSTRAINT_UNIQUE',
+    rawCode: 2067
+  }
+}
+Error while inserting single company: 901017242 LibsqlError: SQLITE_CONSTRAINT_UNIQUE: UNIQUE constraint failed: companies.nit
+    at mapSqliteError (/Users/mauricio/Developer/rues-app/node_modules/@libsql/client/lib-cjs/sqlite3.js:396:16)
+    at executeStmt (/Users/mauricio/Developer/rues-app/node_modules/@libsql/client/lib-cjs/sqlite3.js:301:15)
+    at Sqlite3Client.execute (/Users/mauricio/Developer/rues-app/node_modules/@libsql/client/lib-cjs/sqlite3.js:101:16)
+    ... 3 lines matching cause stack trace ...
+    at QueryPromise.then (/Users/mauricio/Developer/rues-app/node_modules/src/query-promise.ts:31:15) {
+  code: 'SQLITE_CONSTRAINT_UNIQUE',
+  rawCode: 2067,
+  [cause]: SqliteError: UNIQUE constraint failed: companies.nit
+      at convertError (/Users/mauricio/Developer/rues-app/node_modules/libsql/index.js:51:12)
+      at Statement.run (/Users/mauricio/Developer/rues-app/node_modules/libsql/index.js:301:13)
+      at executeStmt (/Users/mauricio/Developer/rues-app/node_modules/@libsql/client/lib-cjs/sqlite3.js:294:34)
+      at Sqlite3Client.execute (/Users/mauricio/Developer/rues-app/node_modules/@libsql/client/lib-cjs/sqlite3.js:101:16)
+      at LibSQLPreparedQuery.run (/Users/mauricio/Developer/rues-app/node_modules/src/libsql/session.ts:179:56)
+      at QueryPromise.run (/Users/mauricio/Developer/rues-app/node_modules/src/sqlite-core/query-builders/insert.ts:385:26)
+      at QueryPromise.execute (/Users/mauricio/Developer/rues-app/node_modules/src/sqlite-core/query-builders/insert.ts:401:53)
+      at QueryPromise.then (/Users/mauricio/Developer/rues-app/node_modules/src/query-promise.ts:31:15) {
+    code: 'SQLITE_CONSTRAINT_UNIQUE',
+    rawCode: 2067
+  }
+}
+Error while inserting single company: 900206039 LibsqlError: SQLITE_CONSTRAINT_UNIQUE: UNIQUE constraint failed: companies.nit
+    at mapSqliteError (/Users/mauricio/Developer/rues-app/node_modules/@libsql/client/lib-cjs/sqlite3.js:396:16)
+    at executeStmt (/Users/mauricio/Developer/rues-app/node_modules/@libsql/client/lib-cjs/sqlite3.js:301:15)
+    at Sqlite3Client.execute (/Users/mauricio/Developer/rues-app/node_modules/@libsql/client/lib-cjs/sqlite3.js:101:16)
+    ... 3 lines matching cause stack trace ...
+    at QueryPromise.then (/Users/mauricio/Developer/rues-app/node_modules/src/query-promise.ts:31:15) {
+  code: 'SQLITE_CONSTRAINT_UNIQUE',
+  rawCode: 2067,
+  [cause]: SqliteError: UNIQUE constraint failed: companies.nit
+      at convertError (/Users/mauricio/Developer/rues-app/node_modules/libsql/index.js:51:12)
+      at Statement.run (/Users/mauricio/Developer/rues-app/node_modules/libsql/index.js:301:13)
+      at executeStmt (/Users/mauricio/Developer/rues-app/node_modules/@libsql/client/lib-cjs/sqlite3.js:294:34)
+      at Sqlite3Client.execute (/Users/mauricio/Developer/rues-app/node_modules/@libsql/client/lib-cjs/sqlite3.js:101:16)
+      at LibSQLPreparedQuery.run (/Users/mauricio/Developer/rues-app/node_modules/src/libsql/session.ts:179:56)
+      at QueryPromise.run (/Users/mauricio/Developer/rues-app/node_modules/src/sqlite-core/query-builders/insert.ts:385:26)
+      at QueryPromise.execute (/Users/mauricio/Developer/rues-app/node_modules/src/sqlite-core/query-builders/insert.ts:401:53)
+      at QueryPromise.then (/Users/mauricio/Developer/rues-app/node_modules/src/query-promise.ts:31:15) {
+    code: 'SQLITE_CONSTRAINT_UNIQUE',
+    rawCode: 2067
+  }
+}
+Error while inserting single company: 901383342 LibsqlError: SQLITE_CONSTRAINT_UNIQUE: UNIQUE constraint failed: companies.nit
+    at mapSqliteError (/Users/mauricio/Developer/rues-app/node_modules/@libsql/client/lib-cjs/sqlite3.js:396:16)
+    at executeStmt (/Users/mauricio/Developer/rues-app/node_modules/@libsql/client/lib-cjs/sqlite3.js:301:15)
+    at Sqlite3Client.execute (/Users/mauricio/Developer/rues-app/node_modules/@libsql/client/lib-cjs/sqlite3.js:101:16)
+    ... 3 lines matching cause stack trace ...
+    at QueryPromise.then (/Users/mauricio/Developer/rues-app/node_modules/src/query-promise.ts:31:15) {
+  code: 'SQLITE_CONSTRAINT_UNIQUE',
+  rawCode: 2067,
+  [cause]: SqliteError: UNIQUE constraint failed: companies.nit
+      at convertError (/Users/mauricio/Developer/rues-app/node_modules/libsql/index.js:51:12)
+      at Statement.run (/Users/mauricio/Developer/rues-app/node_modules/libsql/index.js:301:13)
+      at executeStmt (/Users/mauricio/Developer/rues-app/node_modules/@libsql/client/lib-cjs/sqlite3.js:294:34)
+      at Sqlite3Client.execute (/Users/mauricio/Developer/rues-app/node_modules/@libsql/client/lib-cjs/sqlite3.js:101:16)
+      at LibSQLPreparedQuery.run (/Users/mauricio/Developer/rues-app/node_modules/src/libsql/session.ts:179:56)
+      at QueryPromise.run (/Users/mauricio/Developer/rues-app/node_modules/src/sqlite-core/query-builders/insert.ts:385:26)
+      at QueryPromise.execute (/Users/mauricio/Developer/rues-app/node_modules/src/sqlite-core/query-builders/insert.ts:401:53)
+      at QueryPromise.then (/Users/mauricio/Developer/rues-app/node_modules/src/query-promise.ts:31:15) {
+    code: 'SQLITE_CONSTRAINT_UNIQUE',
+    rawCode: 2067
+  }
+}
+Error while inserting single company: 900911206 LibsqlError: SQLITE_CONSTRAINT_UNIQUE: UNIQUE constraint failed: companies.nit
+    at mapSqliteError (/Users/mauricio/Developer/rues-app/node_modules/@libsql/client/lib-cjs/sqlite3.js:396:16)
+    at executeStmt (/Users/mauricio/Developer/rues-app/node_modules/@libsql/client/lib-cjs/sqlite3.js:301:15)
+    at Sqlite3Client.execute (/Users/mauricio/Developer/rues-app/node_modules/@libsql/client/lib-cjs/sqlite3.js:101:16)
+    ... 3 lines matching cause stack trace ...
+    at QueryPromise.then (/Users/mauricio/Developer/rues-app/node_modules/src/query-promise.ts:31:15) {
+  code: 'SQLITE_CONSTRAINT_UNIQUE',
+  rawCode: 2067,
+  [cause]: SqliteError: UNIQUE constraint failed: companies.nit
+      at convertError (/Users/mauricio/Developer/rues-app/node_modules/libsql/index.js:51:12)
+      at Statement.run (/Users/mauricio/Developer/rues-app/node_modules/libsql/index.js:301:13)
+      at executeStmt (/Users/mauricio/Developer/rues-app/node_modules/@libsql/client/lib-cjs/sqlite3.js:294:34)
+      at Sqlite3Client.execute (/Users/mauricio/Developer/rues-app/node_modules/@libsql/client/lib-cjs/sqlite3.js:101:16)
+      at LibSQLPreparedQuery.run (/Users/mauricio/Developer/rues-app/node_modules/src/libsql/session.ts:179:56)
+      at QueryPromise.run (/Users/mauricio/Developer/rues-app/node_modules/src/sqlite-core/query-builders/insert.ts:385:26)
+      at QueryPromise.execute (/Users/mauricio/Developer/rues-app/node_modules/src/sqlite-core/query-builders/insert.ts:401:53)
+      at QueryPromise.then (/Users/mauricio/Developer/rues-app/node_modules/src/query-promise.ts:31:15) {
+    code: 'SQLITE_CONSTRAINT_UNIQUE',
+    rawCode: 2067
+  }
+}
+Error while inserting single company: 900058944 LibsqlError: SQLITE_CONSTRAINT_UNIQUE: UNIQUE constraint failed: companies.nit
+    at mapSqliteError (/Users/mauricio/Developer/rues-app/node_modules/@libsql/client/lib-cjs/sqlite3.js:396:16)
+    at executeStmt (/Users/mauricio/Developer/rues-app/node_modules/@libsql/client/lib-cjs/sqlite3.js:301:15)
+    at Sqlite3Client.execute (/Users/mauricio/Developer/rues-app/node_modules/@libsql/client/lib-cjs/sqlite3.js:101:16)
+    ... 3 lines matching cause stack trace ...
+    at QueryPromise.then (/Users/mauricio/Developer/rues-app/node_modules/src/query-promise.ts:31:15) {
+  code: 'SQLITE_CONSTRAINT_UNIQUE',
+  rawCode: 2067,
+  [cause]: SqliteError: UNIQUE constraint failed: companies.nit
+      at convertError (/Users/mauricio/Developer/rues-app/node_modules/libsql/index.js:51:12)
+      at Statement.run (/Users/mauricio/Developer/rues-app/node_modules/libsql/index.js:301:13)
+      at executeStmt (/Users/mauricio/Developer/rues-app/node_modules/@libsql/client/lib-cjs/sqlite3.js:294:34)
+      at Sqlite3Client.execute (/Users/mauricio/Developer/rues-app/node_modules/@libsql/client/lib-cjs/sqlite3.js:101:16)
+      at LibSQLPreparedQuery.run (/Users/mauricio/Developer/rues-app/node_modules/src/libsql/session.ts:179:56)
+      at QueryPromise.run (/Users/mauricio/Developer/rues-app/node_modules/src/sqlite-core/query-builders/insert.ts:385:26)
+      at QueryPromise.execute (/Users/mauricio/Developer/rues-app/node_modules/src/sqlite-core/query-builders/insert.ts:401:53)
+      at QueryPromise.then (/Users/mauricio/Developer/rues-app/node_modules/src/query-promise.ts:31:15) {
+    code: 'SQLITE_CONSTRAINT_UNIQUE',
+    rawCode: 2067
+  }
+}

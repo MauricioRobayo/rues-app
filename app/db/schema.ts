@@ -10,7 +10,7 @@ export const tokens = sqliteTable("tokens", {
 });
 export const companies = sqliteTable("companies", {
   id: int().primaryKey({ autoIncrement: true }),
-  nit: int(),
+  nit: int().unique().notNull(),
   documentType: text().notNull(),
   businessName: text().notNull(),
   category: text().notNull(),
@@ -31,9 +31,9 @@ export const companies = sqliteTable("companies", {
   city: text(),
   state: text(),
 });
-export const chambers = sqliteTable("chamber", {
+export const chambers = sqliteTable("chambers", {
   id: int().primaryKey({ autoIncrement: true }),
-  code: int().unique(),
+  code: int().unique().notNull(),
   name: text().notNull(),
   city: text().notNull(),
   address: text().notNull(),
