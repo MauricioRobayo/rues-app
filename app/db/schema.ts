@@ -9,7 +9,8 @@ export const tokens = sqliteTable("tokens", {
     .default(sql`(unixepoch())`),
 });
 export const companies = sqliteTable("companies", {
-  nit: int().primaryKey(),
+  id: int().primaryKey({ autoIncrement: true }),
+  nit: int(),
   documentType: text().notNull(),
   businessName: text().notNull(),
   category: text().notNull(),
@@ -31,7 +32,8 @@ export const companies = sqliteTable("companies", {
   state: text(),
 });
 export const chambers = sqliteTable("chamber", {
-  code: int().primaryKey(),
+  id: int().primaryKey({ autoIncrement: true }),
+  code: int().unique(),
   name: text().notNull(),
   city: text().notNull(),
   address: text().notNull(),
