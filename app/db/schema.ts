@@ -39,3 +39,11 @@ export const chambers = sqliteTable("chambers", {
   address: text().notNull(),
   state: text().notNull(),
 });
+export const ruesSync = sqliteTable("rues_sync", {
+  id: int().primaryKey({ autoIncrement: true }),
+  total: int().notNull(),
+  inserted: int().notNull(),
+  timestamp: int({ mode: "timestamp" }).notNull(),
+  initialDate: int({ mode: "timestamp" }).notNull(),
+  finalDate: int({ mode: "timestamp" }).notNull(),
+});
