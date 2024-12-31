@@ -6,8 +6,9 @@ export default defineConfig({
   out: "./app/db/drizzle",
   schema: "./app/db/schema.ts",
   casing: "camelCase",
-  dialect: "sqlite",
+  dialect: "turso",
   dbCredentials: {
-    url: process.env.DB_FILE_NAME!,
+    url: process.env.TURSO_DATABASE_URL!,
+    authToken: process.env.TURSO_AUTH_TOKEN,
   },
 });
