@@ -22,7 +22,7 @@ export async function POST(request: Request) {
 
   const startedAtMs = new Date();
   const latestRuesSync = await ruesSyncRepository.getLatest();
-  const syncStartDate = latestRuesSync?.syncEndDate ?? "1910-01-01";
+  const syncStartDate = latestRuesSync?.syncEndDate ?? "2025-01-06";
   const syncEndDate = new Date().toISOString().slice(0, 10);
   if (syncStartDate >= syncEndDate) {
     return Response.json(
@@ -64,7 +64,7 @@ export async function POST(request: Request) {
   console.log("RUES sync started successfully:", ruesSyncId);
 
   try {
-    const recordsInserted = await getData({
+    await getData({
       fileUrl,
       fn: async (batch) => {
         const companies = batch.map((company) => ({
@@ -74,9 +74,10 @@ export async function POST(request: Request) {
         await companiesRepository.insertMany(companies);
       },
     });
+    const recordsInserted = await companiesRepository.findBySyncId(ruesSyncId);
     await ruesSyncRepository.update(ruesSyncId, {
       endedAtMs: new Date(),
-      recordsInserted,
+      recordsInserted: recordsInserted.length,
       status: "success",
     });
     console.log("RUES sync finished successfully:", ruesSyncId);
