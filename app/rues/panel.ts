@@ -122,17 +122,17 @@ async function processStream({
         }
         batch.push(row);
         if (batch.length >= batchSize) {
-          const batchToInsert = [...batch];
+          const currentBatch = [...batch];
           batch.length = 0;
           processing = processing.then(async () => {
             try {
-              await fn(batchToInsert);
-              total = total + batchToInsert.length;
-              console.log(`Inserted ${total} companies`);
+              await fn(currentBatch);
+              total = total + currentBatch.length;
+              console.log(`Processed ${total}`);
             } catch (error) {
               console.error(
-                "Error inserting batch",
-                JSON.stringify(batchToInsert),
+                "Error processing batch",
+                JSON.stringify(currentBatch),
                 error
               );
             }
@@ -145,7 +145,7 @@ async function processStream({
           if (batch.length > 0) {
             await fn(batch);
             total = total + batch.length;
-            console.log(`Inserted ${total} companies`);
+            console.log(`Processed ${total}`);
           }
           console.log("Finished processing CSV.");
           resolve(total);
