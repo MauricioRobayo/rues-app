@@ -117,7 +117,8 @@ async function processStream({
     nodeReadable
       .pipe(csvParser())
       .on("data", (row: CompanyRecord) => {
-        if (Number(row.numero_identificacion) === 0) {
+        const nit = Number(row.numero_identificacion);
+        if (nit === 0 || Number.isNaN(nit)) {
           return;
         }
         batch.push(row);
