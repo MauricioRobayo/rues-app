@@ -43,7 +43,7 @@ export async function getFileUrl(filters: Filters) {
   return response.json() as Promise<string>;
 }
 
-export async function getData({
+export async function streamData({
   fileUrl,
   fn,
   batchSize = 500,
@@ -73,7 +73,13 @@ export async function getData({
     requestOptions
   );
 
-  return processStream({ response, encoding: "ISO-8859-1", fn, batchSize });
+  return processStream({
+    response,
+    encoding: "ISO-8859-1",
+    fn,
+    batchSize,
+    debug,
+  });
 }
 
 function readableStreamToNodeReadable(
