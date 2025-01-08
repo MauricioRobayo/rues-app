@@ -10,7 +10,6 @@ if (!syncToken) {
 }
 
 // TODO: Fire and forget
-// TODO: Reported recordsInserted differs from actual recordsInserted, check, totalRecords vs recordsInserted in rues_sync id 1
 // TODO: Send email with report
 // TODO: cronjob
 
@@ -22,7 +21,7 @@ export async function POST(request: Request) {
 
   const startedAtMs = new Date();
   const latestRuesSync = await ruesSyncRepository.getLatest();
-  const syncStartDate = latestRuesSync?.syncEndDate ?? "2025-01-06";
+  const syncStartDate = latestRuesSync?.syncEndDate ?? "1910-01-01";
   const syncEndDate = new Date().toISOString().slice(0, 10);
   if (syncStartDate >= syncEndDate) {
     return Response.json(
@@ -74,10 +73,11 @@ export async function POST(request: Request) {
         await companiesRepository.insertMany(companies);
       },
     });
-    const recordsInserted = await companiesRepository.findBySyncId(ruesSyncId);
+    const totalRecordsInserted =
+      await companiesRepository.getTotalRecordsBySyncId(ruesSyncId);
     await ruesSyncRepository.update(ruesSyncId, {
       endedAtMs: new Date(),
-      recordsInserted: recordsInserted.length,
+      totalRecordsInserted,
       status: "success",
     });
     console.log("RUES sync finished successfully:", ruesSyncId);

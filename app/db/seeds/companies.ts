@@ -2,6 +2,7 @@ import { type CompanyRecord } from "@/app/rues/panel";
 import { db } from "..";
 import { companies } from "../schema";
 import { mapCompanyRecordToCompanyModel } from "@/app/rues/mappers";
+import { companiesRepository } from "@/app/repositories/companies";
 
 const seedData: CompanyRecord[] = [
   {
@@ -79,10 +80,9 @@ const seedData: CompanyRecord[] = [
 ];
 
 async function main() {
-  await db
-    .insert(companies)
-    .values(seedData.map(mapCompanyRecordToCompanyModel))
-    .onConflictDoNothing();
+  await companiesRepository.insertMany(
+    seedData.map(mapCompanyRecordToCompanyModel)
+  );
 }
 
 main();
