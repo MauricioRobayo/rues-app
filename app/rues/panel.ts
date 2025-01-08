@@ -1,10 +1,17 @@
 import csvParser from "csv-parser";
 import { Readable } from "stream";
-
+export const CompanySize = {
+  "NO DETERMINADO": "00",
+  MICRO: "01",
+  PEQUEÑA: "02",
+  MEDIANA: "03",
+  GRANDE: "04",
+} as const;
+export type CompanySize = (typeof CompanySize)[keyof typeof CompanySize];
 export interface Filters {
   startDate: string;
   endDate: string;
-  companySize?: ("00" | "01" | "02" | "03" | "04")[];
+  companySize?: CompanySize[];
 }
 
 export type CompanyRecord = {
@@ -64,7 +71,7 @@ export async function getData({
     requestOptions
   );
 
-  processStream({ response, encoding: "ISO-8859-1", fn, batchSize });
+  return processStream({ response, encoding: "ISO-8859-1", fn, batchSize });
 }
 
 function readableStreamToNodeReadable(
@@ -95,7 +102,7 @@ async function processStream({
   encoding: string;
   fn: (batch: CompanyRecord[]) => Promise<void>;
   batchSize: number;
-}): Promise<void> {
+}): Promise<number> {
   if (!response.body) {
     throw new Error("Response body is empty or not streamable.");
   }
@@ -106,43 +113,51 @@ async function processStream({
   let total = 0;
   let processing = Promise.resolve();
 
-  nodeReadable
-    .pipe(csvParser())
-    .on("data", (row: CompanyRecord) => {
-      if (Number(row.numero_identificacion) === 0) {
-        return;
-      }
-      batch.push(row);
-      if (batch.length >= batchSize) {
-        const batchToInsert = [...batch];
-        batch.length = 0;
-        processing = processing.then(async () => {
-          try {
-            await fn(batchToInsert);
-            total = total + batchToInsert.length;
+  return new Promise((resolve, reject) => {
+    nodeReadable
+      .pipe(csvParser())
+      .on("data", (row: CompanyRecord) => {
+        if (Number(row.numero_identificacion) === 0) {
+          return;
+        }
+        batch.push(row);
+        if (batch.length >= batchSize) {
+          const batchToInsert = [...batch];
+          batch.length = 0;
+          processing = processing.then(async () => {
+            try {
+              await fn(batchToInsert);
+              total = total + batchToInsert.length;
+              console.log(`Inserted ${total} companies`);
+            } catch (error) {
+              console.error(
+                "Error inserting batch",
+                JSON.stringify(batchToInsert),
+                error
+              );
+            }
+          });
+        }
+      })
+      .on("end", async () => {
+        try {
+          await processing;
+          if (batch.length > 0) {
+            await fn(batch);
+            total = total + batch.length;
             console.log(`Inserted ${total} companies`);
-          } catch (error) {
-            console.error(
-              "Error inserting batch",
-              JSON.stringify(batchToInsert),
-              error
-            );
           }
-        });
-      }
-    })
-    .on("end", async () => {
-      await processing;
-      if (batch.length > 0) {
-        await fn(batch);
-        total = total + batch.length;
-        console.log(`Inserted ${total} companies`);
-      }
-      console.log("Finished processing CSV.");
-    })
-    .on("error", () => {
-      console.error("Error while processing CSV");
-    });
+          console.log("Finished processing CSV.");
+          resolve(total);
+        } catch (error) {
+          reject(error);
+        }
+      })
+      .on("error", (error) => {
+        console.error("Error while processing CSV", error);
+        reject(error);
+      });
+  });
 }
 
 export async function getTotal(filters: Filters) {

@@ -2,7 +2,7 @@ import { tokenRepository } from "@/app/db/tokens";
 import { RUES } from "@mauriciorobayo/rues-api";
 
 export async function getToken() {
-  const storedToken = await tokenRepository.getLast();
+  const storedToken = await tokenRepository.getLatest();
 
   if (storedToken) {
     console.log("Returning stored token.");

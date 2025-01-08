@@ -1,160 +1,111 @@
+import {
+  getData,
+  getFileUrl,
+  getTotal,
+  type CompanyRecord,
+} from "@/app/rues/panel";
+import { ruesSyncRepository } from "../db/rues-sync";
+import { companies, ruesSync } from "@/app/db/schema";
 import { db } from "@/app/db";
-import { companies } from "@/app/db/schema";
-import csvParser from "csv-parser";
-import { Readable } from "stream";
+import { companiesRepository } from "@/app/db/tokens copy";
 
-type CompanyRecord = {
-  org_juridica: string;
-  categoria: string;
-  fecha_matricula: string;
-  razon_social: string;
-  tipo_identificacion: string;
-  numero_identificacion: string;
-  actividad_economica: string;
-  actividad_economica2: string;
-  actividad_economica3: string;
-  actividad_economica4: string;
-  desc_tamano_empresa: string;
-  departamento: string;
-  municipio: string;
-  direccion_comercial: string;
-  correo_comercial: string;
-  rep_legal: string;
-};
+const syncToken = process.env.RUES_SYNC_TOKEN;
 
-const filters = JSON.stringify({
-  tipo_organizacion: ["Persona Juridica"],
-  departamento_: [],
-  departamento: [],
-  municipio: [],
-  fecha_inicio: "1910-01-01",
-  // fecha_inicio: "2024-12-01",
-  fecha_fin: "2024-12-24",
-  sector_economico: [],
-  actividad_economica: [],
-  ingresos: "",
-  tamanio: [],
-  // tamanio: ["04"],
-  motivo_consulta: ["Otros"],
-});
-
-export async function GET() {
-  // const [fileUrl, total] = await Promise.all([
-  //   getFileUrl(filters),
-  //   getTotal(filters),
-  // ]);
-  const { fileUrl, total } = {
-    fileUrl:
-      "s3://aws-athena-query-results-035967235690-us-east-1/3d22457c-dda5-454d-9119-1209e0a49f27.csv",
-    total: "560175",
-  };
-  await getData(fileUrl);
-  return Response.json({ fileUrl, total });
+if (!syncToken) {
+  throw new Error("RUES_SYNC_TOKEN is required");
 }
 
-async function getFileUrl(filters: string) {
-  const headers = new Headers();
-  headers.append("Content-Type", "application/json");
-  const requestOptions = {
-    method: "POST",
-    body: filters,
-  };
-  const response = await fetch(
-    "https://3qdqz6yla2.execute-api.us-east-1.amazonaws.com/panel-beneficiarios/reporte-informacion-detallada",
-    requestOptions
-  );
-  const data: string = await response.json();
-  return data;
-}
-
-async function getData(fileUrl: string) {
-  const header = new Headers();
-  header.append(
-    "accept",
-    "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7"
-  );
-  const urlencoded = new URLSearchParams();
-  urlencoded.append("bucket", fileUrl);
-
-  const requestOptions = {
-    method: "POST",
-    headers: header,
-    body: urlencoded,
-  };
-
-  const response = await fetch(
-    "https://beneficios.rues.org.co/logs/download_detail.php",
-    requestOptions
-  );
-
-  await processStream(response);
-}
-
-function readableStreamToNodeReadable(
-  readableStream: ReadableStream,
-  encoding: string
-): Readable {
-  const reader = readableStream.getReader();
-  const decoder = new TextDecoder(encoding);
-  return new Readable({
-    async read() {
-      const { done, value } = await reader.read();
-      if (done) {
-        this.push(null);
-      } else {
-        this.push(decoder.decode(value, { stream: true }));
-      }
-    },
-  });
-}
-
-async function processStream(
-  response: Response,
-  encoding: string = "ISO-8859-1"
-): Promise<void> {
-  if (!response.body) {
-    throw new Error("Response body is empty or not streamable.");
+export async function POST(request: Request) {
+  const token = request.headers.get("Authorization")?.split("Bearer ")[1];
+  if (token !== syncToken) {
+    return new Response("Unauthorized", { status: 401 });
   }
 
-  const nodeReadable = readableStreamToNodeReadable(response.body, encoding);
+  const startedAtMs = new Date();
+  const latestRuesSync = await ruesSyncRepository.getLatest();
+  const previousSyncEndDate = new Date(
+    latestRuesSync?.syncEndDate ?? "2025-01-05"
+  );
+  const syncStartDate = new Date(
+    previousSyncEndDate.setUTCDate(previousSyncEndDate.getUTCDate() - 1)
+  )
+    .toISOString()
+    .slice(0, 10);
+  const syncEndDate = new Date().toISOString().slice(0, 10);
+  const randomId = crypto.randomUUID().slice(0, 8);
+  const syncId = `${syncStartDate}${syncEndDate}${randomId}`.replaceAll(
+    "-",
+    ""
+  );
+  if (syncStartDate >= syncEndDate) {
+    return Response.json(
+      { message: "startDate is not before endDate" },
+      {
+        status: 500,
+      }
+    );
+  }
+  const filters = {
+    endDate: syncEndDate,
+    startDate: syncStartDate,
+  };
 
-  const batchSize = 500;
-  const batch: (typeof companies.$inferInsert)[] = [];
-  let total = 0;
+  const [fileUrl, totalRecords] = await Promise.all([
+    getFileUrl(filters),
+    getTotal(filters),
+  ]);
+  const ruesSyncId = await ruesSyncRepository.insert({
+    startedAtMs,
+    syncStartDate,
+    syncEndDate,
+    totalRecords,
+    status: "started",
+    syncFileUrl: fileUrl,
+  });
 
-  nodeReadable
-    .pipe(csvParser())
-    .on("data", async (row: CompanyRecord) => {
-      const company = mapCompanyRecordToCompanyModel(row);
-      if (company.nit === 0) {
-        return;
+  if (!ruesSyncId) {
+    return Response.json(
+      {
+        message: "Could not generate rues_sync init record.",
+      },
+      {
+        status: 500,
       }
-      batch.push(company);
-      if (batch.length >= batchSize) {
-        try {
-          await db.insert(companies).values(batch);
-          total = total + batch.length;
-          console.log(`Inserted ${total} companies`);
-        } catch (error) {
-          console.error("Error while inserting companies:", error, company);
-        }
-        batch.length = 0;
-      }
-    })
-    .on("end", () => {
-      if (batch.length) {
-        db.insert(companies).values(batch);
-        total = total + batch.length;
-        console.log(`Inserted ${total} companies`);
-      }
-      console.log("Finished processing CSV.");
-    })
-    .on("error", (error) => {
-      console.error("Error while processing CSV:", error);
+    );
+  }
+
+  console.log("RUES sync started successfully:", ruesSyncId);
+
+  try {
+    const recordsInserted = await getData({
+      fileUrl,
+      fn: async (batch) => {
+        const companies = batch.map((company) => ({
+          ...mapCompanyRecordToCompanyModel(company),
+          ruesSyncId,
+        }));
+        await companiesRepository.insertMany(companies);
+      },
     });
+    await ruesSyncRepository.update(ruesSyncId, {
+      endedAtMs: new Date(),
+      recordsInserted,
+      status: "success",
+    });
+    console.log("RUES sync finished successfully:", ruesSyncId);
+  } catch (err) {
+    console.error("Error while processing data", err);
+    await ruesSyncRepository.update(ruesSyncId, {
+      endedAtMs: new Date(),
+      status: "error",
+      errorMessage: JSON.stringify(err),
+    });
+  }
+
+  return Response.json({ message: "Alright." });
 }
 
-function mapCompanyRecordToCompanyModel(
+export function mapCompanyRecordToCompanyModel(
   company: CompanyRecord
 ): typeof companies.$inferInsert {
   const companySizes: Record<string, number> = {
@@ -178,16 +129,4 @@ function mapCompanyRecordToCompanyModel(
     companySize: companySizes[company.desc_tamano_empresa] ?? 0,
     businessAddress: company.direccion_comercial,
   };
-}
-
-async function getTotal(filters: string) {
-  const requestOptions = {
-    method: "POST",
-    body: filters,
-  };
-  const response = await fetch(
-    "https://3qdqz6yla2.execute-api.us-east-1.amazonaws.com/panel-beneficiarios/total-registros",
-    requestOptions
-  );
-  return response.json();
 }

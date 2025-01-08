@@ -1,14 +1,11 @@
 import { Company } from "@/app/[company]/Company";
-import { mapRegistryToCompany } from "@/app/mapRegistryToCompany";
 import { getToken } from "@/app/rues/getToken";
-import { RUES } from "@mauriciorobayo/rues-api";
 import { notFound } from "next/navigation";
 
 const currentToken = await getToken();
 if (!currentToken) {
   throw new Error("Could not get token");
 }
-const rues = new RUES(currentToken);
 
 export default async function Page({
   params,
@@ -34,6 +31,5 @@ async function getCompany(slug: string) {
   if (!companyData.data.registros?.length) {
     return notFound();
   }
-  const company = companyData.data.registros[0];
-  return mapRegistryToCompany(company);
+  return <div>hello</div>;
 }

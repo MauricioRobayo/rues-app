@@ -1,4 +1,4 @@
-import { relations, sql } from "drizzle-orm";
+import { sql } from "drizzle-orm";
 import { int, sqliteTable, text } from "drizzle-orm/sqlite-core";
 
 export const tokens = sqliteTable("tokens", {
@@ -16,6 +16,7 @@ export const companies = sqliteTable("companies", {
   category: text().notNull(),
   legalEntity: text().notNull(),
   registrationDate: int({ mode: "timestamp" }).notNull(),
+  ruesSyncId: int().references(() => ruesSync.id),
   businessAddress: text().notNull(),
   companySize: int().notNull(),
   economicActivity1: text().notNull(),
@@ -41,9 +42,13 @@ export const chambers = sqliteTable("chambers", {
 });
 export const ruesSync = sqliteTable("rues_sync", {
   id: int().primaryKey({ autoIncrement: true }),
-  total: int().notNull(),
-  inserted: int().notNull(),
-  timestamp: int({ mode: "timestamp" }).notNull(),
-  initialDate: int({ mode: "timestamp" }).notNull(),
-  finalDate: int({ mode: "timestamp" }).notNull(),
+  startedAtMs: int({ mode: "timestamp_ms" }).notNull(),
+  status: text({ enum: ["success", "error", "started"] }).notNull(),
+  endedAtMs: int({ mode: "timestamp_ms" }),
+  syncStartDate: text({ length: 10 }),
+  syncEndDate: text({ length: 10 }),
+  totalRecords: int(),
+  recordsInserted: int(),
+  syncFileUrl: text(),
+  errorMessage: text(),
 });
