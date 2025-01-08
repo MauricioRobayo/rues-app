@@ -1,4 +1,4 @@
-import { tokenRepository } from "@/app/db/tokens";
+import { tokenRepository } from "@/app/repositories/tokens";
 import { RUES } from "@mauriciorobayo/rues-api";
 
 export async function getToken() {

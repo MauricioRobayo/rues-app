@@ -1,13 +1,18 @@
-import { companiesRepository } from "@/app/db/tokens copy";
+import { companiesRepository } from "@/app/repositories/companies";
 import { mapCompanyRecordToCompanyModel } from "@/app/rues/mappers";
 import { getData, getFileUrl, getTotal } from "@/app/rues/panel";
-import { ruesSyncRepository } from "../db/rues-sync";
+import { ruesSyncRepository } from "../repositories/rues-sync";
 
 const syncToken = process.env.RUES_SYNC_TOKEN;
 
 if (!syncToken) {
   throw new Error("RUES_SYNC_TOKEN is required");
 }
+
+// TODO: Fire and forget
+// TODO: Reported recordsInserted differs from actual recordsInserted, check, totalRecords vs recordsInserted in rues_sync id 1
+// TODO: Send email with report
+// TODO: cronjob
 
 export async function POST(request: Request) {
   const token = request.headers.get("Authorization")?.split("Bearer ")[1];
@@ -17,14 +22,7 @@ export async function POST(request: Request) {
 
   const startedAtMs = new Date();
   const latestRuesSync = await ruesSyncRepository.getLatest();
-  const previousSyncEndDate = new Date(
-    latestRuesSync?.syncEndDate ?? "1910-01-01"
-  );
-  const syncStartDate = new Date(
-    previousSyncEndDate.setUTCDate(previousSyncEndDate.getUTCDate() - 1)
-  )
-    .toISOString()
-    .slice(0, 10);
+  const syncStartDate = latestRuesSync?.syncEndDate ?? "1910-01-01";
   const syncEndDate = new Date().toISOString().slice(0, 10);
   if (syncStartDate >= syncEndDate) {
     return Response.json(

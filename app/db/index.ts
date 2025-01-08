@@ -11,4 +11,5 @@ export const db = drizzle({
   client,
   schema: { tokens, companies, chambers, ruesSync },
   casing: "camelCase",
+  logger: true,
 });
