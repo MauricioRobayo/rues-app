@@ -47,10 +47,12 @@ export async function getData({
   fileUrl,
   fn,
   batchSize = 500,
+  debug = false,
 }: {
   fileUrl: string;
   fn: (batch: CompanyRecord[]) => Promise<void>;
   batchSize?: number;
+  debug?: boolean;
 }) {
   const header = new Headers();
   header.append(
@@ -97,11 +99,13 @@ async function processStream({
   encoding,
   fn,
   batchSize = 500,
+  debug = false,
 }: {
   response: Response;
   encoding: string;
   fn: (batch: CompanyRecord[]) => Promise<void>;
   batchSize: number;
+  debug?: boolean;
 }): Promise<number> {
   if (!response.body) {
     throw new Error("Response body is empty or not streamable.");
@@ -129,7 +133,9 @@ async function processStream({
             try {
               await fn(currentBatch);
               total = total + currentBatch.length;
-              console.log(`Processed ${total}`);
+              if (debug) {
+                console.log(`Processed ${total}`);
+              }
             } catch (error) {
               console.error(
                 "Error processing batch",
@@ -146,9 +152,13 @@ async function processStream({
           if (batch.length > 0) {
             await fn(batch);
             total = total + batch.length;
-            console.log(`Processed ${total}`);
+            if (debug) {
+              console.log(`Processed ${total}`);
+            }
           }
-          console.log("Finished processing CSV.");
+          if (debug) {
+            console.log("Finished processing CSV.");
+          }
           resolve(total);
         } catch (error) {
           reject(error);
