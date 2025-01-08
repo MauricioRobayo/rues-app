@@ -18,7 +18,7 @@ export async function POST(request: Request) {
   const startedAtMs = new Date();
   const latestRuesSync = await ruesSyncRepository.getLatest();
   const previousSyncEndDate = new Date(
-    latestRuesSync?.syncEndDate ?? "2025-01-05"
+    latestRuesSync?.syncEndDate ?? "1910-01-01"
   );
   const syncStartDate = new Date(
     previousSyncEndDate.setUTCDate(previousSyncEndDate.getUTCDate() - 1)
