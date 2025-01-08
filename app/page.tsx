@@ -1,5 +1,3 @@
-import { SearchResults } from "@/app/SearchResults";
-
 export default async function Home() {
   return (
     <main>
@@ -9,7 +7,6 @@ export default async function Home() {
           <input type="text" id="q" name="q" />
           <button type="submit">Buscar</button>
         </form>
-        <SearchResults />
       </div>
     </main>
   );

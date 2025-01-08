@@ -1,7 +1,7 @@
 import { type CompanyRecord } from "@/app/rues/panel";
 import { db } from "..";
 import { companies } from "../schema";
-import { mapCompanyRecordToCompanyModel } from "@/app/rues/route";
+import { mapCompanyRecordToCompanyModel } from "@/app/rues/mappers";
 
 const seedData: CompanyRecord[] = [
   {

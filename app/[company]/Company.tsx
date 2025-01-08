@@ -26,14 +26,7 @@ export function Company({
   documentType,
   nit,
   verificationDigit,
-  registrationId,
   businessName,
-  chamberName,
-  registrationNumber,
-  legalOrganization,
-  registrationStatus,
-  lastRenewedYear,
-  category,
 }: CompanyProps) {
   return (
     <div className="flex flex-col gap-4">

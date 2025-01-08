@@ -1,13 +1,7 @@
-import {
-  getData,
-  getFileUrl,
-  getTotal,
-  type CompanyRecord,
-} from "@/app/rues/panel";
-import { ruesSyncRepository } from "../db/rues-sync";
-import { companies, ruesSync } from "@/app/db/schema";
-import { db } from "@/app/db";
 import { companiesRepository } from "@/app/db/tokens copy";
+import { mapCompanyRecordToCompanyModel } from "@/app/rues/mappers";
+import { getData, getFileUrl, getTotal } from "@/app/rues/panel";
+import { ruesSyncRepository } from "../db/rues-sync";
 
 const syncToken = process.env.RUES_SYNC_TOKEN;
 
@@ -32,11 +26,6 @@ export async function POST(request: Request) {
     .toISOString()
     .slice(0, 10);
   const syncEndDate = new Date().toISOString().slice(0, 10);
-  const randomId = crypto.randomUUID().slice(0, 8);
-  const syncId = `${syncStartDate}${syncEndDate}${randomId}`.replaceAll(
-    "-",
-    ""
-  );
   if (syncStartDate >= syncEndDate) {
     return Response.json(
       { message: "startDate is not before endDate" },
@@ -103,30 +92,4 @@ export async function POST(request: Request) {
   }
 
   return Response.json({ message: "Alright." });
-}
-
-export function mapCompanyRecordToCompanyModel(
-  company: CompanyRecord
-): typeof companies.$inferInsert {
-  const companySizes: Record<string, number> = {
-    "NO DETERMINADO": 0,
-    MICRO: 1,
-    PEQUEÑA: 2,
-    MEDIANA: 3,
-    GRANDE: 4,
-  };
-  return {
-    legalEntity: company.org_juridica,
-    category: company.categoria,
-    registrationDate: new Date(company.fecha_matricula),
-    businessName: company.razon_social,
-    documentType: company.tipo_identificacion,
-    nit: Number(company.numero_identificacion),
-    economicActivity1: company.actividad_economica,
-    economicActivity2: company.actividad_economica2 || null,
-    economicActivity3: company.actividad_economica3 || null,
-    economicActivity4: company.actividad_economica4 || null,
-    companySize: companySizes[company.desc_tamano_empresa] ?? 0,
-    businessAddress: company.direccion_comercial,
-  };
 }
