@@ -4,13 +4,6 @@ import type { CompanyRecord } from "@/app/rues/panel";
 export function mapCompanyRecordToCompanyModel(
   company: CompanyRecord
 ): typeof companies.$inferInsert {
-  const companySizes: Record<string, number> = {
-    "NO DETERMINADO": 0,
-    MICRO: 1,
-    PEQUEÑA: 2,
-    MEDIANA: 3,
-    GRANDE: 4,
-  };
   return {
     legalEntity: company.org_juridica,
     category: company.categoria,
@@ -22,7 +15,9 @@ export function mapCompanyRecordToCompanyModel(
     economicActivity2: company.actividad_economica2 || null,
     economicActivity3: company.actividad_economica3 || null,
     economicActivity4: company.actividad_economica4 || null,
-    companySize: companySizes[company.desc_tamano_empresa] ?? 0,
+    companySize: company.desc_tamano_empresa,
     businessAddress: company.direccion_comercial,
+    city: company.municipio,
+    state: company.departamento,
   };
 }
