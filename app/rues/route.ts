@@ -1,4 +1,5 @@
 import { ruesSyncRepository } from "@/app/repositories/rues-sync";
+import { handler } from "@/app/rues/handler";
 import { after } from "next/server";
 
 const syncToken = process.env.RUES_SYNC_TOKEN;
@@ -35,18 +36,7 @@ export async function POST(request: Request) {
   console.log("RUES sync started successfully:", syncId);
 
   after(() => {
-    console.log("after is running!");
-    let count = 0;
-    new Promise((resolve) => {
-      const interval = setInterval(() => {
-        if (count >= 10) {
-          clearInterval(interval);
-          resolve(count);
-          return;
-        }
-        count++;
-      }, 1000);
-    });
+    handler({ syncId });
   });
 
   return Response.json({ syncId });
