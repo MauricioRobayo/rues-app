@@ -20,7 +20,7 @@ export const companies = sqliteTable(
     registrationDate: int({ mode: "timestamp" }).notNull(),
     ruesSyncId: int().references(() => ruesSync.id),
     businessAddress: text().notNull(),
-    companySize: int().notNull(),
+    companySize: text().notNull(),
     economicActivity1: text().notNull(),
     registrationId: int(),
     economicActivity2: text(),
