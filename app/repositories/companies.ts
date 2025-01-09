@@ -13,4 +13,7 @@ export const companiesRepository = {
       .where(eq(companies.ruesSyncId, syncId));
     return total.at(0)?.count ?? 0;
   },
+  findByNit(nit: number) {
+    return db.query.companies.findFirst({ where: eq(companies.nit, nit) });
+  },
 };
