@@ -406,8 +406,6 @@ export const allChambers = [
   },
 ];
 
-async function seedChambers() {
-  await db.insert(chambers).values(allChambers);
+export async function seedChambers() {
+  await db.insert(chambers).values(allChambers).onConflictDoNothing();
 }
-
-seedChambers();
