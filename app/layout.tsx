@@ -1,5 +1,14 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import { Montserrat } from "next/font/google";
+import Link from "next/link";
+import { Nit } from "@/app/Nit";
+
+const montserrat = Montserrat({
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-montserrat",
+});
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -12,12 +21,18 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" className={montserrat.variable}>
       <body>
-        <header className="bg-sky-900 text-white">
-          <h1 className="text-2xl font-bold text-center py-4 tracking-widest uppercase">
-            Registro Empresarial
-          </h1>
+        <header className="bg-primary/10 text-primary">
+          <div className="max-w-2xl mx-auto px-4 md:px-0 py-2 flex items-center justify-between">
+            <div>
+              <Link href="/">
+                <span className="font-light">RUT</span>
+                <span className="font-bold">NIT</span>
+              </Link>
+            </div>
+            <Nit />
+          </div>
         </header>
         <div className="max-w-2xl mx-auto px-4 md:px-0 py-8">{children}</div>
       </body>
