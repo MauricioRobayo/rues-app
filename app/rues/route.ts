@@ -36,7 +36,7 @@ export async function POST(request: Request) {
 
   after(() => {
     console.log("after is running!");
-    let count = 0;˝
+    let count = 0;
     new Promise((resolve) => {
       const interval = setInterval(() => {
         if (count >= 10) {
