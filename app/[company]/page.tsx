@@ -8,7 +8,7 @@ import { formatDistanceToNowStrict } from "date-fns";
 export const dynamic = "force-static";
 const numberFormatter = new Intl.NumberFormat("es-CO", { useGrouping: true });
 const dateFormatter = new Intl.DateTimeFormat("es-CO", {
-  dateStyle: "full",
+  dateStyle: "long",
   timeZone: "America/Bogota",
 });
 
@@ -82,6 +82,14 @@ export default async function page({
         <p>
           <strong>Dirección:</strong>{" "}
           <span itemProp="address">{companyRecord.businessAddress}</span>
+        </p>
+        <p>
+          <strong>Ciudad:</strong>{" "}
+          <span itemProp="address">{companyRecord.city}</span>
+        </p>
+        <p>
+          <strong>Departamento:</strong>{" "}
+          <span itemProp="address">{companyRecord.state}</span>
         </p>
         <p>
           <strong>Tamaño de la empresa:</strong>
