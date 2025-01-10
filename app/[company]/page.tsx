@@ -1,4 +1,7 @@
+import { Badge } from "@/app/[company]/Badge";
+import { Copy } from "@/app/[company]/CopyButton";
 import { getCompanyRecordFromPathSegment } from "@/app/[company]/getCompanyRecordFromPathSegment";
+import { getRuesDataByNit } from "@/app/[company]/rues";
 import { formatNit } from "@/app/format-nit";
 import { dateFormatter } from "@/app/formatters";
 import { formatDistanceToNowStrict } from "date-fns";
@@ -15,7 +18,6 @@ export const dynamic = "force-static";
 export async function generateMetadata({
   params,
 }: PageProps): Promise<Metadata> {
-  console.log({ params });
   const { company } = await params;
   const companyRecord = await getCompanyRecordFromPathSegment(company);
   const formattedNit = formatNit(companyRecord.nit);
@@ -29,40 +31,53 @@ export default async function page({ params }: PageProps) {
   const { company } = await params;
   const companyRecord = await getCompanyRecordFromPathSegment(company);
   const formattedNit = formatNit(companyRecord.nit);
-
   const dv = getVerificationDigit(companyRecord.nit);
   const registrationDate = dateFormatter.format(companyRecord.registrationDate);
+  const ruesData = await getRuesDataByNit(companyRecord.nit);
+  const status = ruesData?.details?.estado;
+
+  console.log(ruesData);
 
   return (
     <article itemScope itemType="https://schema.org/Organization">
       <header className="py-8">
         <h1
           itemProp="name"
-          className="font-brand text-2xl font-semibold text-brand"
+          className="text-balance text-2xl font-semibold text-brand"
         >
           {companyRecord.businessName}
         </h1>
-        <div className="flex items-center gap-1">
-          <h2 className="text-slate-500">NIT: {formattedNit}</h2>
-          <div className="flex items-center gap-1 rounded-full px-2 text-xs font-semibold uppercase leading-5 text-green-600">
-            <div className="size-2 rounded-full bg-green-600" />
-            Activa
-          </div>
+        <div className="flex items-center gap-2">
+          <h2 className="">NIT: {formattedNit}</h2>
+          {!!status && (
+            <Badge variant={status === "ACTIVA" ? "success" : "error"}>
+              Matrícula {status}
+            </Badge>
+          )}
         </div>
       </header>
       <section>
         <p>
+          <strong>Razón Social:</strong> {companyRecord.businessName}
+        </p>
+        <p>
           <strong>NIT:</strong>{" "}
-          <span itemProp="taxID">{companyRecord.nit}</span>
+          <div className="inline-block">
+            <div className="flex gap-2">
+              <span itemProp="taxID">{companyRecord.nit}</span>
+              <Copy
+                value={String(companyRecord.nit)}
+                className="rounded bg-slate-800 px-2 text-sm text-white"
+              />
+            </div>
+          </div>
         </p>
         <p>
           <strong>DV:</strong> {dv}
         </p>
         <p>
-          <strong>Razón Social:</strong> {companyRecord.businessName}
-        </p>
-        <p>
-          <strong>Activa:</strong> <span itemProp="isicV4">Sí</span>
+          <strong>Activa:</strong>{" "}
+          <span itemProp="isicV4">{status === "ACTIVA" ? "Sí" : "No"}</span>
         </p>
         <p>
           <strong>Categoría:</strong> {companyRecord.category}
