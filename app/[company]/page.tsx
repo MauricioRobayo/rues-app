@@ -77,12 +77,14 @@ export default async function page({ params }: PageProps) {
       <header className="flex flex-col gap-2 py-8">
         <h1
           itemProp="name"
-          className="text-balance text-2xl font-semibold text-brand"
+          className="text-balance text-xl font-semibold text-brand sm:text-2xl"
         >
           {companyRecord.businessName}
         </h1>
         <div className="flex items-center gap-2">
-          <h2 className="text-slate-500">NIT: {formattedNit}</h2>
+          <h2 className="text-sm text-slate-500 sm:text-base">
+            NIT: {formattedNit}
+          </h2>
           {!!status && (
             <Badge variant={status === "ACTIVA" ? "success" : "error"}>
               Matrícula {status}
@@ -91,7 +93,7 @@ export default async function page({ params }: PageProps) {
         </div>
       </header>
       <section>
-        <dl className="flex flex-col gap-1">
+        <dl className="flex flex-col gap-1 text-xs sm:text-sm">
           {detailsMapping.map((detail) => {
             const value = companyRecord[detail.key];
             if ("render" in detail) {
@@ -102,7 +104,7 @@ export default async function page({ params }: PageProps) {
             return (
               <Fragment key={detail.key}>
                 <div className="flex gap-2">
-                  <dt className="">{detail.label}:</dt>
+                  <dt className="shrink-0">{detail.label}:</dt>
                   <dd itemProp={detail.itemProp} className="text-slate-500">
                     {renderValue(value)}
                   </dd>
