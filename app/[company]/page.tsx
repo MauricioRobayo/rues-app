@@ -20,12 +20,17 @@ type Company = typeof companies.$inferInsert;
 type CompanyProperty = keyof Company;
 type CompanyValue = Company[CompanyProperty];
 
-type DetailsMapping = {
-  key: CompanyProperty;
-  label?: string;
-  itemProp?: string;
-  render?: (value: CompanyValue) => JSX.Element | null;
-};
+type DetailsMapping =
+  | {
+      key: CompanyProperty;
+      label: string;
+      itemProp?: string;
+    }
+  | {
+      key: CompanyProperty;
+      itemProp?: string;
+      render: (value: CompanyValue) => JSX.Element | null;
+    };
 
 const detailsMapping: DetailsMapping[] = [
   { key: "businessName", label: "Razón Social" },
@@ -64,8 +69,6 @@ export default async function page({ params }: PageProps) {
   const { company } = await params;
   const companyRecord = await getCompanyRecordFromPathSegment(company);
   const formattedNit = formatNit(companyRecord.nit);
-  const dv = getVerificationDigit(companyRecord.nit);
-  const registrationDate = dateFormatter.format(companyRecord.registrationDate);
   const ruesData = await getRuesDataByNit(companyRecord.nit);
   const status = ruesData?.details?.estado;
 
