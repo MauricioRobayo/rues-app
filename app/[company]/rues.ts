@@ -79,8 +79,6 @@ export const getRuesDataByNit = cache(async (nit: number) => {
       chambersRepository.findByCode(Number(data.chamberCode)),
     ]);
 
-  console.log(">>>", businessEstablishmentsResponse);
-
   const result: {
     chamber?: NonNullable<
       Awaited<ReturnType<typeof chambersRepository.findByCode>>

@@ -2,18 +2,53 @@ import { Badge } from "@/app/[company]/Badge";
 import { Copy } from "@/app/[company]/CopyButton";
 import { getCompanyRecordFromPathSegment } from "@/app/[company]/getCompanyRecordFromPathSegment";
 import { getRuesDataByNit } from "@/app/[company]/rues";
+import type { companies } from "@/app/db/schema";
 import { formatNit } from "@/app/format-nit";
 import { dateFormatter } from "@/app/formatters";
+import type { CompanyRecord } from "@/app/rues/panel";
 import { formatDistanceToNowStrict } from "date-fns";
 import { es } from "date-fns/locale/es";
 import type { Metadata } from "next";
 import { getVerificationDigit } from "nit-verifier";
+import { Fragment, type JSX } from "react";
 
 interface PageProps {
   params: Promise<{ company: string }>;
 }
 
 export const dynamic = "force-static";
+
+type Company = typeof companies.$inferInsert;
+type CompanyProperty = keyof Company;
+type CompanyValue = Company[CompanyProperty];
+
+type DetailsMapping = {
+  key: CompanyProperty;
+  label?: string;
+  itemProp?: string;
+  render?: (value: CompanyValue) => JSX.Element | null;
+};
+
+const detailsMapping: DetailsMapping[] = [
+  { key: "businessName", label: "Razón Social" },
+  {
+    key: "nit",
+    render: renderNit,
+  },
+  { key: "legalEntity", label: "Organización Jurídica" },
+  {
+    key: "registrationDate",
+    render: renderRegistrationDate,
+  },
+  { key: "businessAddress", label: "Dirección", itemProp: "address" },
+  { key: "city", label: "Ciudad", itemProp: "city" },
+  { key: "state", label: "Departamento", itemProp: "state" },
+  {
+    key: "companySize",
+    label: "Tamaño de la empresa",
+    itemProp: "numberOfEmployees",
+  },
+];
 
 export async function generateMetadata({
   params,
@@ -36,11 +71,9 @@ export default async function page({ params }: PageProps) {
   const ruesData = await getRuesDataByNit(companyRecord.nit);
   const status = ruesData?.details?.estado;
 
-  console.log(ruesData);
-
   return (
     <article itemScope itemType="https://schema.org/Organization">
-      <header className="py-8">
+      <header className="flex flex-col gap-2 py-8">
         <h1
           itemProp="name"
           className="text-balance text-2xl font-semibold text-brand"
@@ -48,7 +81,7 @@ export default async function page({ params }: PageProps) {
           {companyRecord.businessName}
         </h1>
         <div className="flex items-center gap-2">
-          <h2 className="">NIT: {formattedNit}</h2>
+          <h2 className="text-slate-500">NIT: {formattedNit}</h2>
           {!!status && (
             <Badge variant={status === "ACTIVA" ? "success" : "error"}>
               Matrícula {status}
@@ -57,72 +90,75 @@ export default async function page({ params }: PageProps) {
         </div>
       </header>
       <section>
-        <p>
-          <strong>Razón Social:</strong> {companyRecord.businessName}
-        </p>
-        <p>
-          <strong>NIT:</strong>{" "}
-          <div className="inline-block">
-            <div className="flex gap-2">
-              <span itemProp="taxID">{companyRecord.nit}</span>
-              <Copy
-                value={String(companyRecord.nit)}
-                className="rounded bg-slate-800 px-2 text-sm text-white"
-              />
-            </div>
-          </div>
-        </p>
-        <p>
-          <strong>DV:</strong> {dv}
-        </p>
-        <p>
-          <strong>Activa:</strong>{" "}
-          <span itemProp="isicV4">{status === "ACTIVA" ? "Sí" : "No"}</span>
-        </p>
-        <p>
-          <strong>Categoría:</strong> {companyRecord.category}
-        </p>
-        <p>
-          <strong>Organización Jurídica:</strong> {companyRecord.legalEntity}
-        </p>
-        <p>
-          <strong>Fecha de Constitución:</strong>{" "}
-          <time dateTime={companyRecord.registrationDate.toISOString()}>
-            {registrationDate}
-          </time>
-        </p>
-        <p>
-          <strong>Antigüedad:</strong>{" "}
-          {formatDistanceToNowStrict(companyRecord.registrationDate, {
-            locale: es,
+        <dl className="flex flex-col gap-1">
+          {detailsMapping.map((detail) => {
+            const value = companyRecord[detail.key];
+            if ("render" in detail) {
+              return (
+                <Fragment key={detail.key}>{detail.render(value)}</Fragment>
+              );
+            }
+            return (
+              <Fragment key={detail.key}>
+                <div className="flex gap-2">
+                  <dt className="">{detail.label}:</dt>
+                  <dd itemProp={detail.itemProp} className="text-slate-500">
+                    {renderValue(value)}
+                  </dd>
+                </div>
+              </Fragment>
+            );
           })}
-        </p>
-        <p>
-          <strong>Dirección:</strong>{" "}
-          <span itemProp="address">{companyRecord.businessAddress}</span>
-        </p>
-        <p>
-          <strong>Ciudad:</strong>{" "}
-          <span itemProp="address">{companyRecord.city}</span>
-        </p>
-        <p>
-          <strong>Departamento:</strong>{" "}
-          <span itemProp="address">{companyRecord.state}</span>
-        </p>
-        <p>
-          <strong>Tamaño de la empresa:</strong>
-          <span itemProp="numberOfEmployees">{companyRecord.companySize}</span>
-        </p>
-        <section>
-          <h2>Actividad Económica</h2>
-          <ul>
-            <li>{companyRecord.economicActivity1}</li>
-            <li>{companyRecord.economicActivity2}</li>
-            <li>{companyRecord.economicActivity3}</li>
-            <li>{companyRecord.economicActivity4}</li>
-          </ul>
-        </section>
+        </dl>
       </section>
     </article>
+  );
+}
+
+function renderValue(value: CompanyValue) {
+  if (value instanceof Date) {
+    return dateFormatter.format(value);
+  }
+  return value;
+}
+
+function renderNit(nit: CompanyValue) {
+  if (typeof nit !== "number") {
+    return null;
+  }
+  return (
+    <>
+      <div className="flex gap-2">
+        <dt>NIT:</dt>
+        <dd className="text-slate-500">{nit}</dd>
+      </div>
+      <div className="flex gap-2">
+        <dt>DV:</dt>
+        <dd className="text-slate-500">{getVerificationDigit(nit)}</dd>
+      </div>
+    </>
+  );
+}
+function renderRegistrationDate(registrationDate: CompanyValue) {
+  if (!(registrationDate instanceof Date)) {
+    return null;
+  }
+  return (
+    <>
+      <div className="flex gap-2">
+        <dt>Fecha de constitución:</dt>
+        <dd className="text-slate-500">
+          {dateFormatter.format(registrationDate)}
+        </dd>
+      </div>
+      <div className="flex gap-2">
+        <dt>Antigüedad:</dt>
+        <dd className="text-slate-500">
+          {formatDistanceToNowStrict(registrationDate, {
+            locale: es,
+          })}
+        </dd>
+      </div>
+    </>
   );
 }
