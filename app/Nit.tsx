@@ -1,13 +1,19 @@
 "use client";
 
+import { formatNit } from "@/app/format-nit";
 import { usePathname } from "next/navigation";
 
-export function Nit() {
+export function Nit({
+  className,
+  options,
+}: {
+  className?: string;
+  options?: Parameters<typeof formatNit>[1];
+}) {
   const pathname = usePathname();
-
   if (pathname === "/") {
     return null;
   }
-  const nit = pathname.replace(/.*-/g, "");
-  return <div>{nit}</div>;
+  const nit = Number(pathname.replace(/.*-/g, ""));
+  return <div className={className}>{formatNit(nit, options)}</div>;
 }

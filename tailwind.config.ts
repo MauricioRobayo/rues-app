@@ -1,15 +1,16 @@
 import type { Config } from "tailwindcss";
+import colors from "tailwindcss/colors";
 
 export default {
   content: ["./app/**/*.{js,ts,jsx,tsx,mdx}"],
   theme: {
     extend: {
       colors: {
-        primary: "#034a9b",
-        secondary: "#069169",
+        brand: colors.sky[700],
       },
       fontFamily: {
-        sans: ["var(--font-montserrat)"],
+        brand: ["var(--font-montserrat)"],
+        sans: ["var(--font-roboto-flex)"],
       },
     },
   },

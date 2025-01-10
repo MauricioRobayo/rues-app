@@ -38,7 +38,7 @@ export async function getFileUrl(filters: Filters) {
   headers.append("Content-Type", "application/json");
   const response = await fetch(
     "https://3qdqz6yla2.execute-api.us-east-1.amazonaws.com/panel-beneficiarios/reporte-informacion-detallada",
-    { method: "POST", headers, body: getFilters(filters) }
+    { method: "POST", headers, body: getFilters(filters) },
   );
   return response.json() as Promise<string>;
 }
@@ -57,7 +57,7 @@ export async function streamData({
   const header = new Headers();
   header.append(
     "accept",
-    "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7"
+    "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7",
   );
   const urlencoded = new URLSearchParams();
   urlencoded.append("bucket", fileUrl);
@@ -70,7 +70,7 @@ export async function streamData({
 
   const response = await fetch(
     "https://beneficios.rues.org.co/logs/download_detail.php",
-    requestOptions
+    requestOptions,
   );
 
   return processStream({
@@ -84,7 +84,7 @@ export async function streamData({
 
 function readableStreamToNodeReadable(
   readableStream: ReadableStream,
-  encoding: string
+  encoding: string,
 ): Readable {
   const reader = readableStream.getReader();
   const decoder = new TextDecoder(encoding);
@@ -146,7 +146,7 @@ async function processStream({
               console.error(
                 "Error processing batch",
                 JSON.stringify(currentBatch),
-                error
+                error,
               );
             }
           });
@@ -183,7 +183,7 @@ export async function getTotal(filters: Filters) {
     {
       method: "POST",
       body: getFilters(filters),
-    }
+    },
   );
   return response.json();
 }

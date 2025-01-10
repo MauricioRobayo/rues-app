@@ -2,7 +2,7 @@ import type { companies } from "@/app/db/schema";
 import type { CompanyRecord } from "@/app/rues/panel";
 
 export function mapCompanyRecordToCompanyModel(
-  company: CompanyRecord
+  company: CompanyRecord,
 ): typeof companies.$inferInsert {
   return {
     legalEntity: company.org_juridica,

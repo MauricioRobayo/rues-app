@@ -36,7 +36,7 @@ export const companies = sqliteTable(
   },
   (table) => {
     return [index("rues_sync_idx").on(table.ruesSyncId)];
-  }
+  },
 );
 export const chambers = sqliteTable("chambers", {
   id: int().primaryKey({ autoIncrement: true }),

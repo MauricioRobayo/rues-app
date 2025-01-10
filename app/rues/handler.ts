@@ -18,7 +18,7 @@ export async function handler({
       { message: "startDate is not before endDate" },
       {
         status: 500,
-      }
+      },
     );
   }
   const filters = {

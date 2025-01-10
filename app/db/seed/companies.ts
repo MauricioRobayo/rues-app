@@ -79,6 +79,6 @@ const seedData: CompanyRecord[] = [
 
 export async function seedCompanies() {
   await companiesRepository.insertMany(
-    seedData.map(mapCompanyRecordToCompanyModel)
+    seedData.map(mapCompanyRecordToCompanyModel),
   );
 }
