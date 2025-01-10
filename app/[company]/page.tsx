@@ -1,11 +1,9 @@
 import { Badge } from "@/app/[company]/Badge";
-import { Copy } from "@/app/[company]/CopyButton";
 import { getCompanyRecordFromPathSegment } from "@/app/[company]/getCompanyRecordFromPathSegment";
 import { getRuesDataByNit } from "@/app/[company]/rues";
 import type { companies } from "@/app/db/schema";
 import { formatNit } from "@/app/format-nit";
 import { dateFormatter } from "@/app/formatters";
-import type { CompanyRecord } from "@/app/rues/panel";
 import { formatDistanceToNowStrict } from "date-fns";
 import { es } from "date-fns/locale/es";
 import type { Metadata } from "next";
