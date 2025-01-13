@@ -1,7 +1,6 @@
 import { Badge } from "@/app/[company]/Badge";
 import { getCompanyRecordFromPathSegment } from "@/app/[company]/getCompanyRecordFromPathSegment";
 import { getRuesDataByNit } from "@/app/[company]/rues";
-import type { companies } from "@/app/db/schema";
 import { formatNit } from "@/app/format-nit";
 import { dateFormatter } from "@/app/formatters";
 import type {
@@ -16,10 +15,6 @@ interface PageProps {
 }
 
 export const dynamic = "force-static";
-
-type Company = typeof companies.$inferInsert;
-type CompanyProperty = keyof Company;
-type CompanyValue = Company[CompanyProperty];
 
 type DetailsMapping = {
   key:
