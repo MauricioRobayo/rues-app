@@ -34,6 +34,7 @@ const detailsMapping: DetailsMapping[] = [
   { key: "nom_camara", label: "Cámara de comercio" },
   { key: "organizacion_juridica", label: "Organización jurídica" },
   { key: "estado_matricula", label: "Estado matrícula" },
+  { key: "motivo_cancelacion", label: "Motivo de cancelación" },
   {
     key: "fecha_matricula",
     label: "Fecha de constitución",
@@ -44,7 +45,21 @@ const detailsMapping: DetailsMapping[] = [
     label: "Fecha de renovación",
     renderValue: renderDateValue,
   },
+  {
+    key: "fecha_actualizacion",
+    label: "Fecha actualización",
+    renderValue: renderDateValue,
+  },
+  {
+    key: "fecha_cancelacion",
+    label: "Fecha cancelación",
+    renderValue: renderDateValue,
+  },
   { key: "ultimo_ano_renovado", label: "Último año renovado" },
+  {
+    key: "indicador_emprendimiento_social",
+    label: "Indicador emprendimiento social",
+  },
   { key: "tipo_sociedad", label: "Tipo de sociedad" },
   { key: "url_venta_certificados", label: "Certificado de tradición" },
 ];
@@ -107,7 +122,7 @@ export default async function page({ params }: PageProps) {
         </div>
       </header>
       <section>
-        <dl className="flex flex-col gap-1 text-sm sm:text-base">
+        <dl className="flex flex-col gap-2 text-sm sm:text-base">
           {detailsMapping.map((detail) => {
             const value =
               // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -149,11 +164,9 @@ function CompanyDetail({
   value: ReactNode;
 }) {
   return (
-    <div key={label} className="flex flex-col gap-x-1 sm:flex-row">
-      <dt className="shrink-0">{label}:</dt>
-      <dd itemProp={itemProp} className="text-slate-500">
-        {value}
-      </dd>
+    <div key={label} className="flex flex-col">
+      <dt className="shrink-0 text-sm text-slate-500">{label}</dt>
+      <dd itemProp={itemProp}>{value}</dd>
     </div>
   );
 }
