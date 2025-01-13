@@ -6,6 +6,7 @@ import {
   type FileResponse,
   type BusinessEstablishmentsResponse,
 } from "@mauriciorobayo/rues-api";
+import { notFound } from "next/navigation";
 import { cache } from "react";
 
 const rues = new RUES();
@@ -38,7 +39,7 @@ async function advancedSearch(nit: number) {
   const response = await rues.advancedSearch({ query: { nit }, token });
 
   if (response.status === "success") {
-    const data = response.data.registros?.map(ruesDataMapper).at(0);
+    const data = response.data.registros?.at(0);
     return data ? { data, token } : null;
   }
 
@@ -55,7 +56,7 @@ async function advancedSearch(nit: number) {
     token: newToken,
   });
   if (newResponse.status === "success") {
-    const data = newResponse.data.registros?.map(ruesDataMapper).at(0);
+    const data = newResponse.data.registros?.at(0);
     return data ? { data, token } : null;
   }
 
@@ -65,18 +66,17 @@ async function advancedSearch(nit: number) {
 export const getRuesDataByNit = cache(async (nit: number) => {
   const advancedSearchResponse = await advancedSearch(nit);
   if (!advancedSearchResponse) {
-    return null;
+    notFound();
   }
   const { data, token } = advancedSearchResponse;
-
   const [fileResponse, businessEstablishmentsResponse, chamber] =
     await Promise.all([
-      rues.getFile({ id: data.registrationId }),
+      rues.getFile({ id: data.id_rm }),
       rues.getBusinessEstablishments({
-        query: RUES.getBusinessDetails(data.registrationId),
+        query: RUES.getBusinessDetails(data.id_rm),
         token,
       }),
-      chambersRepository.findByCode(Number(data.chamberCode)),
+      chambersRepository.findByCode(Number(data.cod_camara)),
     ]);
 
   const result: {
@@ -85,7 +85,10 @@ export const getRuesDataByNit = cache(async (nit: number) => {
     >;
     details?: FileResponse["registros"];
     establishments?: BusinessEstablishmentsResponse["registros"];
-  } = {};
+    rues: NonNullable<AdvancedSearchResponse["registros"]>[number];
+  } = {
+    rues: data,
+  };
 
   if (chamber) {
     result.chamber = chamber;
@@ -101,12 +104,3 @@ export const getRuesDataByNit = cache(async (nit: number) => {
 
   return result;
 });
-
-function ruesDataMapper(
-  ruesData: NonNullable<AdvancedSearchResponse["registros"]>[number],
-) {
-  return {
-    registrationId: ruesData.id_rm,
-    chamberCode: ruesData.cod_camara,
-  };
-}

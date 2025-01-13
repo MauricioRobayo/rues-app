@@ -4,10 +4,11 @@ import { getRuesDataByNit } from "@/app/[company]/rues";
 import type { companies } from "@/app/db/schema";
 import { formatNit } from "@/app/format-nit";
 import { dateFormatter } from "@/app/formatters";
-import { formatDistanceToNowStrict } from "date-fns";
-import { es } from "date-fns/locale/es";
+import type {
+  AdvancedSearchResponse,
+  FileResponse,
+} from "@mauriciorobayo/rues-api";
 import type { Metadata } from "next";
-import { getVerificationDigit } from "nit-verifier";
 import { type ReactNode } from "react";
 
 interface PageProps {
@@ -21,42 +22,52 @@ type CompanyProperty = keyof Company;
 type CompanyValue = Company[CompanyProperty];
 
 type DetailsMapping = {
-  key: CompanyProperty;
+  key:
+    | keyof NonNullable<AdvancedSearchResponse["registros"]>[number]
+    | keyof FileResponse["registros"];
   label: string;
-  renderValue?: (value: CompanyValue) => ReactNode;
+  renderValue?: (value: string) => ReactNode;
   itemProp?: string;
 };
 
 const detailsMapping: DetailsMapping[] = [
-  { key: "businessName", label: "Razón Social" },
   { key: "nit", label: "NIT" },
+  { key: "dv", label: "DV" },
+  { key: "matricula", label: "Matrícula" },
+  { key: "sigla", label: "Sigla" },
+  { key: "nom_camara", label: "Cámara de comercio" },
+  { key: "organizacion_juridica", label: "Organización jurídica" },
+  { key: "estado_matricula", label: "Estado matrícula" },
   {
-    key: "nit",
-    label: "DV",
-    renderValue: (value: CompanyValue) =>
-      typeof value === "number" ? getVerificationDigit(value) : null,
+    key: "fecha_matricula",
+    label: "Fecha de constitución",
+    renderValue: renderDateValue,
   },
-  { key: "legalEntity", label: "Organización Jurídica" },
-  { key: "registrationDate", label: "Fecha de constitución" },
   {
-    key: "registrationDate",
-    label: "Antigüedad",
-    renderValue: (value: CompanyValue) =>
-      value instanceof Date
-        ? formatDistanceToNowStrict(value, {
-            locale: es,
-          })
-        : null,
+    key: "fecha_renovacion",
+    label: "Fecha de renovación",
+    renderValue: renderDateValue,
   },
-  { key: "businessAddress", label: "Dirección", itemProp: "address" },
-  { key: "city", label: "Ciudad", itemProp: "city" },
-  { key: "state", label: "Departamento", itemProp: "state" },
-  {
-    key: "companySize",
-    label: "Tamaño de la empresa",
-    itemProp: "numberOfEmployees",
-  },
+  { key: "ultimo_ano_renovado", label: "Último año renovado" },
+  { key: "tipo_sociedad", label: "Tipo de sociedad" },
+  { key: "url_venta_certificados", label: "Certificado de tradición" },
 ];
+
+/*
+{
+    "cod_ciiu_act_econ_pri": "4111",
+    "desc_ciiu_act_econ_pri": "Construcción de edificios residenciales",
+    "cod_ciiu_act_econ_sec": "4112",
+    "desc_ciiu_act_econ_sec": "Construcción de edificios no residenciales",
+    "ciiu3": "",
+    "desc_ciiu3": "",
+    "ciiu4": "",
+    "desc_ciiu4": "",
+    "cod_tipo_sociedad": "02",
+    "fecha_actualizacion": "20240405",
+}
+
+*/
 
 export async function generateMetadata({
   params,
@@ -74,8 +85,10 @@ export default async function page({ params }: PageProps) {
   const { company } = await params;
   const companyRecord = await getCompanyRecordFromPathSegment(company);
   const formattedNit = formatNit(companyRecord.nit);
-  const ruesData = await getRuesDataByNit(companyRecord.nit);
-  const status = ruesData?.details?.estado;
+  const companyData = await getRuesDataByNit(companyRecord.nit);
+  const status = companyData?.details?.estado;
+
+  console.log(companyData);
 
   return (
     <article itemScope itemType="https://schema.org/Organization">
@@ -100,11 +113,16 @@ export default async function page({ params }: PageProps) {
       <section>
         <dl className="flex flex-col gap-1 text-sm sm:text-base">
           {detailsMapping.map((detail) => {
-            const value = companyRecord[detail.key];
+            const value =
+              companyData?.rues?.[detail.key] ||
+              companyData.details[detail.key];
+            if (!value) {
+              return null;
+            }
             return (
               <CompanyDetail
                 key={detail.label}
-                value={value}
+                value={detail.renderValue ? detail.renderValue(value) : value}
                 label={detail.label}
                 itemProp={detail.itemProp}
               />
@@ -116,11 +134,9 @@ export default async function page({ params }: PageProps) {
   );
 }
 
-function renderValue(value: CompanyValue) {
-  if (value instanceof Date) {
-    return dateFormatter.format(value);
-  }
-  return value;
+function renderDateValue(value: string) {
+  const formattedDate = `${value.slice(0, 4)}-${value.slice(4, 6)}-${value.slice(6, 8)}`;
+  return dateFormatter.format(new Date(formattedDate));
 }
 
 function CompanyDetail({
@@ -130,13 +146,13 @@ function CompanyDetail({
 }: {
   label: string;
   itemProp?: string;
-  value: CompanyValue;
+  value: ReactNode;
 }) {
   return (
     <div key={label} className="flex flex-col gap-x-1 sm:flex-row">
       <dt className="shrink-0">{label}:</dt>
       <dd itemProp={itemProp} className="text-slate-500">
-        {renderValue ? renderValue(value) : renderValue(value)}
+        {value}
       </dd>
     </div>
   );
