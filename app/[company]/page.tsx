@@ -8,7 +8,7 @@ import { formatDistanceToNowStrict } from "date-fns";
 import { es } from "date-fns/locale/es";
 import type { Metadata } from "next";
 import { getVerificationDigit } from "nit-verifier";
-import { Fragment, type JSX } from "react";
+import { type ReactNode } from "react";
 
 interface PageProps {
   params: Promise<{ company: string }>;
@@ -20,28 +20,33 @@ type Company = typeof companies.$inferInsert;
 type CompanyProperty = keyof Company;
 type CompanyValue = Company[CompanyProperty];
 
-type DetailsMapping =
-  | {
-      key: CompanyProperty;
-      label: string;
-      itemProp?: string;
-    }
-  | {
-      key: CompanyProperty;
-      itemProp?: string;
-      render: (value: CompanyValue) => JSX.Element | null;
-    };
+type DetailsMapping = {
+  key: CompanyProperty;
+  label: string;
+  renderValue?: (value: CompanyValue) => ReactNode;
+  itemProp?: string;
+};
 
 const detailsMapping: DetailsMapping[] = [
   { key: "businessName", label: "Razón Social" },
+  { key: "nit", label: "NIT" },
   {
     key: "nit",
-    render: renderNit,
+    label: "DV",
+    renderValue: (value: CompanyValue) =>
+      typeof value === "number" ? getVerificationDigit(value) : null,
   },
   { key: "legalEntity", label: "Organización Jurídica" },
+  { key: "registrationDate", label: "Fecha de constitución" },
   {
     key: "registrationDate",
-    render: renderRegistrationDate,
+    label: "Antigüedad",
+    renderValue: (value: CompanyValue) =>
+      value instanceof Date
+        ? formatDistanceToNowStrict(value, {
+            locale: es,
+          })
+        : null,
   },
   { key: "businessAddress", label: "Dirección", itemProp: "address" },
   { key: "city", label: "Ciudad", itemProp: "city" },
@@ -74,7 +79,7 @@ export default async function page({ params }: PageProps) {
 
   return (
     <article itemScope itemType="https://schema.org/Organization">
-      <header className="flex flex-col gap-2 py-8">
+      <header className="flex flex-col gap-0 py-8 sm:gap-2">
         <h1
           itemProp="name"
           className="text-balance text-xl font-semibold text-brand sm:text-2xl"
@@ -82,7 +87,7 @@ export default async function page({ params }: PageProps) {
           {companyRecord.businessName}
         </h1>
         <div className="flex items-center gap-2">
-          <h2 className="text-sm text-slate-500 sm:text-base">
+          <h2 className="text-base text-slate-500 sm:text-lg">
             NIT: {formattedNit}
           </h2>
           {!!status && (
@@ -93,23 +98,16 @@ export default async function page({ params }: PageProps) {
         </div>
       </header>
       <section>
-        <dl className="flex flex-col gap-1 text-xs sm:text-sm">
+        <dl className="flex flex-col gap-1 text-sm sm:text-base">
           {detailsMapping.map((detail) => {
             const value = companyRecord[detail.key];
-            if ("render" in detail) {
-              return (
-                <Fragment key={detail.key}>{detail.render(value)}</Fragment>
-              );
-            }
             return (
-              <Fragment key={detail.key}>
-                <div className="flex gap-2">
-                  <dt className="shrink-0">{detail.label}:</dt>
-                  <dd itemProp={detail.itemProp} className="text-slate-500">
-                    {renderValue(value)}
-                  </dd>
-                </div>
-              </Fragment>
+              <CompanyDetail
+                key={detail.label}
+                value={value}
+                label={detail.label}
+                itemProp={detail.itemProp}
+              />
             );
           })}
         </dl>
@@ -125,43 +123,21 @@ function renderValue(value: CompanyValue) {
   return value;
 }
 
-function renderNit(nit: CompanyValue) {
-  if (typeof nit !== "number") {
-    return null;
-  }
+function CompanyDetail({
+  label,
+  itemProp,
+  value,
+}: {
+  label: string;
+  itemProp?: string;
+  value: CompanyValue;
+}) {
   return (
-    <>
-      <div className="flex gap-2">
-        <dt>NIT:</dt>
-        <dd className="text-slate-500">{nit}</dd>
-      </div>
-      <div className="flex gap-2">
-        <dt>DV:</dt>
-        <dd className="text-slate-500">{getVerificationDigit(nit)}</dd>
-      </div>
-    </>
-  );
-}
-function renderRegistrationDate(registrationDate: CompanyValue) {
-  if (!(registrationDate instanceof Date)) {
-    return null;
-  }
-  return (
-    <>
-      <div className="flex gap-2">
-        <dt>Fecha de constitución:</dt>
-        <dd className="text-slate-500">
-          {dateFormatter.format(registrationDate)}
-        </dd>
-      </div>
-      <div className="flex gap-2">
-        <dt>Antigüedad:</dt>
-        <dd className="text-slate-500">
-          {formatDistanceToNowStrict(registrationDate, {
-            locale: es,
-          })}
-        </dd>
-      </div>
-    </>
+    <div key={label} className="flex flex-col gap-x-1 sm:flex-row">
+      <dt className="shrink-0">{label}:</dt>
+      <dd itemProp={itemProp} className="text-slate-500">
+        {renderValue ? renderValue(value) : renderValue(value)}
+      </dd>
+    </div>
   );
 }

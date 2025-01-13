@@ -28,7 +28,7 @@
     "drizzle-orm": "^0.38.3",
     "eslint": "^9",
     "eslint-config-next": "15.1.2",
-    "next": "15.1.2",
+    "next": "^15.1.4",
     "nit-verifier": "^1.0.6",
     "postcss": "^8",
     "prettier": "^3.4.2",
