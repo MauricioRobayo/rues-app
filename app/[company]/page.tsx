@@ -101,7 +101,7 @@ export default async function page({ params }: PageProps) {
           </h2>
           {!!status && (
             <Badge variant={status === "ACTIVA" ? "success" : "error"}>
-              Matrícula {status}
+              {status}
             </Badge>
           )}
         </div>
