@@ -31,6 +31,7 @@ type DetailsMapping = {
 };
 
 const detailsMapping: DetailsMapping[] = [
+  { key: "razon_social", label: "Razón social" },
   { key: "nit", label: "NIT" },
   { key: "dv", label: "DV" },
   { key: "matricula", label: "Matrícula" },
@@ -114,7 +115,11 @@ export default async function page({ params }: PageProps) {
         <dl className="flex flex-col gap-1 text-sm sm:text-base">
           {detailsMapping.map((detail) => {
             const value =
+              // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+              // @ts-ignore
               companyData?.rues?.[detail.key] ||
+              // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+              // @ts-ignore
               companyData.details[detail.key];
             if (!value) {
               return null;
