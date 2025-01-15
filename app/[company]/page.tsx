@@ -1,10 +1,10 @@
-import { Badge } from "@/app/[company]/Components/Badge";
+import { Badge } from "@/app/[company]/components/Badge";
 import {
   getCompanyRecordFromPathSegment,
   slugifyCompanyName,
 } from "@/app/[company]/getCompanyRecordFromPathSegment";
-import { getRuesDataByNit } from "@/app/[company]/rues";
-import { siisApi, type Source } from "@/app/[company]/siis";
+import { getRuesDataByNit } from "@/app/[company]/services/rues";
+import { siisApi, type Source } from "@/app/[company]/services/siis";
 import { formatNit } from "@/app/format-nit";
 import { dateFormatter } from "@/app/formatters";
 import { companiesRepository } from "@/app/repositories/companies";
@@ -16,8 +16,8 @@ import type { Metadata } from "next";
 import { unstable_cache } from "next/cache";
 import { permanentRedirect } from "next/navigation";
 import { type ReactNode } from "react";
-import { CompanyDetail } from "@/app/[company]/Components/CompanyDetail";
-import { EconomicActivity } from "@/app/[company]/Components/EconomicActivity";
+import { CompanyDetail } from "@/app/[company]/components/CompanyDetail";
+import { EconomicActivity } from "@/app/[company]/components/EconomicActivity";
 
 interface PageProps {
   params: Promise<{ company: string }>;
@@ -173,7 +173,7 @@ export default async function page({ params }: PageProps) {
         </div>
       </header>
       <section className="flex flex-col gap-2">
-        <dl className="flex flex-col gap-2 text-sm sm:text-base">
+        <dl className="flex flex-col gap-2">
           {companyDetails.map((detail) => {
             const value = getCompanyDetailValue(detail.key, companyData);
             if (!value) {

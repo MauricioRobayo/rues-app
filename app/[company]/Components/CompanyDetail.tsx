@@ -20,11 +20,13 @@ export function CompanyDetail({
         direction === "row" ? "sm:flex-row" : "gap-y-2",
       )}
     >
-      <dt className="shrink-0 text-sm text-slate-500 sm:text-base">
+      <dt className="shrink-0 text-slate-500">
         {label}
         <span className="max-sm:hidden">:</span>
       </dt>
-      <dd itemProp={itemProp}>{children}</dd>
+      <dd itemProp={itemProp} className="text-balance">
+        {children}
+      </dd>
     </div>
   );
 }
