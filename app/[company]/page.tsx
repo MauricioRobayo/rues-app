@@ -254,7 +254,32 @@ export default async function page({ params }: PageProps) {
         </Section>
         <Section>
           <Section.title>Establecimientos Comerciales</Section.title>
-          <div></div>
+          {companyData.establishments?.map((establishment) => {
+            return (
+              <details key={establishment.MATRICULA}>
+                <summary>{establishment.RAZON_SOCIAL}</summary>
+                <dl className="flex flex-col gap-2 p-4">
+                  {establishmentsDetails.map((detail) => {
+                    const value = establishment[detail.key];
+                    if (!value) {
+                      return null;
+                    }
+                    return (
+                      <CompanyDetail
+                        key={detail.label}
+                        label={detail.label}
+                        itemProp={detail.itemProp}
+                      >
+                        {detail.renderValue
+                          ? detail.renderValue(String(value))
+                          : value}
+                      </CompanyDetail>
+                    );
+                  })}
+                </dl>
+              </details>
+            );
+          })}
         </Section>
       </div>
     </article>

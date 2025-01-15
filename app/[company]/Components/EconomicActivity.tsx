@@ -13,11 +13,11 @@ export function EconomicActivity({
     );
   }
   return (
-    <CompanyDetail label="Actividad Económica" direction="column">
+    <CompanyDetail label="Actividad Económica">
       {economicActivities.length === 1 ? (
         <EconomicActivityItem item={economicActivities[0]} />
       ) : (
-        <ol className="list-decimal pl-8">
+        <ol className="flex list-decimal flex-col gap-2 pl-4">
           {economicActivities.map((economicActivity) => (
             <li key={economicActivity.code} className="">
               <EconomicActivityItem item={economicActivity} />
@@ -35,8 +35,8 @@ function EconomicActivityItem({
   item: { code: string; description: string };
 }) {
   return (
-    <div className="inline-flex flex-col">
-      {item.description}{" "}
+    <div className="inline-flex flex-col leading-tight">
+      {item.description}
       <code>
         <small className="text-slate-500">CIIU {item.code}</small>
       </code>
