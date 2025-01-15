@@ -1,16 +1,19 @@
 import { Badge } from "@/app/[company]/components/Badge";
+import { CompanyDetail } from "@/app/[company]/components/CompanyDetail";
+import { EconomicActivity } from "@/app/[company]/components/EconomicActivity";
+import { Section } from "@/app/[company]/components/Section";
 import {
   getCompanyRecordFromPathSegment,
   slugifyCompanyName,
 } from "@/app/[company]/getCompanyRecordFromPathSegment";
 import { getRuesDataByNit } from "@/app/[company]/services/rues";
 import { siisApi, type Source } from "@/app/[company]/services/siis";
+import type { chambers } from "@/app/db/schema";
 import { formatNit } from "@/app/format-nit";
 import { dateFormatter } from "@/app/formatters";
 import { companiesRepository } from "@/app/repositories/companies";
 import type {
   BusinessEstablishment,
-  BusinessEstablishmentsResponse,
   BusinessRecord,
   File,
 } from "@mauriciorobayo/rues-api";
@@ -21,10 +24,6 @@ import type { Metadata } from "next";
 import { unstable_cache } from "next/cache";
 import { permanentRedirect } from "next/navigation";
 import { type ReactNode } from "react";
-import { CompanyDetail } from "@/app/[company]/components/CompanyDetail";
-import { EconomicActivity } from "@/app/[company]/components/EconomicActivity";
-import type { chambers } from "@/app/db/schema";
-import { Section } from "@/app/[company]/components/Section";
 
 interface PageProps {
   params: Promise<{ company: string }>;
