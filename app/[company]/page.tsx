@@ -1,4 +1,4 @@
-import { Badge } from "@/app/[company]/Badge";
+import { Badge } from "@/app/[company]/Components/Badge";
 import {
   getCompanyRecordFromPathSegment,
   slugifyCompanyName,
@@ -16,7 +16,8 @@ import type { Metadata } from "next";
 import { unstable_cache } from "next/cache";
 import { permanentRedirect } from "next/navigation";
 import { type ReactNode } from "react";
-import { twJoin } from "tailwind-merge";
+import { CompanyDetail } from "@/app/[company]/Components/CompanyDetail";
+import { EconomicActivity } from "@/app/[company]/Components/EconomicActivity";
 
 interface PageProps {
   params: Promise<{ company: string }>;
@@ -40,7 +41,7 @@ const economicActivityKeys: { code: keyof File; description: keyof File }[] = [
   { code: "ciiu4", description: "desc_ciiu4" },
 ];
 
-const detailsMapping: DetailsMapping[] = [
+const companyDetails: DetailsMapping[] = [
   { key: "razon_social", label: "Razón social" },
   { key: "nit", label: "NIT" },
   { key: "dv", label: "DV" },
@@ -173,7 +174,7 @@ export default async function page({ params }: PageProps) {
       </header>
       <section className="flex flex-col gap-2">
         <dl className="flex flex-col gap-2 text-sm sm:text-base">
-          {detailsMapping.map((detail) => {
+          {companyDetails.map((detail) => {
             const value = getCompanyDetailValue(detail.key, companyData);
             if (!value) {
               return null;
@@ -228,31 +229,6 @@ function isDetailsKey(
   return key in (data?.details ?? {});
 }
 
-function CompanyDetail({
-  label,
-  itemProp,
-  children,
-  className,
-}: {
-  label: string;
-  itemProp?: string;
-  className?: string;
-  children: ReactNode;
-}) {
-  return (
-    <div
-      key={label}
-      className={twJoin("flex flex-col gap-x-1 sm:flex-row", className)}
-    >
-      <dt className="shrink-0 text-sm text-slate-500 sm:text-base">
-        {label}
-        <span className="max-sm:hidden">:</span>
-      </dt>
-      <dd itemProp={itemProp}>{children}</dd>
-    </div>
-  );
-}
-
 const getCompanyData = unstable_cache(async (nit) => {
   const [companyData, siis] = await Promise.all([
     getRuesDataByNit(nit),
@@ -263,45 +239,3 @@ const getCompanyData = unstable_cache(async (nit) => {
     siis,
   };
 });
-
-function EconomicActivity({
-  economicActivities,
-}: {
-  economicActivities: { code: string; description: string }[];
-}) {
-  if (economicActivities.length === 1) {
-    return (
-      <CompanyDetail label="Actividad Económica">
-        <EconomicActivityItem item={economicActivities[0]} />
-      </CompanyDetail>
-    );
-  }
-  return (
-    <CompanyDetail label="Actividad Económica" className="gap-2 sm:flex-col">
-      {economicActivities.length === 1 ? (
-        <EconomicActivityItem item={economicActivities[0]} />
-      ) : (
-        <ol className="list-decimal pl-8">
-          {economicActivities.map((economicActivity) => (
-            <li key={economicActivity.code} className="">
-              <EconomicActivityItem item={economicActivity} />
-            </li>
-          ))}
-        </ol>
-      )}
-    </CompanyDetail>
-  );
-}
-
-function EconomicActivityItem({
-  item,
-}: {
-  item: { code: string; description: string };
-}) {
-  return (
-    <>
-      <small className="text-slate-500">[CIIU {item.code}]</small>{" "}
-      {item.description}
-    </>
-  );
-}
