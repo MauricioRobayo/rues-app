@@ -28,58 +28,59 @@ export interface Hit {
 }
 
 export interface Source {
-  estado: string;
-  financieros: Financieros;
-  infoEmpresa: InfoEmpresa;
-  fechaEstado: Date;
-  nombreEmpresa: string;
-  actividadesEconomicas: string[];
-  geolocalizacion: Geolocalizacion;
-  fechaCorte: Date;
-  ciudad: string;
-  macroSector: string;
-  NIT: string;
-  departamento: string;
-  fechaConstitucion: Date;
+  // Only using this fields
   region: string;
+  ciudad: string;
+  departamento: string;
+  macroSector: string;
   sector: string;
-  puntoEntrada: string;
+  // estado: string;
+  // financieros: Financieros;
+  // infoEmpresa: InfoEmpresa;
+  // fechaEstado: Date;
+  // nombreEmpresa: string;
+  // actividadesEconomicas: string[];
+  // geolocalizacion: Geolocalizacion;
+  // fechaCorte: Date;
+  // NIT: string;
+  // fechaConstitucion: Date;
+  // puntoEntrada: string;
 }
 
-export interface Financieros {
-  ingresosEmpresa: number;
-  roeAnterior: number;
-  roaAnterior: number;
-  activos: number;
-  roa: number;
-  utilidades: number;
-  ros: number;
-  roe: number;
-  margen: number;
-}
+// export interface Financieros {
+//   ingresosEmpresa: number;
+//   roeAnterior: number;
+//   roaAnterior: number;
+//   activos: number;
+//   roa: number;
+//   utilidades: number;
+//   ros: number;
+//   roe: number;
+//   margen: number;
+// }
 
-export interface Geolocalizacion {
-  latitud: string;
-  longitud: string;
-  direccion: string;
-}
+// export interface Geolocalizacion {
+//   latitud: string;
+//   longitud: string;
+//   direccion: string;
+// }
 
-export interface InfoEmpresa {
-  corte: Date;
-  formulario: string;
-  num_radicado: string;
-  documentos_adicionales: any[];
-  NIT: string;
-  nombreEmpresa: string;
-  puntoEntrada: string;
-  codigoFormulario: string;
-}
+// export interface InfoEmpresa {
+//   corte: Date;
+//   formulario: string;
+//   num_radicado: string;
+//   documentos_adicionales: unknown[];
+//   NIT: string;
+//   nombreEmpresa: string;
+//   puntoEntrada: string;
+//   codigoFormulario: string;
+// }
 
 export interface Total {
   value: number;
   relation: string;
 }
-export async function siisApi(nit: number) {
+export async function siisApi(nit: number): Promise<Source | null> {
   const headers = new Headers();
   headers.append("Content-Type", "application/json");
 
@@ -98,7 +99,7 @@ export async function siisApi(nit: number) {
         },
       },
     ],
-    _source: ["*"],
+    _source: ["region", "ciudad", "departamento", "macroSector", "sector"],
   });
 
   const requestOptions = {
@@ -114,10 +115,10 @@ export async function siisApi(nit: number) {
 
   if (!response.ok) {
     console.error("Failed to fetch siis data. Status code:", response.status);
-    return {};
+    return null;
   }
 
   const data: SiisResponse = await response.json();
 
-  return data.hits.hits.at(0)?._source ?? {};
+  return data.hits.hits.at(0)?._source ?? null;
 }

@@ -2,9 +2,9 @@ import { chambersRepository } from "@/app/repositories/chambers";
 import { tokenRepository } from "@/app/repositories/tokens";
 import {
   RUES,
-  AdvancedSearchResponse,
-  type FileResponse,
+  type File,
   type BusinessEstablishmentsResponse,
+  type BusinessRecord,
 } from "@mauriciorobayo/rues-api";
 import { notFound } from "next/navigation";
 import { cache } from "react";
@@ -83,9 +83,9 @@ export const getRuesDataByNit = cache(async (nit: number) => {
     chamber?: NonNullable<
       Awaited<ReturnType<typeof chambersRepository.findByCode>>
     >;
-    details?: FileResponse["registros"];
+    details?: File;
     establishments?: BusinessEstablishmentsResponse["registros"];
-    rues: NonNullable<AdvancedSearchResponse["registros"]>[number];
+    rues: BusinessRecord;
   } = {
     rues: data,
   };

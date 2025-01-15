@@ -14,6 +14,15 @@ export const companiesRepository = {
     return total.at(0)?.count ?? 0;
   },
   findByNit(nit: number) {
-    return db.query.companies.findFirst({ where: eq(companies.nit, nit) });
+    return db.query.companies.findFirst({
+      where: eq(companies.nit, nit),
+      columns: { nit: true, businessName: true },
+    });
+  },
+  updateBusinessNameByNit(nit: number, businessName: string) {
+    return db
+      .update(companies)
+      .set({ businessName })
+      .where(eq(companies.nit, nit));
   },
 };

@@ -32,7 +32,7 @@ function isValidNit(nit: number) {
   return !Number.isNaN(nit) && String(nit).length >= 9;
 }
 
-function slugifyCompanyName(companyName: string) {
+export function slugifyCompanyName(companyName: string) {
   return slugify(companyName, {
     customReplacements: [[".", ""]],
   });

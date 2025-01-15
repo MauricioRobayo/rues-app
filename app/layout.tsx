@@ -22,7 +22,7 @@ export default function RootLayout({
     >
       <body>
         <div className="bg-brand/5 text-brand">
-          <div className="mx-auto flex max-w-2xl items-center justify-between px-4 py-2 md:px-0">
+          <div className="mx-auto flex max-w-4xl items-center justify-between px-4 py-2 md:px-0">
             <div>
               <Link href="/">
                 <Logo />
@@ -31,7 +31,7 @@ export default function RootLayout({
             <Nit className="font-bold tracking-wide" />
           </div>
         </div>
-        <main className="mx-auto max-w-2xl px-4 md:px-0">{children}</main>
+        <main className="mx-auto max-w-4xl px-4 md:px-0">{children}</main>
       </body>
     </html>
   );
