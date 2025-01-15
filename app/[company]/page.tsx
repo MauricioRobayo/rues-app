@@ -1,10 +1,12 @@
 import { Badge } from "@/app/[company]/Badge";
 import { getCompanyRecordFromPathSegment } from "@/app/[company]/getCompanyRecordFromPathSegment";
 import { getRuesDataByNit } from "@/app/[company]/rues";
+import { siisApi } from "@/app/[company]/siis";
 import { formatNit } from "@/app/format-nit";
 import { dateFormatter } from "@/app/formatters";
 import type {
-  AdvancedSearchResponse,
+  File,
+  BusinessRecord,
   FileResponse,
 } from "@mauriciorobayo/rues-api";
 import type { Metadata } from "next";
@@ -16,10 +18,10 @@ interface PageProps {
 
 export const dynamic = "force-static";
 
+type CompanyDetailKey = keyof BusinessRecord | keyof File;
+
 type DetailsMapping = {
-  key:
-    | keyof NonNullable<AdvancedSearchResponse["registros"]>[number]
-    | keyof FileResponse["registros"];
+  key: CompanyDetailKey;
   label: string;
   renderValue?: (value: string) => ReactNode;
   itemProp?: string;
@@ -96,10 +98,13 @@ export default async function page({ params }: PageProps) {
   const { company } = await params;
   const companyRecord = await getCompanyRecordFromPathSegment(company);
   const formattedNit = formatNit(companyRecord.nit);
-  const companyData = await getRuesDataByNit(companyRecord.nit);
+  const [companyData, siisData] = await Promise.all([
+    getRuesDataByNit(companyRecord.nit),
+    siisApi(companyRecord.nit),
+  ]);
   const status = companyData?.details?.estado;
 
-  console.log(companyData);
+  console.log(companyData, siisData);
 
   return (
     <article itemScope itemType="https://schema.org/Organization">
@@ -124,13 +129,7 @@ export default async function page({ params }: PageProps) {
       <section>
         <dl className="flex flex-col gap-2 text-sm sm:text-base">
           {detailsMapping.map((detail) => {
-            const value =
-              // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-              // @ts-ignore
-              companyData?.rues?.[detail.key] ||
-              // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-              // @ts-ignore
-              companyData.details[detail.key];
+            const value = getCompanyDetailValue(detail.key, companyData);
             if (!value) {
               return null;
             }
@@ -154,6 +153,23 @@ function renderDateValue(value: string) {
   return dateFormatter.format(new Date(formattedDate));
 }
 
+function getCompanyDetailValue(
+  key: CompanyDetailKey,
+  data: Awaited<ReturnType<typeof getRuesDataByNit>>,
+) {
+  if (isRuesKey(key, data)) {
+    return data.rues[key];
+  }
+  return data.details?.[key];
+}
+
+function isRuesKey(
+  key: CompanyDetailKey,
+  data: Awaited<ReturnType<typeof getRuesDataByNit>>,
+): key is keyof BusinessRecord {
+  return key in data.rues;
+}
+
 function CompanyDetail({
   label,
   itemProp,
@@ -164,8 +180,11 @@ function CompanyDetail({
   value: ReactNode;
 }) {
   return (
-    <div key={label} className="flex flex-col">
-      <dt className="shrink-0 text-sm text-slate-500">{label}</dt>
+    <div key={label} className="flex flex-col gap-x-1 sm:flex-row">
+      <dt className="shrink-0 text-sm text-slate-500 sm:text-base">
+        {label}
+        <span className="max-sm:hidden">:</span>
+      </dt>
       <dd itemProp={itemProp}>{value}</dd>
     </div>
   );
