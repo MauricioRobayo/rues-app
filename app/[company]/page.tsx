@@ -15,6 +15,8 @@ import { ExternalLink } from "lucide-react";
 import { companiesRepository } from "@/app/repositories/companies";
 import { permanentRedirect } from "next/navigation";
 import { twJoin } from "tailwind-merge";
+import { formatDistanceStrict, formatDistanceToNowStrict } from "date-fns";
+import { es } from "date-fns/locale";
 
 interface PageProps {
   params: Promise<{ company: string }>;
@@ -51,6 +53,16 @@ const detailsMapping: DetailsMapping[] = [
     key: "fecha_matricula",
     label: "Fecha de constitución",
     renderValue: renderDateValue,
+  },
+  {
+    key: "fecha_matricula",
+    label: "Antigüedad",
+    renderValue(value) {
+      const formattedDate = `${value.slice(0, 4)}-${value.slice(4, 6)}-${value.slice(6, 8)}`;
+      return formatDistanceToNowStrict(new Date(formattedDate), {
+        locale: es,
+      });
+    },
   },
   {
     key: "fecha_renovacion",
@@ -269,12 +281,9 @@ function EconomicActivity({
       {economicActivities.length === 1 ? (
         <EconomicActivityItem item={economicActivities[0]} />
       ) : (
-        <ol className="list-decimal">
+        <ol className="list-decimal pl-8">
           {economicActivities.map((economicActivity) => (
-            <li
-              key={economicActivity.code}
-              className="list-inside list-decimal pl-4"
-            >
+            <li key={economicActivity.code} className="">
               <EconomicActivityItem item={economicActivity} />
             </li>
           ))}
@@ -290,9 +299,9 @@ function EconomicActivityItem({
   item: { code: string; description: string };
 }) {
   return (
-    <span className="uppercase">
-      {item.description}{" "}
-      <small className="text-slate-500">[CIIU {item.code}]</small>
-    </span>
+    <>
+      <small className="text-slate-500">[CIIU {item.code}]</small>{" "}
+      {item.description}
+    </>
   );
 }
