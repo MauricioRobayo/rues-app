@@ -7,16 +7,16 @@ import { getRuesDataByNit } from "@/app/[company]/rues";
 import { siisApi, type Source } from "@/app/[company]/siis";
 import { formatNit } from "@/app/format-nit";
 import { dateFormatter } from "@/app/formatters";
-import type { File, BusinessRecord } from "@mauriciorobayo/rues-api";
+import { companiesRepository } from "@/app/repositories/companies";
+import type { BusinessRecord, File } from "@mauriciorobayo/rues-api";
+import { formatDistanceToNowStrict } from "date-fns";
+import { es } from "date-fns/locale";
+import { ExternalLink } from "lucide-react";
 import type { Metadata } from "next";
 import { unstable_cache } from "next/cache";
-import { type ReactNode } from "react";
-import { ExternalLink } from "lucide-react";
-import { companiesRepository } from "@/app/repositories/companies";
 import { permanentRedirect } from "next/navigation";
+import { type ReactNode } from "react";
 import { twJoin } from "tailwind-merge";
-import { formatDistanceStrict, formatDistanceToNowStrict } from "date-fns";
-import { es } from "date-fns/locale";
 
 interface PageProps {
   params: Promise<{ company: string }>;
