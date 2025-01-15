@@ -4,11 +4,7 @@ import { getRuesDataByNit } from "@/app/[company]/rues";
 import { siisApi } from "@/app/[company]/siis";
 import { formatNit } from "@/app/format-nit";
 import { dateFormatter } from "@/app/formatters";
-import type {
-  File,
-  BusinessRecord,
-  FileResponse,
-} from "@mauriciorobayo/rues-api";
+import type { File, BusinessRecord } from "@mauriciorobayo/rues-api";
 import type { Metadata } from "next";
 import { type ReactNode } from "react";
 
@@ -127,6 +123,7 @@ export default async function page({ params }: PageProps) {
         </div>
       </header>
       <section>
+        <h3>Detalles de la empresa</h3>
         <dl className="flex flex-col gap-2 text-sm sm:text-base">
           {detailsMapping.map((detail) => {
             const value = getCompanyDetailValue(detail.key, companyData);
@@ -144,6 +141,7 @@ export default async function page({ params }: PageProps) {
           })}
         </dl>
       </section>
+      <section></section>
     </article>
   );
 }
