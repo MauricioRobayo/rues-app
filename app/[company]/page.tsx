@@ -8,7 +8,12 @@ import { siisApi, type Source } from "@/app/[company]/services/siis";
 import { formatNit } from "@/app/format-nit";
 import { dateFormatter } from "@/app/formatters";
 import { companiesRepository } from "@/app/repositories/companies";
-import type { BusinessRecord, File } from "@mauriciorobayo/rues-api";
+import type {
+  BusinessEstablishment,
+  BusinessEstablishmentsResponse,
+  BusinessRecord,
+  File,
+} from "@mauriciorobayo/rues-api";
 import { formatDistanceToNowStrict } from "date-fns";
 import { es } from "date-fns/locale";
 import { ExternalLink } from "lucide-react";
@@ -18,6 +23,8 @@ import { permanentRedirect } from "next/navigation";
 import { type ReactNode } from "react";
 import { CompanyDetail } from "@/app/[company]/components/CompanyDetail";
 import { EconomicActivity } from "@/app/[company]/components/EconomicActivity";
+import type { chambers } from "@/app/db/schema";
+import { Section } from "@/app/[company]/components/Section";
 
 interface PageProps {
   params: Promise<{ company: string }>;
@@ -27,8 +34,8 @@ export const dynamic = "force-static";
 
 type CompanyDetailKey = keyof BusinessRecord | keyof File | keyof Source;
 
-type DetailsMapping = {
-  key: CompanyDetailKey;
+type DetailsMapping<T> = {
+  key: T;
   label: string;
   renderValue?: (value: string) => ReactNode;
   itemProp?: string;
@@ -41,7 +48,55 @@ const economicActivityKeys: { code: keyof File; description: keyof File }[] = [
   { code: "ciiu4", description: "desc_ciiu4" },
 ];
 
-const companyDetails: DetailsMapping[] = [
+type ChamberDetailKey =
+  | keyof Omit<typeof chambers.$inferSelect, "id" | "code">
+  | keyof File;
+const chamberDetails: DetailsMapping<ChamberDetailKey>[] = [
+  { key: "name", label: "Nombre" },
+  { key: "address", label: "Dirección" },
+  { key: "city", label: "Ciudad" },
+  { key: "state", label: "Departamento" },
+  {
+    key: "url_venta_certificados",
+    label: "Certificado de tradición",
+    renderValue(value: string) {
+      return (
+        <a
+          href={value}
+          target="_blank"
+          className="flex items-center gap-1 text-blue-600 underline"
+        >
+          Solicitar Certificado de Tradición
+          <ExternalLink size={14} />
+        </a>
+      );
+    },
+  },
+];
+
+type EstablishmentKeys = keyof BusinessEstablishment;
+const establishmentsDetails: DetailsMapping<EstablishmentKeys>[] = [
+  { key: "RAZON_SOCIAL", label: "Razón social" },
+  { key: "SIGLA", label: "Sigla" },
+  { key: "MATRICULA", label: "Matrícula" },
+  { key: "DESC_TIPO_SOCIEDAD", label: "Tipo de sociedad" },
+  { key: "DESC_ORGANIZACION_JURIDICA", label: "Organización jurídica" },
+  { key: "CATEGORIA_MATRICULA", label: "Categoría" },
+  { key: "DESC_ESTADO_MATRICULA", label: "Estado" },
+  {
+    key: "FECHA_MATRICULA",
+    label: "Fecha de constitución",
+    renderValue: renderDateValue,
+  },
+  {
+    key: "FECHA_RENOVACION",
+    label: "Fecha de renovación",
+    renderValue: renderDateValue,
+  },
+  { key: "ULTIMO_ANO_RENOVADO", label: "Último año renovado" },
+];
+
+const companyDetails: DetailsMapping<CompanyDetailKey>[] = [
   { key: "razon_social", label: "Razón social" },
   { key: "nit", label: "NIT" },
   { key: "dv", label: "DV" },
@@ -86,23 +141,6 @@ const companyDetails: DetailsMapping[] = [
     label: "Indicador emprendimiento social",
   },
   { key: "tipo_sociedad", label: "Tipo de sociedad" },
-  { key: "nom_camara", label: "Cámara de comercio" },
-  {
-    key: "url_venta_certificados",
-    label: "Certificado de tradición",
-    renderValue(value: string) {
-      return (
-        <a
-          href={value}
-          target="_blank"
-          className="flex items-center gap-1 text-blue-600 underline"
-        >
-          Solicitar Certificado de Tradición
-          <ExternalLink size={14} />
-        </a>
-      );
-    },
-  },
   { key: "region", label: "Región" },
   { key: "ciudad", label: "Ciudad" },
   { key: "departamento", label: "Departamento" },
@@ -129,9 +167,9 @@ export default async function page({ params }: PageProps) {
   const companyData = await getCompanyData(companyRecord.nit);
   const status = companyData?.details?.estado;
   const companyName = companyData.rues.razon_social;
-
+  console.log(">>>", companyData.establishments);
   if (companyRecord.businessName !== companyName) {
-    console.log("Razon Social changed for NIT:", companyRecord.nit);
+    console.warn("Razon Social changed for NIT:", companyRecord.nit);
     await companiesRepository.updateBusinessNameByNit(
       companyRecord.nit,
       companyName,
@@ -172,27 +210,53 @@ export default async function page({ params }: PageProps) {
           )}
         </div>
       </header>
-      <section className="flex flex-col gap-2">
-        <dl className="flex flex-col gap-2">
-          {companyDetails.map((detail) => {
-            const value = getCompanyDetailValue(detail.key, companyData);
-            if (!value) {
-              return null;
-            }
-            return (
-              <CompanyDetail
-                key={detail.label}
-                label={detail.label}
-                itemProp={detail.itemProp}
-              >
-                {detail.renderValue ? detail.renderValue(value) : value}
-              </CompanyDetail>
-            );
-          })}
-        </dl>
-        <EconomicActivity economicActivities={economicActivities} />
-      </section>
-      <section></section>
+      <div className="grid grid-flow-row-dense grid-cols-1 gap-4 sm:grid-cols-2">
+        <Section id="detalles-de-la-empresa">
+          <Section.title>Detalles de la Empresa</Section.title>
+          <dl className="flex flex-col gap-2">
+            {companyDetails.map((detail) => {
+              const value = getCompanyDetailValue(detail.key, companyData);
+              if (!value) {
+                return null;
+              }
+              return (
+                <CompanyDetail
+                  key={detail.label}
+                  label={detail.label}
+                  itemProp={detail.itemProp}
+                >
+                  {detail.renderValue ? detail.renderValue(value) : value}
+                </CompanyDetail>
+              );
+            })}
+          </dl>
+          <EconomicActivity economicActivities={economicActivities} />
+        </Section>
+        <Section id="camara-de-comercio">
+          <Section.title>Cámara de Comercio</Section.title>
+          <dl className="flex flex-col gap-2">
+            {chamberDetails.map((detail) => {
+              const value = getChamberDetailValue(detail.key, companyData);
+              if (!value) {
+                return null;
+              }
+              return (
+                <CompanyDetail
+                  key={detail.label}
+                  label={detail.label}
+                  itemProp={detail.itemProp}
+                >
+                  {detail.renderValue ? detail.renderValue(value) : value}
+                </CompanyDetail>
+              );
+            })}
+          </dl>
+        </Section>
+        <Section>
+          <Section.title>Establecimientos Comerciales</Section.title>
+          <div></div>
+        </Section>
+      </div>
     </article>
   );
 }
@@ -215,6 +279,16 @@ function getCompanyDetailValue(
   return data.siis?.[key];
 }
 
+function getChamberDetailValue(
+  key: ChamberDetailKey,
+  data: Awaited<ReturnType<typeof getCompanyData>>,
+) {
+  if (isDetailsKey(key, data)) {
+    return data.details?.[key];
+  }
+  return data.chamber?.[key];
+}
+
 function isRuesKey(
   key: CompanyDetailKey,
   data: Awaited<ReturnType<typeof getCompanyData>>,
@@ -223,7 +297,7 @@ function isRuesKey(
 }
 
 function isDetailsKey(
-  key: CompanyDetailKey,
+  key: CompanyDetailKey | ChamberDetailKey,
   data: Awaited<ReturnType<typeof getCompanyData>>,
 ): key is keyof File {
   return key in (data?.details ?? {});
