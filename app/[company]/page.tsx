@@ -357,14 +357,18 @@ export const getCompanyData = unstable_cache(async (company: string) => {
     notFound();
   }
 
-  const companySlug = slugifyCompanyName(companyData.rues.razon_social);
+  const companyName = companyData.rues.razon_social;
+  const companySlug = slugifyCompanyName(companyName);
 
   if (slug !== companySlug) {
     console.warn("Company name changed for NIT:", nit);
-    await companiesRepository.updateBusinessNameByNit(nit, companySlug);
+    await companiesRepository.updateByNit(nit, {
+      businessName: companyName,
+    });
     permanentRedirect(`${companySlug}-${nit}`);
   }
 
+  // TODO: properly map all the data and return the massaged data
   return {
     ...companyData,
     siis,

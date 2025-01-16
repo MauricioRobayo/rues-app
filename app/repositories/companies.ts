@@ -19,10 +19,7 @@ export const companiesRepository = {
       columns: { nit: true, businessName: true },
     });
   },
-  updateBusinessNameByNit(nit: number, businessName: string) {
-    return db
-      .update(companies)
-      .set({ businessName })
-      .where(eq(companies.nit, nit));
+  updateByNit(nit: number, data: Partial<typeof companies.$inferInsert>) {
+    return db.update(companies).set(data).where(eq(companies.nit, nit));
   },
 };
