@@ -1,10 +1,11 @@
 import { companiesRepository } from "@/app/repositories/companies";
 import slugify from "@sindresorhus/slugify";
+import { unstable_cache } from "next/cache";
 import { notFound, permanentRedirect } from "next/navigation";
 import { cache } from "react";
 
-export const getCompanyRecordFromPathSegment = cache(
-  async (pathSegment: string) => {
+export const getCompanyRecordFromPathSegment = unstable_cache(
+  cache(async (pathSegment: string) => {
     const { nit, slug } = parseCompanyPathSegment(pathSegment);
     if (!isValidNit(nit)) {
       notFound();
@@ -18,7 +19,7 @@ export const getCompanyRecordFromPathSegment = cache(
       permanentRedirect(`/${companyNameSlug}-${nit}`);
     }
     return companyRecord;
-  },
+  }),
 );
 
 function parseCompanyPathSegment(pathSegment: string) {

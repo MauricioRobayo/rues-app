@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import Link from "next/link";
-import { Nit } from "@/app/Nit";
+import { Nit } from "@/app/components/Nit";
 import { montserrat, roboto_flex } from "@/app/fonts";
-import { Logo } from "@/app/Logo";
+import { Logo } from "@/app/components/Logo";
 import { Email } from "react-obfuscate-email";
 import type { ComponentProps } from "react";
 import { twMerge } from "tailwind-merge";
