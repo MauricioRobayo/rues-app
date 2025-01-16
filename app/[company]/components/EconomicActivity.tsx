@@ -1,4 +1,4 @@
-import { CompanyDetail } from "@/app/[company]/components2/CompanyDetail";
+import { CompanyDetail } from "@/app/[company]/components/CompanyDetail";
 
 export function EconomicActivity({
   economicActivities,
