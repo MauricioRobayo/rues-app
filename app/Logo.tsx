@@ -1,7 +1,7 @@
 export function Logo() {
   return (
     <div className="font-brand">
-      <span className="font-light">RUT</span>
+      <span className="text-sm font-light">registro</span>
       <span className="font-bold">NIT</span>
     </div>
   );
