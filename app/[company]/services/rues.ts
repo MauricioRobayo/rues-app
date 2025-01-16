@@ -2,11 +2,10 @@ import { chambersRepository } from "@/app/repositories/chambers";
 import { tokenRepository } from "@/app/repositories/tokens";
 import {
   RUES,
-  type File,
   type BusinessEstablishmentsResponse,
   type BusinessRecord,
+  type File,
 } from "@mauriciorobayo/rues-api";
-import { notFound } from "next/navigation";
 import { cache } from "react";
 
 const rues = new RUES();
@@ -66,7 +65,7 @@ async function advancedSearch(nit: number) {
 export const getRuesDataByNit = cache(async (nit: number) => {
   const advancedSearchResponse = await advancedSearch(nit);
   if (!advancedSearchResponse) {
-    notFound();
+    return null;
   }
   const { data, token } = advancedSearchResponse;
   const [fileResponse, businessEstablishmentsResponse, chamber] =
