@@ -372,9 +372,9 @@ export const getCompanyData = unstable_cache(
     }
 
     after(() => {
-      companiesRepository.updateByNit(nit, {
-        businessName: companyData.rues.razon_social,
-        origin: "request",
+      companiesRepository.upsert({
+        nit,
+        name: companyData.rues.razon_social,
       });
     });
 

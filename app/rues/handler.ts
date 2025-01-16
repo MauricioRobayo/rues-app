@@ -46,7 +46,7 @@ export async function handler({
           ...mapCompanyRecordToCompanyModel(company),
           ruesSyncId: syncId,
         }));
-        await companiesRepository.insertMany(companies);
+        await companiesRepository.upsertMany(companies);
       },
       debug,
     });

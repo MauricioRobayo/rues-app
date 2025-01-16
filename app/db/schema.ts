@@ -13,7 +13,7 @@ export const companies = sqliteTable(
   {
     id: int().primaryKey({ autoIncrement: true }),
     nit: int().unique().notNull(),
-    businessName: text().notNull(),
+    name: text().notNull(),
     ruesSyncId: int().references(() => ruesSync.id),
     timestamp: int({ mode: "timestamp" }).default(sql`(unixepoch())`),
   },
