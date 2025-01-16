@@ -15,7 +15,7 @@ export const getCompanyRecordFromPathSegment = unstable_cache(
     if (!companyRecord) {
       notFound();
     }
-    const companyNameSlug = slugifyCompanyName(companyRecord.businessName);
+    const companyNameSlug = slugifyCompanyName(companyRecord.name);
     if (slug !== companyNameSlug) {
       permanentRedirect(`/${companyNameSlug}-${nit}`);
     }
