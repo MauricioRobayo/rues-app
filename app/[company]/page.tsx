@@ -1,8 +1,8 @@
 import { Container } from "@/app/(search)/components/Container";
-import { Badge } from "@/app/[company]/components/Badge";
-import { CompanyDetail } from "@/app/[company]/components/CompanyDetail";
-import { EconomicActivity } from "@/app/[company]/components/EconomicActivity";
-import { Section } from "@/app/[company]/components/Section";
+import { Badge } from "@/app/[company]/components2/Badge";
+import { CompanyDetail } from "@/app/[company]/components2/CompanyDetail";
+import { EconomicActivity } from "@/app/[company]/components2/EconomicActivity";
+import { Section } from "@/app/[company]/components2/Section";
 import { getCompanyRecordFromPathSegment } from "@/app/[company]/getCompanyRecordFromPathSegment";
 import { getRuesDataByNit } from "@/app/[company]/services/rues";
 import { siisApi, type Source } from "@/app/[company]/services/siis";

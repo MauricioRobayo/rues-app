@@ -1,6 +1,6 @@
 "use client";
 
-import { Badge } from "@/app/[company]/components/Badge";
+import { Badge } from "@/app/[company]/components2/Badge";
 import { formatNit } from "@/app/format-nit";
 import { slugifyCompanyName } from "@/app/utils/slugify-company-name";
 import type { BusinessRecord } from "@mauriciorobayo/rues-api";
