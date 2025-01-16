@@ -34,11 +34,11 @@ export default function RootLayout({
             <Nit className="font-bold tracking-wide" />
           </Container>
         </header>
-        <main className="mx-auto max-w-4xl flex-grow px-4 md:px-0">
+        <main className="mx-auto max-w-4xl flex-grow px-4 py-8 md:px-0 md:py-16">
           {children}
         </main>
         <footer className="bg-brand text-white">
-          <Container className="py-16 text-center">
+          <Container className="py-8 text-center">
             <Email email="info@rnit.com" />
           </Container>
         </footer>
@@ -50,8 +50,8 @@ export default function RootLayout({
 function Container({ className, ...props }: ComponentProps<"div">) {
   return (
     <div
-      {...props}
       className={twMerge("mx-auto max-w-4xl px-4 sm:px-0", className)}
+      {...props}
     />
   );
 }

@@ -88,6 +88,16 @@ const establishmentsDetails: DetailsMapping<EstablishmentKeys>[] = [
     renderValue: renderDateValue,
   },
   {
+    key: "FECHA_MATRICULA",
+    label: "Antigüedad",
+    renderValue(value) {
+      const formattedDate = `${value.slice(0, 4)}-${value.slice(4, 6)}-${value.slice(6, 8)}`;
+      return formatDistanceToNowStrict(new Date(formattedDate), {
+        locale: es,
+      });
+    },
+  },
+  {
     key: "FECHA_RENOVACION",
     label: "Fecha de renovación",
     renderValue: renderDateValue,
@@ -166,7 +176,6 @@ export default async function page({ params }: PageProps) {
   const companyData = await getCompanyData(companyRecord.nit);
   const status = companyData?.details?.estado;
   const companyName = companyData.rues.razon_social;
-  console.log(">>>", companyData.establishments);
   if (companyRecord.businessName !== companyName) {
     console.warn("Razon Social changed for NIT:", companyRecord.nit);
     await companiesRepository.updateBusinessNameByNit(
@@ -191,7 +200,7 @@ export default async function page({ params }: PageProps) {
 
   return (
     <article itemScope itemType="https://schema.org/Organization">
-      <header className="flex flex-col gap-0 py-8 sm:gap-2">
+      <header className="flex flex-col gap-0 pb-8 sm:gap-2">
         <h1
           itemProp="name"
           className="text-balance text-xl font-semibold text-brand sm:text-2xl"
@@ -209,7 +218,7 @@ export default async function page({ params }: PageProps) {
           )}
         </div>
       </header>
-      <div className="grid grid-flow-row-dense grid-cols-1 gap-4 sm:grid-cols-2">
+      <div className="grid grid-flow-row-dense grid-cols-1 gap-6 sm:grid-cols-2">
         <Section id="detalles-de-la-empresa">
           <Section.title>Detalles de la Empresa</Section.title>
           <dl className="flex flex-col gap-2">
@@ -231,55 +240,59 @@ export default async function page({ params }: PageProps) {
           </dl>
           <EconomicActivity economicActivities={economicActivities} />
         </Section>
-        <Section id="camara-de-comercio">
-          <Section.title>Cámara de Comercio</Section.title>
-          <dl className="flex flex-col gap-2">
-            {chamberDetails.map((detail) => {
-              const value = getChamberDetailValue(detail.key, companyData);
-              if (!value) {
-                return null;
-              }
-              return (
-                <CompanyDetail
-                  key={detail.label}
-                  label={detail.label}
-                  itemProp={detail.itemProp}
-                >
-                  {detail.renderValue ? detail.renderValue(value) : value}
-                </CompanyDetail>
-              );
-            })}
-          </dl>
-        </Section>
-        <Section>
-          <Section.title>Establecimientos Comerciales</Section.title>
-          {companyData.establishments?.map((establishment) => {
-            return (
-              <details key={establishment.MATRICULA}>
-                <summary>{establishment.RAZON_SOCIAL}</summary>
-                <dl className="flex flex-col gap-2 p-4">
-                  {establishmentsDetails.map((detail) => {
-                    const value = establishment[detail.key];
-                    if (!value) {
-                      return null;
-                    }
-                    return (
-                      <CompanyDetail
-                        key={detail.label}
-                        label={detail.label}
-                        itemProp={detail.itemProp}
-                      >
-                        {detail.renderValue
-                          ? detail.renderValue(String(value))
-                          : value}
-                      </CompanyDetail>
-                    );
-                  })}
-                </dl>
-              </details>
-            );
-          })}
-        </Section>
+        <div className="contents flex-col sm:flex sm:gap-6">
+          <Section id="camara-de-comercio">
+            <Section.title>Cámara de Comercio</Section.title>
+            <dl className="flex flex-col gap-2">
+              {chamberDetails.map((detail) => {
+                const value = getChamberDetailValue(detail.key, companyData);
+                if (!value) {
+                  return null;
+                }
+                return (
+                  <CompanyDetail
+                    key={detail.label}
+                    label={detail.label}
+                    itemProp={detail.itemProp}
+                  >
+                    {detail.renderValue ? detail.renderValue(value) : value}
+                  </CompanyDetail>
+                );
+              })}
+            </dl>
+          </Section>
+          {(companyData.establishments ?? []).length > 0 && (
+            <Section id="establecimientos-comerciales">
+              <Section.title>Establecimientos Comerciales</Section.title>
+              {companyData.establishments?.map((establishment) => {
+                return (
+                  <details key={establishment.MATRICULA}>
+                    <summary>{establishment.RAZON_SOCIAL}</summary>
+                    <dl className="flex flex-col gap-2 p-4">
+                      {establishmentsDetails.map((detail) => {
+                        const value = establishment[detail.key];
+                        if (!value) {
+                          return null;
+                        }
+                        return (
+                          <CompanyDetail
+                            key={detail.label}
+                            label={detail.label}
+                            itemProp={detail.itemProp}
+                          >
+                            {detail.renderValue
+                              ? detail.renderValue(String(value))
+                              : value}
+                          </CompanyDetail>
+                        );
+                      })}
+                    </dl>
+                  </details>
+                );
+              })}
+            </Section>
+          )}
+        </div>
       </div>
     </article>
   );

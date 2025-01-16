@@ -1,23 +1,14 @@
 import type { ComponentProps } from "react";
+import { twMerge } from "tailwind-merge";
 
-export function Section({
-  children,
-  ...props
-}: Omit<ComponentProps<"section">, "className">) {
+export function Section({ className, ...props }: ComponentProps<"section">) {
   return (
-    <section {...props} className="flex flex-col gap-4">
-      {children}
-    </section>
+    <section className={twMerge("flex flex-col gap-4", className)} {...props} />
   );
 }
-function Title({
-  children,
-  ...props
-}: Omit<ComponentProps<"h3">, "className">) {
+function Title({ className, ...props }: ComponentProps<"h3">) {
   return (
-    <h3 {...props} className="text-lg font-semibold">
-      {children}
-    </h3>
+    <h3 className={twMerge("text-lg font-semibold", className)} {...props} />
   );
 }
 
