@@ -50,13 +50,10 @@ export async function handler({
       },
       debug,
     });
-    const totalRecordsInserted =
-      await companiesRepository.getTotalRecordsBySyncId(syncId);
     await ruesSyncRepository.update(syncId, {
       ...ruesSyncData,
       endedAtMs: new Date(),
       status: "success",
-      totalRecordsInserted,
     });
     console.log("RUES sync finished successfully:", syncId);
   } catch (err) {
