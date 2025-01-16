@@ -37,7 +37,6 @@ export const ruesSync = sqliteTable("rues_sync", {
   syncStartDate: text({ length: 10 }),
   syncEndDate: text({ length: 10 }),
   totalRecords: int(),
-  totalRecordsInserted: int(),
   syncFileUrl: text(),
   errorMessage: text(),
 });
