@@ -6,7 +6,6 @@ import {
   type BusinessRecord,
   type File,
 } from "@mauriciorobayo/rues-api";
-import { cache } from "react";
 
 const rues = new RUES();
 
@@ -62,7 +61,7 @@ async function advancedSearch(nit: number) {
   return null;
 }
 
-export const getRuesDataByNit = cache(async (nit: number) => {
+export async function getRuesDataByNit(nit: number) {
   const advancedSearchResponse = await advancedSearch(nit);
   if (!advancedSearchResponse) {
     return null;
@@ -102,4 +101,4 @@ export const getRuesDataByNit = cache(async (nit: number) => {
   }
 
   return result;
-});
+}
