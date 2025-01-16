@@ -370,18 +370,14 @@ const getCompanyData = unstable_cache(
   }),
 );
 
-// This function is unintentionally not
-// cached so we can handle logic based
-// on the segmentPath which can be different
-// given the same nit:
-// rnit.co/930123456
-// rnit.co/razon-social-930123456
-// rnit.co/razon-social-cambio-930123456
-// all of the above should trigger this
-// uncached logic to do proper redirects
-// Get DO cache fetching the data based on the
-// NIT, so we avoid doing requests to the APIs
-// given the same NIT if we already got the data
+// This function is unintentionally not cached so we can handle logic based
+// on the segmentPath which can be different given the same nit:
+//   - rnit.co/930123456
+//   - rnit.co/razon-social-930123456
+//   - rnit.co/razon-social-cambio-930123456
+// all of the above should trigger this uncached logic to do proper redirects
+// Get DO cache fetching the data based on the NIT, so we avoid doing requests
+// to the APIs given the same NIT if we already got the data.
 async function getPageData(company: string) {
   const { nit, slug } = parseCompanyPathSegment(company);
 
@@ -389,6 +385,8 @@ async function getPageData(company: string) {
     notFound();
   }
 
+  // Cache at the NIT level to avoid multiple path segments with same NIT
+  // triggering multiple duplicated API calls
   const companyData = await getCompanyData(nit);
 
   if (!companyData) {
