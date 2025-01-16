@@ -2,16 +2,14 @@ import { Badge } from "@/app/[company]/components/Badge";
 import { CompanyDetail } from "@/app/[company]/components/CompanyDetail";
 import { EconomicActivity } from "@/app/[company]/components/EconomicActivity";
 import { Section } from "@/app/[company]/components/Section";
-import {
-  getCompanyRecordFromPathSegment,
-  slugifyCompanyName,
-} from "@/app/[company]/getCompanyRecordFromPathSegment";
+import { getCompanyRecordFromPathSegment } from "@/app/[company]/getCompanyRecordFromPathSegment";
 import { getRuesDataByNit } from "@/app/[company]/services/rues";
 import { siisApi, type Source } from "@/app/[company]/services/siis";
 import type { chambers } from "@/app/db/schema";
 import { formatNit } from "@/app/format-nit";
 import { dateFormatter } from "@/app/formatters";
 import { companiesRepository } from "@/app/repositories/companies";
+import { slugifyCompanyName } from "@/app/utils/slugify-company-name";
 import type {
   BusinessEstablishment,
   BusinessRecord,

@@ -1,5 +1,6 @@
 import { companiesRepository } from "@/app/repositories/companies";
-import slugify from "@sindresorhus/slugify";
+import { isValidNit } from "@/app/utils/is-valid-nit";
+import { slugifyCompanyName } from "@/app/utils/slugify-company-name";
 import { unstable_cache } from "next/cache";
 import { notFound, permanentRedirect } from "next/navigation";
 import { cache } from "react";
@@ -27,14 +28,4 @@ function parseCompanyPathSegment(pathSegment: string) {
     nit: Number(pathSegment.replace(/.*-/g, "")),
     slug: pathSegment.slice(0, pathSegment.lastIndexOf("-")),
   } as const;
-}
-
-function isValidNit(nit: number) {
-  return !Number.isNaN(nit) && String(nit).length >= 9;
-}
-
-export function slugifyCompanyName(companyName: string) {
-  return slugify(companyName, {
-    customReplacements: [[".", ""]],
-  });
 }
