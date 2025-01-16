@@ -17,7 +17,7 @@ export async function search(companyName: string) {
   if (response.status === "error") {
     return null;
   }
-  return (response.data.registros ?? []).filter((registro) =>
-    Boolean(Number(registro.nit)),
-  );
+  return (response.data.registros ?? [])
+    .filter((registro) => Boolean(Number(registro.nit)))
+    .slice(0, 25);
 }

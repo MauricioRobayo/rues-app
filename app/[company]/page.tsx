@@ -1,3 +1,4 @@
+import { Container } from "@/app/(search)/components/Container";
 import { Badge } from "@/app/[company]/components/Badge";
 import { CompanyDetail } from "@/app/[company]/components/CompanyDetail";
 import { EconomicActivity } from "@/app/[company]/components/EconomicActivity";
@@ -197,26 +198,35 @@ export default async function page({ params }: PageProps) {
     .filter((economicActivity) => economicActivity !== null);
 
   return (
-    <article itemScope itemType="https://schema.org/Organization">
-      <header className="flex flex-col gap-0 pb-8 sm:gap-2">
-        <h1
-          itemProp="name"
-          className="text-balance text-xl font-semibold text-brand sm:text-2xl"
-        >
-          {companyName}
-        </h1>
-        <div className="flex items-center gap-2">
-          <h2 className="text-base text-slate-500 sm:text-lg">
-            NIT: {formattedNit}
-          </h2>
-          {!!status && (
-            <Badge variant={status === "ACTIVA" ? "success" : "error"}>
-              {status}
-            </Badge>
-          )}
-        </div>
+    <article
+      itemScope
+      itemType="https://schema.org/Organization"
+      className="mb-16 flex w-full flex-col gap-8"
+    >
+      <header className="flex flex-col gap-0 border-t-2 border-slate-200 bg-slate-100 sm:gap-2">
+        <Container className="my-8">
+          <h1
+            itemProp="name"
+            className="text-balance text-xl font-semibold text-brand sm:text-2xl"
+          >
+            {companyName}
+          </h1>
+          <div className="flex items-center gap-2">
+            <h2 className="text-base text-slate-500 sm:text-lg">
+              NIT: {formattedNit}
+            </h2>
+            {!!status && (
+              <Badge
+                status={status === "ACTIVA" ? "success" : "error"}
+                type="color"
+              >
+                {status}
+              </Badge>
+            )}
+          </div>
+        </Container>
       </header>
-      <div className="grid grid-flow-row-dense grid-cols-1 gap-6 sm:grid-cols-2">
+      <Container className="mx-auto grid max-w-4xl grid-flow-row-dense grid-cols-1 gap-6 sm:grid-cols-2">
         <Section id="detalles-de-la-empresa">
           <Section.title>Detalles de la Empresa</Section.title>
           <dl className="flex flex-col gap-2">
@@ -291,7 +301,7 @@ export default async function page({ params }: PageProps) {
             </Section>
           )}
         </div>
-      </div>
+      </Container>
     </article>
   );
 }

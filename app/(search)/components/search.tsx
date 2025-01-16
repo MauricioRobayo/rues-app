@@ -1,6 +1,7 @@
 "use client";
 
 import { search } from "@/app/(search)/actions/search";
+import { Container } from "@/app/(search)/components/Container";
 import { SearchResults } from "@/app/(search)/components/SearchResults";
 import type { BusinessRecord } from "@mauriciorobayo/rues-api";
 import Form from "next/form";
@@ -25,7 +26,7 @@ export default function Page() {
     getSearchResults();
   }, [companyName]);
   return (
-    <div className="flex flex-col gap-8">
+    <Container className="my-8">
       <Form
         className="flex w-full flex-col items-center gap-2 sm:flex-row"
         action="/"
@@ -46,6 +47,6 @@ export default function Page() {
         </button>
       </Form>
       <SearchResults results={results} />
-    </div>
+    </Container>
   );
 }

@@ -1,12 +1,11 @@
-import type { Metadata } from "next";
-import "./globals.css";
-import Link from "next/link";
+import { Container } from "@/app/(search)/components/Container";
+import { Logo } from "@/app/(search)/components/Logo";
 import { Nit } from "@/app/(search)/components/Nit";
 import { montserrat, roboto_flex } from "@/app/fonts";
-import { Logo } from "@/app/(search)/components/Logo";
+import type { Metadata } from "next";
+import Link from "next/link";
 import { Email } from "react-obfuscate-email";
-import type { ComponentProps } from "react";
-import { twMerge } from "tailwind-merge";
+import "./globals.css";
 
 export const metadata: Metadata = {
   title: "NIT Empresarial",
@@ -34,9 +33,7 @@ export default function RootLayout({
             <Nit className="font-bold tracking-wide" />
           </Container>
         </header>
-        <main className="mx-auto max-w-4xl flex-grow px-4 py-8 md:px-0 md:py-16">
-          {children}
-        </main>
+        <main className="flex-grow">{children}</main>
         <footer className="bg-brand text-white">
           <Container className="py-8 text-center">
             <Email email="info@rnit.com" />
@@ -44,14 +41,5 @@ export default function RootLayout({
         </footer>
       </body>
     </html>
-  );
-}
-
-function Container({ className, ...props }: ComponentProps<"div">) {
-  return (
-    <div
-      className={twMerge("mx-auto max-w-4xl px-4 sm:px-0", className)}
-      {...props}
-    />
   );
 }

@@ -18,7 +18,6 @@ export function SearchResults({
   if (results.length === 0) {
     return <div>No se encontraron resultados.</div>;
   }
-  console.log("results", results);
 
   return (
     <ul className="flex flex-col gap-4">
@@ -28,15 +27,15 @@ export function SearchResults({
         return (
           <li
             key={result.id_rm}
-            className="rounded-sm border bg-slate-50 px-4 py-2 shadow-sm"
+            className="rounded-sm border bg-gray-100 px-4 py-2 shadow-sm"
           >
             <Link href={companyUrl}>
-              <h2 className="text-balance">{result.razon_social}</h2>
+              <h2 className="text-balance text-brand">{result.razon_social}</h2>
               <div className="flex gap-2">
                 <h3 className="text-slate-600">
                   NIT: {formatNit(Number(result.nit))}
                 </h3>
-                <Badge variant={isActive ? "success" : "error"}>
+                <Badge status={isActive ? "success" : "error"} type="color">
                   {result.estado_matricula}
                 </Badge>
               </div>
