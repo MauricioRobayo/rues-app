@@ -203,7 +203,10 @@ const getCompanyData = unstable_cache(
         { label: "Departamento", value: companyData.chamber?.["state"] },
         {
           label: "Certificado de tradición",
-          value: companyData.details?.["url_venta_certificados"],
+          value: {
+            url: companyData.details?.["url_venta_certificados"],
+            label: "Descargar certificado de tradición en línea",
+          },
         },
       ],
       businessEstablishments: (companyData.establishments ?? []).map(
@@ -215,42 +218,51 @@ const getCompanyData = unstable_cache(
             name: establishment["RAZON_SOCIAL"],
             id: establishment["MATRICULA"],
             details: [
-              { value: establishment["RAZON_SOCIAL"], label: "Razón social" },
-              { value: establishment["SIGLA"], label: "Sigla" },
-              { value: establishment["MATRICULA"], label: "Matrícula" },
               {
-                value: establishment["DESC_TIPO_SOCIEDAD"],
+                label: "Razón social",
+                value: establishment["RAZON_SOCIAL"],
+              },
+              {
+                label: "Sigla",
+                value: establishment["SIGLA"],
+              },
+              {
+                label: "Matrícula",
+                value: establishment["MATRICULA"],
+              },
+              {
                 label: "Tipo de sociedad",
+                value: establishment["DESC_TIPO_SOCIEDAD"],
               },
               {
-                value: establishment["DESC_ORGANIZACION_JURIDICA"],
                 label: "Organización jurídica",
+                value: establishment["DESC_ORGANIZACION_JURIDICA"],
               },
               {
-                value: establishment["CATEGORIA_MATRICULA"],
                 label: "Categoría",
+                value: establishment["CATEGORIA_MATRICULA"],
               },
               {
-                value: establishment["DESC_ESTADO_MATRICULA"],
                 label: "Estado",
+                value: establishment["DESC_ESTADO_MATRICULA"],
               },
               {
-                value: creationDate,
                 label: "Fecha de constitución",
+                value: creationDate,
               },
               {
-                value: getYearsOfBusiness(creationDate),
                 label: "Antigüedad",
+                value: getYearsOfBusiness(creationDate),
               },
               {
+                label: "Fecha de renovación",
                 value: gatDateFromDetailsDate(
                   establishment["FECHA_RENOVACION"],
                 ),
-                label: "Fecha de renovación",
               },
               {
-                value: establishment["ULTIMO_ANO_RENOVADO"],
                 label: "Último año renovado",
+                value: establishment["ULTIMO_ANO_RENOVADO"],
               },
             ],
           };

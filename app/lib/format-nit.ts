@@ -1,5 +1,8 @@
-import { numberFormatter } from "@/app/lib/formatters";
 import { getVerificationDigit } from "nit-verifier";
+
+const numberFormatter = new Intl.NumberFormat("es-CO", {
+  useGrouping: true,
+});
 
 export function formatNit(
   nit: number,
