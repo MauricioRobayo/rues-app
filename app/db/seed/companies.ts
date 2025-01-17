@@ -1,6 +1,6 @@
 import { companiesRepository } from "@/app/repositories/companies";
-import { mapCompanyRecordToCompanyModel } from "@/app/rues/mappers";
-import { type CompanyRecord } from "@/app/rues/panel";
+import { mapCompanyRecordToCompanyModel } from "@/app/rues/mappers/map-company-record-to-company-model";
+import { type CompanyRecord } from "@/app/rues/services/rues";
 
 const seedData: CompanyRecord[] = [
   {

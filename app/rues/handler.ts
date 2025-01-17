@@ -1,7 +1,7 @@
 import { companiesRepository } from "@/app/repositories/companies";
 import { ruesSyncRepository } from "@/app/repositories/rues-sync";
-import { mapCompanyRecordToCompanyModel } from "@/app/rues/mappers";
-import { getFileUrl, getTotal, streamData } from "@/app/rues/panel";
+import { mapCompanyRecordToCompanyModel } from "@/app/rues/mappers/map-company-record-to-company-model";
+import { getFileUrl, getTotal, streamData } from "@/app/rues/services/rues";
 
 export async function handler({
   debug = false,

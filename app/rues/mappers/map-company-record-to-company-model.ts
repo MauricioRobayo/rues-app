@@ -1,5 +1,5 @@
 import type { companies } from "@/app/db/schema";
-import type { CompanyRecord } from "@/app/rues/panel";
+import type { CompanyRecord } from "@/app/rues/services/rues";
 
 export function mapCompanyRecordToCompanyModel(
   company: CompanyRecord,
