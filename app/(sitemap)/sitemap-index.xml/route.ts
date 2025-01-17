@@ -1,4 +1,4 @@
-import { generateSitemaps } from "@/app/sitemap";
+import { generateSitemaps } from "@/app/(sitemap)/sitemap";
 import { BASE_URL } from "@/app/lib/constants";
 import { NextResponse } from "next/server";
 
