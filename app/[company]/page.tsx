@@ -6,12 +6,12 @@ import { Section } from "@/app/[company]/components/Section";
 import { getRuesDataByNit } from "@/app/[company]/services/rues";
 import { siisApi, type Source } from "@/app/[company]/services/siis";
 import type { chambers } from "@/app/db/schema";
-import { formatNit } from "@/app/format-nit";
-import { dateFormatter } from "@/app/formatters";
+import { formatNit } from "@/app/lib/format-nit";
+import { dateFormatter } from "@/app/lib/formatters";
 import { companiesRepository } from "@/app/repositories/companies";
-import { isValidNit } from "@/app/utils/is-valid-nit";
-import { parseCompanyPathSegment } from "@/app/utils/parse-company-path-segment";
-import { slugifyCompanyName } from "@/app/utils/slugify-company-name";
+import { isValidNit } from "@/app/lib/is-valid-nit";
+import { parseCompanyPathSegment } from "@/app/lib/parse-company-path-segment";
+import { slugifyCompanyName } from "@/app/lib/slugify-company-name";
 import type {
   BusinessEstablishment,
   BusinessRecord,

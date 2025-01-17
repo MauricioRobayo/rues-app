@@ -1,4 +1,4 @@
-import { numberFormatter } from "@/app/formatters";
+import { numberFormatter } from "@/app/lib/formatters";
 import { getVerificationDigit } from "nit-verifier";
 
 export function formatNit(
