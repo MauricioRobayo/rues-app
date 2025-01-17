@@ -2,6 +2,7 @@
 
 import { search } from "@/app/(search)/actions/search";
 import { Container } from "@/app/(search)/components/Container";
+import { Recaptcha } from "@/app/(search)/components/Recaptcha";
 import { SearchResults } from "@/app/(search)/components/SearchResults";
 import type { BusinessRecord } from "@mauriciorobayo/rues-api";
 import Form from "next/form";
@@ -19,14 +20,24 @@ export default function Page() {
         return;
       }
       startTransition(async () => {
-        const data = await search(companyName);
-        setResults(data);
+        if (!("grecaptcha" in window)) {
+          return;
+        }
+        const token = await window.grecaptcha.enterprise.execute(
+          process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY,
+          { action: "SEARCH" },
+        );
+        const data = await search({ companyName, token });
+        if (data) {
+          setResults(data);
+        }
       });
     }
     getSearchResults();
   }, [companyName]);
   return (
     <Container className="my-8">
+      <Recaptcha />
       <Form
         className="flex w-full flex-col items-center gap-2 sm:flex-row"
         action="/"

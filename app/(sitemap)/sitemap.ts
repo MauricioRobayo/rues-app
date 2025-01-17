@@ -3,7 +3,12 @@ import { companiesRepository } from "@/app/repositories/companies";
 import { slugifyCompanyName } from "@/app/lib/slugify-company-name";
 import type { MetadataRoute } from "next";
 
+const isVercelProductionDeployment = process.env.VERCEL_ENV === "production";
+
 export async function generateSitemaps() {
+  if (!isVercelProductionDeployment) {
+    return [{ id: 0 }];
+  }
   const total = await companiesRepository.count();
   if (!total) {
     return [];
@@ -21,7 +26,7 @@ export default async function sitemap({
 }): Promise<MetadataRoute.Sitemap> {
   const companies = await companiesRepository.getCompanies({
     offset: id * MAX_URLS_PER_SITEMAP,
-    limit: MAX_URLS_PER_SITEMAP,
+    limit: isVercelProductionDeployment ? MAX_URLS_PER_SITEMAP : 10,
   });
   return companies.map((company) => {
     const companySlug = slugifyCompanyName(company.name);
