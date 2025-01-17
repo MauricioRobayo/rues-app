@@ -1,6 +1,6 @@
 "use client";
 
-import { search } from "@/app/(search)/actions/search";
+import { search } from "@/app/(search)/actions";
 import { Container } from "@/app/(search)/components/Container";
 import { Recaptcha } from "@/app/(search)/components/Recaptcha";
 import { SearchResults } from "@/app/(search)/components/SearchResults";

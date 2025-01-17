@@ -29,7 +29,7 @@ export function SearchResults({
             key={result.id_rm}
             className="rounded-sm border bg-gray-100 px-4 py-2 shadow-sm"
           >
-            <Link href={companyUrl}>
+            <Link href={companyUrl} prefetch={false}>
               <h2 className="text-balance text-brand">{result.razon_social}</h2>
               <div className="flex gap-2">
                 <h3 className="text-slate-600">
