@@ -4,27 +4,21 @@ import { CompanyDetail } from "@/app/[company]/components/CompanyDetail";
 import { EconomicActivity } from "@/app/[company]/components/EconomicActivity";
 import { Section } from "@/app/[company]/components/Section";
 import { getRuesDataByNit } from "@/app/[company]/services/rues";
-import { siisApi, type Source } from "@/app/[company]/services/siis";
-import type { chambers } from "@/app/db/schema";
+import { siisApi } from "@/app/[company]/services/siis";
+import { companiesRepository } from "@/app/db/repositories/companies";
 import { formatNit } from "@/app/lib/format-nit";
 import { dateFormatter } from "@/app/lib/formatters";
-import { companiesRepository } from "@/app/repositories/companies";
 import { isValidNit } from "@/app/lib/is-valid-nit";
 import { parseCompanyPathSegment } from "@/app/lib/parse-company-path-segment";
 import { slugifyCompanyName } from "@/app/lib/slugify-company-name";
-import type {
-  BusinessEstablishment,
-  BusinessRecord,
-  File,
-} from "@mauriciorobayo/rues-api";
+import type { File } from "@mauriciorobayo/rues-api";
 import { formatDistanceToNowStrict } from "date-fns";
 import { es } from "date-fns/locale";
-import { ExternalLink } from "lucide-react";
 import type { Metadata } from "next";
 import { unstable_cache } from "next/cache";
 import { notFound, permanentRedirect } from "next/navigation";
 import { after } from "next/server";
-import { cache, type ReactNode } from "react";
+import { cache } from "react";
 
 interface PageProps {
   params: Promise<{ company: string }>;
@@ -32,143 +26,14 @@ interface PageProps {
 
 export const dynamic = "force-static";
 
-type CompanyDetailKey = keyof BusinessRecord | keyof File | keyof Source;
-
-type DetailsMapping<T> = {
-  key: T;
-  label: string;
-  renderValue?: (value: string) => ReactNode;
-  itemProp?: string;
-};
-
-const economicActivityKeys: { code: keyof File; description: keyof File }[] = [
-  { code: "cod_ciiu_act_econ_pri", description: "desc_ciiu_act_econ_pri" },
-  { code: "cod_ciiu_act_econ_sec", description: "desc_ciiu_act_econ_sec" },
-  { code: "ciiu3", description: "desc_ciiu3" },
-  { code: "ciiu4", description: "desc_ciiu4" },
-];
-
-type ChamberDetailKey =
-  | keyof Omit<typeof chambers.$inferSelect, "id" | "code">
-  | keyof File;
-const chamberDetails: DetailsMapping<ChamberDetailKey>[] = [
-  { key: "name", label: "Nombre" },
-  { key: "address", label: "Dirección" },
-  { key: "city", label: "Ciudad" },
-  { key: "state", label: "Departamento" },
-  {
-    key: "url_venta_certificados",
-    label: "Certificado de tradición",
-    renderValue(value: string) {
-      return (
-        <a
-          href={value}
-          target="_blank"
-          className="flex items-center gap-1 text-blue-600 underline"
-        >
-          Solicitar Certificado de Tradición
-          <ExternalLink size={14} />
-        </a>
-      );
-    },
-  },
-];
-
-type EstablishmentKeys = keyof BusinessEstablishment;
-const establishmentsDetails: DetailsMapping<EstablishmentKeys>[] = [
-  { key: "RAZON_SOCIAL", label: "Razón social" },
-  { key: "SIGLA", label: "Sigla" },
-  { key: "MATRICULA", label: "Matrícula" },
-  { key: "DESC_TIPO_SOCIEDAD", label: "Tipo de sociedad" },
-  { key: "DESC_ORGANIZACION_JURIDICA", label: "Organización jurídica" },
-  { key: "CATEGORIA_MATRICULA", label: "Categoría" },
-  { key: "DESC_ESTADO_MATRICULA", label: "Estado" },
-  {
-    key: "FECHA_MATRICULA",
-    label: "Fecha de constitución",
-    renderValue: renderDateValue,
-  },
-  {
-    key: "FECHA_MATRICULA",
-    label: "Antigüedad",
-    renderValue(value) {
-      const formattedDate = `${value.slice(0, 4)}-${value.slice(4, 6)}-${value.slice(6, 8)}`;
-      return formatDistanceToNowStrict(new Date(formattedDate), {
-        locale: es,
-      });
-    },
-  },
-  {
-    key: "FECHA_RENOVACION",
-    label: "Fecha de renovación",
-    renderValue: renderDateValue,
-  },
-  { key: "ULTIMO_ANO_RENOVADO", label: "Último año renovado" },
-];
-
-const companyDetails: DetailsMapping<CompanyDetailKey>[] = [
-  { key: "razon_social", label: "Razón social" },
-  { key: "nit", label: "NIT" },
-  { key: "dv", label: "DV" },
-  { key: "matricula", label: "Matrícula" },
-  { key: "sigla", label: "Sigla" },
-  { key: "organizacion_juridica", label: "Organización jurídica" },
-  { key: "estado_matricula", label: "Estado matrícula" },
-  { key: "motivo_cancelacion", label: "Motivo de cancelación" },
-  {
-    key: "fecha_matricula",
-    label: "Fecha de constitución",
-    renderValue: renderDateValue,
-  },
-  {
-    key: "fecha_matricula",
-    label: "Antigüedad",
-    renderValue(value) {
-      const formattedDate = `${value.slice(0, 4)}-${value.slice(4, 6)}-${value.slice(6, 8)}`;
-      return formatDistanceToNowStrict(new Date(formattedDate), {
-        locale: es,
-      });
-    },
-  },
-  {
-    key: "fecha_renovacion",
-    label: "Fecha de renovación",
-    renderValue: renderDateValue,
-  },
-  {
-    key: "fecha_actualizacion",
-    label: "Fecha actualización",
-    renderValue: renderDateValue,
-  },
-  {
-    key: "fecha_cancelacion",
-    label: "Fecha cancelación",
-    renderValue: renderDateValue,
-  },
-  { key: "ultimo_ano_renovado", label: "Último año renovado" },
-  {
-    key: "indicador_emprendimiento_social",
-    label: "Indicador emprendimiento social",
-  },
-  { key: "tipo_sociedad", label: "Tipo de sociedad" },
-  { key: "region", label: "Región" },
-  { key: "ciudad", label: "Ciudad" },
-  { key: "departamento", label: "Departamento" },
-  { key: "macroSector", label: "Macro sector" },
-  { key: "sector", label: "Sector" },
-];
-
 export async function generateMetadata({
   params,
 }: PageProps): Promise<Metadata> {
   const { company } = await params;
   const companyData = await getPageData(company);
-  const companyName = companyData.rues.razon_social;
 
-  // TODO: I should parse this data before getting here
-  const formattedNit = formatNit(Number(companyData.rues.nit));
   return {
-    title: `${companyName} - NIT ${formattedNit}`,
+    title: `${companyData.name} - NIT ${companyData.fullNit}`,
     // description: "Generated by create next app",
   };
 }
@@ -176,22 +41,6 @@ export async function generateMetadata({
 export default async function page({ params }: PageProps) {
   const { company } = await params;
   const companyData = await getPageData(company);
-  const companyName = companyData.rues.razon_social;
-
-  // TODO: I should parse this data before getting here
-  const formattedNit = formatNit(Number(companyData.rues.nit));
-  const status = companyData?.details?.estado;
-
-  const economicActivities = economicActivityKeys
-    .map((key) => {
-      const code = companyData.details?.[key.code];
-      const description = companyData.details?.[key.description];
-      if (!code || !description) {
-        return null;
-      }
-      return { code, description };
-    })
-    .filter((economicActivity) => economicActivity !== null);
 
   return (
     <article
@@ -205,20 +54,18 @@ export default async function page({ params }: PageProps) {
             itemProp="name"
             className="text-balance text-xl font-semibold text-brand sm:text-2xl"
           >
-            {companyName}
+            {companyData.name}
           </h1>
           <div className="flex items-center gap-2">
             <h2 className="text-base text-slate-500 sm:text-lg">
-              NIT: {formattedNit}
+              NIT: {companyData.fullNit}
             </h2>
-            {!!status && (
-              <Badge
-                status={status === "ACTIVA" ? "success" : "error"}
-                type="color"
-              >
-                {status}
-              </Badge>
-            )}
+            <Badge
+              status={companyData.isActive ? "success" : "error"}
+              type="color"
+            >
+              {companyData.isActive ? "ACTIVA" : "CANCELADA"}
+            </Badge>
           </div>
         </Container>
       </header>
@@ -226,67 +73,71 @@ export default async function page({ params }: PageProps) {
         <Section id="detalles-de-la-empresa">
           <Section.title>Detalles de la Empresa</Section.title>
           <dl className="flex flex-col gap-2">
-            {companyDetails.map((detail) => {
-              const value = getCompanyDetailValue(detail.key, companyData);
-              if (!value) {
+            {companyData.details.map((detail) => {
+              if (!detail.value) {
                 return null;
               }
               return (
                 <CompanyDetail
                   key={detail.label}
                   label={detail.label}
-                  itemProp={detail.itemProp}
+                  // TODO: schema.org
+                  // itemProp={detail.itemProp}
                 >
-                  {detail.renderValue ? detail.renderValue(value) : value}
+                  {detail.value instanceof Date
+                    ? dateFormatter.format(detail.value)
+                    : detail.value}
                 </CompanyDetail>
               );
             })}
           </dl>
-          <EconomicActivity economicActivities={economicActivities} />
+          <EconomicActivity
+            economicActivities={companyData.economicActivities}
+          />
         </Section>
         <div className="contents flex-col sm:flex sm:gap-6">
           <Section id="camara-de-comercio">
             <Section.title>Cámara de Comercio</Section.title>
             <dl className="flex flex-col gap-2">
-              {chamberDetails.map((detail) => {
-                const value = getChamberDetailValue(detail.key, companyData);
-                if (!value) {
+              {companyData.chamber.map((detail) => {
+                if (!detail.value) {
                   return null;
                 }
                 return (
                   <CompanyDetail
                     key={detail.label}
                     label={detail.label}
-                    itemProp={detail.itemProp}
+                    // TODO: schema.org
+                    // itemProp={detail.itemProp}
                   >
-                    {detail.renderValue ? detail.renderValue(value) : value}
+                    {detail.value}
                   </CompanyDetail>
                 );
               })}
             </dl>
           </Section>
-          {(companyData.establishments ?? []).length > 0 && (
+          {companyData.businessEstablishments.length > 0 && (
             <Section id="establecimientos-comerciales">
               <Section.title>Establecimientos Comerciales</Section.title>
-              {companyData.establishments?.map((establishment) => {
+              {companyData.businessEstablishments.map((establishment) => {
                 return (
-                  <details key={establishment.MATRICULA}>
-                    <summary>{establishment.RAZON_SOCIAL}</summary>
+                  <details key={establishment.id}>
+                    <summary>{establishment.name}</summary>
                     <dl className="flex flex-col gap-2 p-4">
-                      {establishmentsDetails.map((detail) => {
-                        const value = establishment[detail.key];
-                        if (!value) {
+                      {establishment.details.map((detail) => {
+                        if (!detail.value) {
                           return null;
                         }
                         return (
                           <CompanyDetail
                             key={detail.label}
                             label={detail.label}
-                            itemProp={detail.itemProp}
+                            // TODO: schema.org
+                            // itemProp={detail.itemProp}
                           >
-                            {detail.renderValue
-                              ? detail.renderValue(String(value))
-                              : value}
+                            {detail.value instanceof Date
+                              ? dateFormatter.format(detail.value)
+                              : detail.value}
                           </CompanyDetail>
                         );
                       })}
@@ -300,48 +151,6 @@ export default async function page({ params }: PageProps) {
       </Container>
     </article>
   );
-}
-
-function renderDateValue(value: string) {
-  const formattedDate = `${value.slice(0, 4)}-${value.slice(4, 6)}-${value.slice(6, 8)}`;
-  return dateFormatter.format(new Date(formattedDate));
-}
-
-function getCompanyDetailValue(
-  key: CompanyDetailKey,
-  data: NonNullable<Awaited<ReturnType<typeof getCompanyData>>>,
-) {
-  if (isRuesKey(key, data)) {
-    return data.rues[key];
-  }
-  if (isDetailsKey(key, data)) {
-    return data.details?.[key];
-  }
-  return data.siis?.[key];
-}
-
-function getChamberDetailValue(
-  key: ChamberDetailKey,
-  data: NonNullable<Awaited<ReturnType<typeof getCompanyData>>>,
-) {
-  if (isDetailsKey(key, data)) {
-    return data.details?.[key];
-  }
-  return data.chamber?.[key];
-}
-
-function isRuesKey(
-  key: CompanyDetailKey,
-  data: NonNullable<Awaited<ReturnType<typeof getCompanyData>>>,
-): key is keyof BusinessRecord {
-  return key in data.rues;
-}
-
-function isDetailsKey(
-  key: CompanyDetailKey | ChamberDetailKey,
-  data: Awaited<ReturnType<typeof getCompanyData>>,
-): key is keyof File {
-  return key in (data?.details ?? {});
 }
 
 const getCompanyData = unstable_cache(
@@ -362,13 +171,199 @@ const getCompanyData = unstable_cache(
       });
     });
 
-    // TODO: properly map and return the massaged data
+    const registrationDate = gatDateFromDetailsDate(
+      companyData.details?.["fecha_matricula"],
+    );
+
     return {
-      ...companyData,
-      siis,
+      name: companyData.rues.razon_social,
+      nit: companyData.rues.nit,
+      fullNit: formatNit(Number(companyData.rues.nit)),
+      isActive: companyData.rues.estado_matricula === "ACTIVA",
+      details: [
+        {
+          label: "Razón social",
+          value: companyData.rues["razon_social"],
+        },
+        { label: "NIT", value: companyData.rues["nit"] },
+        { label: "DV", value: companyData.rues["dv"] },
+        {
+          label: "Matrícula",
+          value: companyData.rues["matricula"],
+        },
+        { label: "Sigla", value: companyData.rues["sigla"] },
+        {
+          label: "Organización jurídica",
+          value: companyData.rues["organizacion_juridica"],
+        },
+        {
+          label: "Estado",
+          value: companyData.rues["estado_matricula"],
+        },
+        {
+          label: "Fecha de creación",
+          value: registrationDate,
+        },
+        {
+          label: "Antigüedad",
+          value: getYearsOfBusiness(registrationDate),
+        },
+        {
+          label: "Fecha de renovación",
+          value: gatDateFromDetailsDate(
+            companyData.details?.["fecha_renovacion"],
+          ),
+        },
+        {
+          label: "Fecha de actualización",
+          value: gatDateFromDetailsDate(
+            companyData.details?.["fecha_actualizacion"],
+          ),
+        },
+        {
+          label: "Fecha de cancelación",
+          value: gatDateFromDetailsDate(
+            companyData.details?.["fecha_cancelacion"],
+          ),
+        },
+        {
+          label: "Último año renovado",
+          value: companyData.details?.["ultimo_ano_renovado"],
+        },
+        {
+          label: "Indicador de emprendimiento social",
+          value: companyData.details?.["indicador_emprendimiento_social"],
+        },
+        {
+          label: "Tipo de sociedad",
+          value: companyData.details?.["tipo_sociedad"],
+        },
+        {
+          label: "Extinción de dominio",
+          value: companyData.details?.["extincion_dominio"],
+        },
+        { label: "Región", value: siis?.["region"] },
+        { label: "Departamento", value: siis?.["departamento"] },
+        { label: "Ciudad", value: siis?.["ciudad"] },
+        { label: "Macro sector", value: siis?.["macroSector"] },
+        { label: "Sector", value: siis?.["sector"] },
+      ],
+      economicActivities: getEconomicActivitiesFromDetails(companyData.details),
+      chamber: [
+        { label: "Nombre", value: companyData.chamber?.["name"] },
+        { label: "Dirección", value: companyData.chamber?.["address"] },
+        { label: "Ciudad", value: companyData.chamber?.["city"] },
+        { label: "Departamento", value: companyData.chamber?.["state"] },
+        {
+          label: "Certificado de tradición",
+          value: companyData.details?.["url_venta_certificados"],
+        },
+      ],
+      businessEstablishments: (companyData.establishments ?? []).map(
+        (establishment) => {
+          const creationDate = gatDateFromDetailsDate(
+            establishment["FECHA_MATRICULA"],
+          );
+          return {
+            name: establishment["RAZON_SOCIAL"],
+            id: establishment["MATRICULA"],
+            details: [
+              { value: establishment["RAZON_SOCIAL"], label: "Razón social" },
+              { value: establishment["SIGLA"], label: "Sigla" },
+              { value: establishment["MATRICULA"], label: "Matrícula" },
+              {
+                value: establishment["DESC_TIPO_SOCIEDAD"],
+                label: "Tipo de sociedad",
+              },
+              {
+                value: establishment["DESC_ORGANIZACION_JURIDICA"],
+                label: "Organización jurídica",
+              },
+              {
+                value: establishment["CATEGORIA_MATRICULA"],
+                label: "Categoría",
+              },
+              {
+                value: establishment["DESC_ESTADO_MATRICULA"],
+                label: "Estado",
+              },
+              {
+                value: creationDate,
+                label: "Fecha de constitución",
+              },
+              {
+                value: getYearsOfBusiness(creationDate),
+                label: "Antigüedad",
+              },
+              {
+                value: gatDateFromDetailsDate(
+                  establishment["FECHA_RENOVACION"],
+                ),
+                label: "Fecha de renovación",
+              },
+              {
+                value: establishment["ULTIMO_ANO_RENOVADO"],
+                label: "Último año renovado",
+              },
+            ],
+          };
+        },
+      ),
     };
   }),
 );
+
+function getYearsOfBusiness(date?: Date) {
+  return date
+    ? formatDistanceToNowStrict(date, {
+        locale: es,
+      })
+    : undefined;
+}
+
+function getEconomicActivitiesFromDetails(details: File | undefined) {
+  if (!details) {
+    return [];
+  }
+  const economicActivities = [
+    {
+      code: details["cod_ciiu_act_econ_pri"],
+      description: details["desc_ciiu_act_econ_pri"],
+    },
+  ];
+
+  if (details["cod_ciiu_act_econ_sec"] && details["desc_ciiu_act_econ_sec"]) {
+    economicActivities.push({
+      code: details["cod_ciiu_act_econ_sec"],
+      description: details["desc_ciiu_act_econ_sec"],
+    });
+  }
+
+  if (details["ciiu3"] && details["desc_ciiu3"]) {
+    economicActivities.push({
+      code: details["ciiu3"],
+      description: details["desc_ciiu3"],
+    });
+  }
+
+  if (details["ciiu4"] && details["desc_ciiu_act_econ_sec"]) {
+    economicActivities.push({
+      code: details["ciiu4"],
+      description: details["desc_ciiu4"],
+    });
+  }
+
+  return economicActivities;
+}
+
+function gatDateFromDetailsDate(value?: string) {
+  if (!value?.trim() || value.length !== 8) {
+    return undefined;
+  }
+  const formattedDate = `${value.slice(0, 4)}-${value.slice(4, 6)}-${value.slice(6, 8)}`;
+  const date = new Date(formattedDate);
+  return Number.isNaN(date.getTime()) ? undefined : date;
+}
 
 // This function is unintentionally not cached so we can handle logic based
 // on the segmentPath which can be different given the same nit:
@@ -393,8 +388,7 @@ async function getPageData(company: string) {
     notFound();
   }
 
-  const companyName = companyData.rues.razon_social;
-  const companySlug = slugifyCompanyName(companyName);
+  const companySlug = slugifyCompanyName(companyData.name);
 
   if (slug !== companySlug) {
     permanentRedirect(`${companySlug}-${nit}`);

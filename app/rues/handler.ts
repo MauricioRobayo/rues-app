@@ -1,5 +1,5 @@
-import { companiesRepository } from "@/app/repositories/companies";
-import { ruesSyncRepository } from "@/app/repositories/rues-sync";
+import { companiesRepository } from "@/app/db/repositories/companies";
+import { ruesSyncRepository } from "@/app/db/repositories/rues-sync";
 import { mapCompanyRecordToCompanyModel } from "@/app/rues/mappers/map-company-record-to-company-model";
 import { getFileUrl, getTotal, streamData } from "@/app/rues/services/rues";
 

@@ -1,5 +1,5 @@
 import { BASE_URL, MAX_URLS_PER_SITEMAP } from "@/app/lib/constants";
-import { companiesRepository } from "@/app/repositories/companies";
+import { companiesRepository } from "@/app/db/repositories/companies";
 import { slugifyCompanyName } from "@/app/lib/slugify-company-name";
 import type { MetadataRoute } from "next";
 

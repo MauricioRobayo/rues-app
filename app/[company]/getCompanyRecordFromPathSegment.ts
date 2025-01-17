@@ -1,4 +1,4 @@
-import { companiesRepository } from "@/app/repositories/companies";
+import { companiesRepository } from "@/app/db/repositories/companies";
 import { isValidNit } from "@/app/lib/is-valid-nit";
 import { slugifyCompanyName } from "@/app/lib/slugify-company-name";
 import { unstable_cache } from "next/cache";
