@@ -15,7 +15,9 @@ export const companies = sqliteTable(
     nit: int().unique().notNull(),
     name: text().notNull(),
     ruesSyncId: int().references(() => ruesSync.id),
-    timestamp: int({ mode: "timestamp" }).default(sql`(unixepoch())`),
+    timestamp: int({ mode: "timestamp" })
+      .notNull()
+      .default(sql`(unixepoch())`),
   },
   (table) => {
     return [index("rues_sync_idx").on(table.ruesSyncId)];

@@ -1,6 +1,6 @@
 import { db } from "@/app/db";
 import { companies } from "@/app/db/schema";
-import { eq, sql } from "drizzle-orm";
+import { asc, count, eq, sql } from "drizzle-orm";
 
 export const companiesRepository = {
   upsertMany(data: (typeof companies.$inferInsert)[]) {
@@ -12,6 +12,7 @@ export const companiesRepository = {
         target: companies.nit,
         set: {
           name: excludedName,
+          timestamp: sql`unixepoch()`,
         },
         setWhere: sql`${companies.name} != ${excludedName}`,
       });
@@ -24,5 +25,28 @@ export const companiesRepository = {
       where: eq(companies.nit, nit),
       columns: { nit: true, name: true },
     });
+  },
+  findFirst(
+    columns?: Partial<Record<keyof typeof companies.$inferSelect, true>>,
+  ) {
+    return db.query.companies.findFirst({
+      orderBy: [asc(companies.id)],
+      columns,
+    });
+  },
+  async count() {
+    const total = await db.select({ count: count() }).from(companies);
+    return total.at(0)?.count;
+  },
+  getCompanies({ limit, offset }: { limit: number; offset: number }) {
+    return db
+      .select({
+        nit: companies.nit,
+        name: companies.name,
+        timestamp: companies.timestamp,
+      })
+      .from(companies)
+      .limit(limit)
+      .offset(offset);
   },
 };
