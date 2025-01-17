@@ -23,7 +23,7 @@ export default function RootLayout({
       lang="es-CO"
       className={`${roboto_flex.variable} ${montserrat.variable}`}
     >
-      <GoogleTagManager gtmId="GTM-XYZ" />
+      <GoogleTagManager gtmId={process.env.NEXT_PUBLIC_GTM_ID ?? ""} />
       <body className="space-between flex h-svh flex-col">
         <header className="bg-brand/5 text-brand">
           <Container className="flex items-center justify-between py-2">
