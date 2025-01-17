@@ -3,7 +3,7 @@ import { companiesRepository } from "@/app/repositories/companies";
 import { slugifyCompanyName } from "@/app/utils/slugify-company-name";
 import type { MetadataRoute } from "next";
 
-const MAX_URLS_PER_SITEMAP = 10_000;
+const MAX_URLS_PER_SITEMAP = 1_000;
 
 export async function generateSitemaps() {
   const total = await companiesRepository.count();
