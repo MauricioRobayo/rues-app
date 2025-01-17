@@ -3,13 +3,14 @@ import { companiesRepository } from "@/app/repositories/companies";
 import { slugifyCompanyName } from "@/app/utils/slugify-company-name";
 import type { MetadataRoute } from "next";
 
-const urlsPerSitemap = 25_000;
+const MAX_URLS_PER_SITEMAP = 10_000;
 
 export async function generateSitemaps() {
   const total = await companiesRepository.count();
-  if (!total) return;
-
-  const totalSitemaps = Math.ceil(total / urlsPerSitemap);
+  if (!total) {
+    return [];
+  }
+  const totalSitemaps = Math.ceil(total / MAX_URLS_PER_SITEMAP);
   return Array.from({ length: totalSitemaps }, (_, i) => ({
     id: i,
   }));
@@ -20,10 +21,9 @@ export default async function sitemap({
 }: {
   id: number;
 }): Promise<MetadataRoute.Sitemap> {
-  const start = id * urlsPerSitemap;
   const companies = await companiesRepository.getCompanies({
-    offset: start,
-    limit: urlsPerSitemap,
+    offset: id * MAX_URLS_PER_SITEMAP,
+    limit: MAX_URLS_PER_SITEMAP,
   });
   return companies.map((company) => {
     const companySlug = slugifyCompanyName(company.name);
