@@ -1,9 +1,7 @@
-import { BASE_URL } from "@/app/lib/constants";
+import { BASE_URL, MAX_URLS_PER_SITEMAP } from "@/app/lib/constants";
 import { companiesRepository } from "@/app/repositories/companies";
 import { slugifyCompanyName } from "@/app/utils/slugify-company-name";
 import type { MetadataRoute } from "next";
-
-const MAX_URLS_PER_SITEMAP = 1_000;
 
 export async function generateSitemaps() {
   const total = await companiesRepository.count();
