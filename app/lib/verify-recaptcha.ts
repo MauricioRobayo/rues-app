@@ -26,8 +26,6 @@ export async function verifyRecaptcha({
     });
     const data = await response.json();
 
-    console.log("response", JSON.stringify(data, null, 2));
-
     if (!data.tokenProperties.valid) {
       console.log(
         `The CreateAssessment call failed because the token was: ${data.tokenProperties.invalidReason}`,
