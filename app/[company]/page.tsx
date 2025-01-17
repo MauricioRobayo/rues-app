@@ -1,13 +1,12 @@
 import { Container } from "@/app/(search)/components/Container";
 import { Badge } from "@/app/[company]/components/Badge";
-import { CompanyDetail } from "@/app/[company]/components/CompanyDetail";
+import { CompanyDetails } from "@/app/[company]/components/CompanyDetails";
 import { EconomicActivity } from "@/app/[company]/components/EconomicActivity";
 import { Section } from "@/app/[company]/components/Section";
 import { getRuesDataByNit } from "@/app/[company]/services/rues";
 import { siisApi } from "@/app/[company]/services/siis";
 import { companiesRepository } from "@/app/db/repositories/companies";
 import { formatNit } from "@/app/lib/format-nit";
-import { dateFormatter } from "@/app/lib/formatters";
 import { isValidNit } from "@/app/lib/is-valid-nit";
 import { parseCompanyPathSegment } from "@/app/lib/parse-company-path-segment";
 import { slugifyCompanyName } from "@/app/lib/slugify-company-name";
@@ -72,25 +71,7 @@ export default async function page({ params }: PageProps) {
       <Container className="mx-auto grid max-w-4xl grid-flow-row-dense grid-cols-1 gap-6 sm:grid-cols-2">
         <Section id="detalles-de-la-empresa">
           <Section.title>Detalles de la Empresa</Section.title>
-          <dl className="flex flex-col gap-2">
-            {companyData.details.map((detail) => {
-              if (!detail.value) {
-                return null;
-              }
-              return (
-                <CompanyDetail
-                  key={detail.label}
-                  label={detail.label}
-                  // TODO: schema.org
-                  // itemProp={detail.itemProp}
-                >
-                  {detail.value instanceof Date
-                    ? dateFormatter.format(detail.value)
-                    : detail.value}
-                </CompanyDetail>
-              );
-            })}
-          </dl>
+          <CompanyDetails details={companyData.details} />
           <EconomicActivity
             economicActivities={companyData.economicActivities}
           />
@@ -98,23 +79,7 @@ export default async function page({ params }: PageProps) {
         <div className="contents flex-col sm:flex sm:gap-6">
           <Section id="camara-de-comercio">
             <Section.title>Cámara de Comercio</Section.title>
-            <dl className="flex flex-col gap-2">
-              {companyData.chamber.map((detail) => {
-                if (!detail.value) {
-                  return null;
-                }
-                return (
-                  <CompanyDetail
-                    key={detail.label}
-                    label={detail.label}
-                    // TODO: schema.org
-                    // itemProp={detail.itemProp}
-                  >
-                    {detail.value}
-                  </CompanyDetail>
-                );
-              })}
-            </dl>
+            <CompanyDetails details={companyData.chamber} />
           </Section>
           {companyData.businessEstablishments.length > 0 && (
             <Section id="establecimientos-comerciales">
@@ -123,25 +88,7 @@ export default async function page({ params }: PageProps) {
                 return (
                   <details key={establishment.id}>
                     <summary>{establishment.name}</summary>
-                    <dl className="flex flex-col gap-2 p-4">
-                      {establishment.details.map((detail) => {
-                        if (!detail.value) {
-                          return null;
-                        }
-                        return (
-                          <CompanyDetail
-                            key={detail.label}
-                            label={detail.label}
-                            // TODO: schema.org
-                            // itemProp={detail.itemProp}
-                          >
-                            {detail.value instanceof Date
-                              ? dateFormatter.format(detail.value)
-                              : detail.value}
-                          </CompanyDetail>
-                        );
-                      })}
-                    </dl>
+                    <CompanyDetails details={establishment.details} />
                   </details>
                 );
               })}
