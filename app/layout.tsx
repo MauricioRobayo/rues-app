@@ -1,3 +1,4 @@
+import { GoogleTagManager } from "@next/third-parties/google";
 import { Container } from "@/app/(search)/components/Container";
 import { Logo } from "@/app/(search)/components/Logo";
 import { Nit } from "@/app/(search)/components/Nit";
@@ -22,6 +23,7 @@ export default function RootLayout({
       lang="es-CO"
       className={`${roboto_flex.variable} ${montserrat.variable}`}
     >
+      <GoogleTagManager gtmId="GTM-XYZ" />
       <body className="space-between flex h-svh flex-col">
         <header className="bg-brand/5 text-brand">
           <Container className="flex items-center justify-between py-2">
