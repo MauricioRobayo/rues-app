@@ -1,13 +1,13 @@
 "use client";
 
 import { search } from "@/app/(search)/actions";
-import { Container } from "@/app/(search)/components/Container";
 import { Recaptcha } from "@/app/(search)/components/Recaptcha";
 import { SearchResults } from "@/app/(search)/components/SearchResults";
 import type { BusinessRecord } from "@mauriciorobayo/rues-api";
 import Form from "next/form";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState, useTransition } from "react";
+import { Container } from "@radix-ui/themes";
 
 export default function Page() {
   const [isPending, startTransition] = useTransition();
@@ -36,7 +36,7 @@ export default function Page() {
     getSearchResults();
   }, [companyName]);
   return (
-    <Container className="my-8">
+    <Container>
       <Recaptcha />
       <Form
         className="flex w-full flex-col items-center gap-2 sm:flex-row"

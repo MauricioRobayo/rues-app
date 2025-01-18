@@ -1,8 +1,4 @@
-import { Container } from "@/app/(search)/components/Container";
-import { Badge } from "@/app/[company]/components/Badge";
 import { CompanyDetails } from "@/app/[company]/components/CompanyDetails";
-import { EconomicActivity } from "@/app/[company]/components/EconomicActivity";
-import { Section } from "@/app/[company]/components/Section";
 import { getRuesDataByNit } from "@/app/[company]/services/rues";
 import { siisApi } from "@/app/[company]/services/siis";
 import { companiesRepository } from "@/app/db/repositories/companies";
@@ -11,6 +7,17 @@ import { isValidNit } from "@/app/lib/is-valid-nit";
 import { parseCompanyPathSegment } from "@/app/lib/parse-company-path-segment";
 import { slugifyCompanyName } from "@/app/lib/slugify-company-name";
 import type { File } from "@mauriciorobayo/rues-api";
+import {
+  Badge,
+  Box,
+  Card,
+  Container,
+  Flex,
+  Grid,
+  Heading,
+  Section,
+  Separator,
+} from "@radix-ui/themes";
 import { formatDistanceToNowStrict } from "date-fns";
 import { es } from "date-fns/locale";
 import type { Metadata } from "next";
@@ -42,59 +49,66 @@ export default async function page({ params }: PageProps) {
   const companyData = await getPageData(company);
 
   return (
-    <article
-      itemScope
-      itemType="https://schema.org/Organization"
-      className="mb-16 flex w-full flex-col gap-8"
-    >
-      <header className="flex flex-col gap-0 border-t-2 border-slate-200 bg-slate-100 sm:gap-2">
-        <Container className="my-8">
-          <h1
-            itemProp="name"
-            className="text-balance text-xl font-semibold text-brand sm:text-2xl"
-          >
-            {companyData.name}
-          </h1>
-          <div className="flex items-center gap-2">
-            <h2 className="text-base text-slate-500 sm:text-lg">
-              NIT: {companyData.fullNit}
-            </h2>
-            <Badge
-              status={companyData.isActive ? "success" : "error"}
-              type="color"
-            >
-              {companyData.isActive ? "ACTIVA" : "CANCELADA"}
-            </Badge>
-          </div>
-        </Container>
-      </header>
-      <Container className="mx-auto grid max-w-4xl grid-flow-row-dense grid-cols-1 gap-6 sm:grid-cols-2">
-        <Section id="detalles-de-la-empresa">
-          <Section.title>Detalles de la Empresa</Section.title>
-          <CompanyDetails details={companyData.details} />
-          <EconomicActivity
-            economicActivities={companyData.economicActivities}
-          />
-        </Section>
-        <div className="contents flex-col sm:flex sm:gap-6">
-          <Section id="camara-de-comercio">
-            <Section.title>Cámara de Comercio</Section.title>
-            <CompanyDetails details={companyData.chamber} />
+    <article itemScope itemType="https://schema.org/Organization">
+      <Box asChild style={{ position: "sticky", top: 0, background: "white" }}>
+        <header>
+          <Container px="4" py="8">
+            <Card size="4" variant="ghost">
+              <Heading itemProp="name" color="sky">
+                {companyData.name}
+              </Heading>
+              <Flex align="center" gap="2">
+                <Heading as="h2" size="4" itemProp="taxID">
+                  NIT: {companyData.fullNit}
+                </Heading>
+                <Badge
+                  color={companyData.isActive ? "green" : "red"}
+                  size="1"
+                  variant="outline"
+                  style={{ textTransform: "uppercase" }}
+                >
+                  {companyData.isActive ? "Activa" : "Cancelada"}
+                </Badge>
+              </Flex>
+            </Card>
+          </Container>
+          <Separator mb="6" size="4" />
+        </header>
+      </Box>
+      <Container px="4">
+        <Grid columns={{ initial: "1", sm: "2" }} gapX="8" width="auto">
+          <Section size="2" id="detalles-de-la-empresa">
+            <Heading as="h3" size="4" mb="2">
+              Detalles de la Empresa
+            </Heading>
+            <CompanyDetails details={companyData.details} />
           </Section>
-          {companyData.businessEstablishments.length > 0 && (
-            <Section id="establecimientos-comerciales">
-              <Section.title>Establecimientos Comerciales</Section.title>
-              {companyData.businessEstablishments.map((establishment) => {
-                return (
-                  <details key={establishment.id}>
-                    <summary>{establishment.name}</summary>
-                    <CompanyDetails details={establishment.details} />
-                  </details>
-                );
-              })}
+          <Box>
+            <Section size="2" id="camara-de-comercio">
+              <Heading as="h3" size="4" mb="2">
+                Cámara de Comercio
+              </Heading>
+              <CompanyDetails details={companyData.chamber} />
             </Section>
-          )}
-        </div>
+            {companyData.businessEstablishments.length > 0 && (
+              <Section size="2" id="establecimientos-comerciales">
+                <Heading as="h3" size="4" mb="4">
+                  Establecimientos Comerciales
+                </Heading>
+                {companyData.businessEstablishments.map((establishment) => {
+                  return (
+                    <details key={establishment.id}>
+                      <summary style={{ marginBottom: "1rem" }}>
+                        {establishment.name}
+                      </summary>
+                      <CompanyDetails details={establishment.details} />
+                    </details>
+                  );
+                })}
+              </Section>
+            )}
+          </Box>
+        </Grid>
       </Container>
     </article>
   );
@@ -194,8 +208,11 @@ const getCompanyData = unstable_cache(
         { label: "Ciudad", value: siis?.["ciudad"] },
         { label: "Macro sector", value: siis?.["macroSector"] },
         { label: "Sector", value: siis?.["sector"] },
+        {
+          label: "Actividad económica",
+          value: getEconomicActivitiesFromDetails(companyData.details),
+        },
       ],
-      economicActivities: getEconomicActivitiesFromDetails(companyData.details),
       chamber: [
         { label: "Nombre", value: companyData.chamber?.["name"] },
         { label: "Dirección", value: companyData.chamber?.["address"] },
@@ -286,29 +303,29 @@ function getEconomicActivitiesFromDetails(details: File | undefined) {
   }
   const economicActivities = [
     {
-      code: details["cod_ciiu_act_econ_pri"],
-      description: details["desc_ciiu_act_econ_pri"],
+      label: details["cod_ciiu_act_econ_pri"],
+      value: details["desc_ciiu_act_econ_pri"],
     },
   ];
 
   if (details["cod_ciiu_act_econ_sec"] && details["desc_ciiu_act_econ_sec"]) {
     economicActivities.push({
-      code: details["cod_ciiu_act_econ_sec"],
-      description: details["desc_ciiu_act_econ_sec"],
+      label: details["cod_ciiu_act_econ_sec"],
+      value: details["desc_ciiu_act_econ_sec"],
     });
   }
 
   if (details["ciiu3"] && details["desc_ciiu3"]) {
     economicActivities.push({
-      code: details["ciiu3"],
-      description: details["desc_ciiu3"],
+      label: details["ciiu3"],
+      value: details["desc_ciiu3"],
     });
   }
 
   if (details["ciiu4"] && details["desc_ciiu_act_econ_sec"]) {
     economicActivities.push({
-      code: details["ciiu4"],
-      description: details["desc_ciiu4"],
+      label: details["ciiu4"],
+      value: details["desc_ciiu4"],
     });
   }
 

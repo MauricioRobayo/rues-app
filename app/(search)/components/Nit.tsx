@@ -4,7 +4,6 @@ import { formatNit } from "@/app/lib/format-nit";
 import { usePathname } from "next/navigation";
 
 export function Nit({
-  className,
   options,
 }: {
   className?: string;
@@ -15,5 +14,5 @@ export function Nit({
     return null;
   }
   const nit = Number(pathname.replace(/.*-/g, ""));
-  return <div className={className}>{formatNit(nit, options)}</div>;
+  return <div>{formatNit(nit, options)}</div>;
 }

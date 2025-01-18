@@ -1,4 +1,4 @@
-import { CompanyDetail } from "@/app/[company]/components/CompanyDetail";
+import { Code, DataList, Link } from "@radix-ui/themes";
 
 const dateFormatter = new Intl.DateTimeFormat("es-CO", {
   dateStyle: "long",
@@ -10,32 +10,34 @@ type Value =
   | Date
   | undefined
   | number
-  | { url?: string; label: string };
+  | { url?: string; label: string }
+  | { label: string; value: string }[];
 
 export function CompanyDetails({
   details,
+  horizontal = false,
 }: {
   details: { label: string; value: Value }[];
+  horizontal?: boolean;
 }) {
   return (
-    <dl className="flex flex-col gap-2">
+    <DataList.Root
+      orientation={horizontal ? "horizontal" : "vertical"}
+      size={{ initial: "2", sm: "3" }}
+    >
       {details.map((detail) => {
         const value = getDetailValue(detail.value);
         if (!value) {
           return null;
         }
         return (
-          <CompanyDetail
-            key={detail.label}
-            label={detail.label}
-            // TODO: schema.org
-            // itemProp={detail.itemProp}
-          >
-            {value}
-          </CompanyDetail>
+          <DataList.Item key={detail.label}>
+            <DataList.Label>{detail.label}</DataList.Label>
+            <DataList.Value>{value}</DataList.Value>
+          </DataList.Item>
         );
       })}
-    </dl>
+    </DataList.Root>
   );
 }
 
@@ -44,16 +46,29 @@ function getDetailValue(value: Value) {
     return dateFormatter.format(value);
   }
 
+  if (Array.isArray(value)) {
+    return (
+      <ol>
+        {value.map((item) => (
+          <DataList.Root orientation="horizontal" key={item.label}>
+            <DataList.Item key={item.label}>
+              <DataList.Label minWidth="0">
+                <Code>{item.label}</Code>
+              </DataList.Label>
+              <DataList.Value>{item.value}</DataList.Value>
+            </DataList.Item>
+          </DataList.Root>
+        ))}
+      </ol>
+    );
+  }
+
   if (typeof value !== "object") {
     return value;
   }
 
   if (value.url) {
-    return (
-      <a href={value.url} className="text-blue-600 underline">
-        {value.label}
-      </a>
-    );
+    return <Link href={value.url}>{value.label}</Link>;
   }
 
   return null;

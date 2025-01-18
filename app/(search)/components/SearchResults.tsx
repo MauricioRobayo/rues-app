@@ -1,9 +1,9 @@
 "use client";
 
-import { Badge } from "@/app/[company]/components/Badge";
 import { formatNit } from "@/app/lib/format-nit";
 import { slugifyCompanyName } from "@/app/lib/slugify-company-name";
 import type { BusinessRecord } from "@mauriciorobayo/rues-api";
+import { Badge } from "@radix-ui/themes";
 import Link from "next/link";
 
 export function SearchResults({
@@ -35,7 +35,7 @@ export function SearchResults({
                 <h3 className="text-slate-600">
                   NIT: {formatNit(Number(result.nit))}
                 </h3>
-                <Badge status={isActive ? "success" : "error"} type="color">
+                <Badge color={isActive ? "green" : "red"}>
                   {result.estado_matricula}
                 </Badge>
               </div>
