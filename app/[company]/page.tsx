@@ -111,8 +111,8 @@ const getCompanyData = unstable_cache(
       return null;
     }
 
-    after(() => {
-      companiesRepository.upsert({
+    after(async () => {
+      await companiesRepository.upsert({
         nit,
         name: companyData.rues.razon_social,
       });
