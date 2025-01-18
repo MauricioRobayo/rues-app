@@ -11,7 +11,7 @@ type Value =
   | undefined
   | number
   | { url?: string; label: string }
-  | { label: string; value: string }[];
+  | { code: string; description: string }[];
 
 export function CompanyDetails({
   details,
@@ -50,12 +50,12 @@ function getDetailValue(value: Value) {
     return (
       <ol>
         {value.map((item) => (
-          <DataList.Root orientation="horizontal" key={item.label}>
-            <DataList.Item key={item.label}>
+          <DataList.Root orientation="horizontal" key={item.code}>
+            <DataList.Item key={item.code}>
               <DataList.Label minWidth="0">
-                <Code>{item.label}</Code>
+                <Code>{item.code}</Code>
               </DataList.Label>
-              <DataList.Value>{item.value}</DataList.Value>
+              <DataList.Value>{item.description}</DataList.Value>
             </DataList.Item>
           </DataList.Root>
         ))}

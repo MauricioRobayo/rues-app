@@ -303,29 +303,29 @@ function getEconomicActivitiesFromDetails(details: File | undefined) {
   }
   const economicActivities = [
     {
-      label: details["cod_ciiu_act_econ_pri"],
-      value: details["desc_ciiu_act_econ_pri"],
+      code: details["cod_ciiu_act_econ_pri"],
+      description: details["desc_ciiu_act_econ_pri"],
     },
   ];
 
   if (details["cod_ciiu_act_econ_sec"] && details["desc_ciiu_act_econ_sec"]) {
     economicActivities.push({
-      label: details["cod_ciiu_act_econ_sec"],
-      value: details["desc_ciiu_act_econ_sec"],
+      code: details["cod_ciiu_act_econ_sec"],
+      description: details["desc_ciiu_act_econ_sec"],
     });
   }
 
   if (details["ciiu3"] && details["desc_ciiu3"]) {
     economicActivities.push({
-      label: details["ciiu3"],
-      value: details["desc_ciiu3"],
+      code: details["ciiu3"],
+      description: details["desc_ciiu3"],
     });
   }
 
   if (details["ciiu4"] && details["desc_ciiu_act_econ_sec"]) {
     economicActivities.push({
-      label: details["ciiu4"],
-      value: details["desc_ciiu4"],
+      code: details["ciiu4"],
+      description: details["desc_ciiu4"],
     });
   }
 
