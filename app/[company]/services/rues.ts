@@ -1,5 +1,6 @@
 import { chambersRepository } from "@/app/db/repositories/chambers";
 import { tokenRepository } from "@/app/db/repositories/tokens";
+import { VALID_RUES_CATEGORIES } from "@/app/shared/lib/constants";
 import {
   RUES,
   type BusinessEstablishmentsResponse,
@@ -63,7 +64,10 @@ async function advancedSearch(nit: number) {
 
 export async function getRuesDataByNit(nit: number) {
   const advancedSearchResponse = await advancedSearch(nit);
-  if (!advancedSearchResponse) {
+  if (
+    !advancedSearchResponse ||
+    !VALID_RUES_CATEGORIES.includes(advancedSearchResponse.data.categoria)
+  ) {
     return null;
   }
   const { data, token } = advancedSearchResponse;

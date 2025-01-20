@@ -1,7 +1,10 @@
 "use server";
 
 import { getToken } from "@/app/[company]/services/rues";
-import { RECAPTCHA_SEARCH_ACTION } from "@/app/shared/lib/constants";
+import {
+  RECAPTCHA_SEARCH_ACTION,
+  VALID_RUES_CATEGORIES,
+} from "@/app/shared/lib/constants";
 import { isValidNit } from "@/app/shared/lib/isValidNit";
 import { verifyRecaptcha } from "@/app/shared/lib/verifyRecaptcha";
 import { mapRuesResultToCompanySummary } from "@/app/shared/mappers/mapRuesResultToCompany";
@@ -46,7 +49,7 @@ const getSearchResultsByCompanyName = unstable_cache(
       .filter(
         (record) =>
           isValidNit(Number(record.nit)) &&
-          record.categoria === "SOCIEDAD ó PERSONA JURIDICA PRINCIPAL ó ESAL" &&
+          VALID_RUES_CATEGORIES.includes(record.categoria) &&
           !!record.id_rm,
       )
       .map(mapRuesResultToCompanySummary);
