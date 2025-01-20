@@ -1,5 +1,5 @@
+import type { CompanyRecord } from "@/app/api/rues-sync/services/rues";
 import type { companies } from "@/app/db/schema";
-import type { CompanyRecord } from "@/app/api/rues/services/rues";
 
 export function mapCompanyRecordToCompanyModel(
   company: CompanyRecord,

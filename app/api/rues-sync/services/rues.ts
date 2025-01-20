@@ -46,11 +46,13 @@ export async function getFileUrl(filters: Filters) {
 export async function streamData({
   fileUrl,
   fn,
+  onEnd,
   batchSize = 500,
   debug = false,
 }: {
   fileUrl: string;
   fn: (batch: CompanyRecord[]) => Promise<void>;
+  onEnd?: () => Promise<void>;
   batchSize?: number;
   debug?: boolean;
 }) {
@@ -77,6 +79,7 @@ export async function streamData({
     response,
     encoding: "ISO-8859-1",
     fn,
+    onEnd,
     batchSize,
     debug,
   });
@@ -104,12 +107,14 @@ async function processStream({
   response,
   encoding,
   fn,
+  onEnd,
   batchSize = 500,
   debug = false,
 }: {
   response: Response;
   encoding: string;
   fn: (batch: CompanyRecord[]) => Promise<void>;
+  onEnd?: () => Promise<void>;
   batchSize: number;
   debug?: boolean;
 }): Promise<number> {
@@ -161,6 +166,9 @@ async function processStream({
             if (debug) {
               console.log(`Processed ${total}`);
             }
+          }
+          if (onEnd) {
+            await onEnd();
           }
           if (debug) {
             console.log("Finished processing CSV.");
