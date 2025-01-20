@@ -7,6 +7,7 @@ export interface CompanySummary {
   isActive: boolean;
   slug: string;
   nit: string;
+  registrationId: string;
 }
 
 export function CompanyCard({

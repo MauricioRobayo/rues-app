@@ -12,5 +12,6 @@ export function mapRuesResultToCompanySummary(
     isActive: ruesResult.estado_matricula === "ACTIVA",
     slug: `/${slugifyCompanyName(ruesResult.razon_social)}-${ruesResult.nit}`,
     nit: ruesResult.nit,
+    registrationId: ruesResult.id_rm,
   };
 }

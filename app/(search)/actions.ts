@@ -46,7 +46,8 @@ const getSearchResultsByCompanyName = unstable_cache(
       .filter(
         (record) =>
           isValidNit(Number(record.nit)) &&
-          record.categoria === "SOCIEDAD ó PERSONA JURIDICA PRINCIPAL ó ESAL",
+          record.categoria === "SOCIEDAD ó PERSONA JURIDICA PRINCIPAL ó ESAL" &&
+          !!record.id_rm,
       )
       .map(mapRuesResultToCompanySummary);
   },
