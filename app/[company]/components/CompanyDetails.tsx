@@ -67,7 +67,7 @@ function getDetailValue(value: Value) {
     return value;
   }
 
-  if (value.url) {
+  if (value !== null && "url" in value && value.url) {
     return <Link href={value.url}>{value.label}</Link>;
   }
 

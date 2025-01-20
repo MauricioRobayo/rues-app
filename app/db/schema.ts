@@ -16,7 +16,6 @@ export const companies = sqliteTable("companies", {
   state: text(),
   city: text(),
   address: text(),
-  email: text(),
   timestamp: int({ mode: "timestamp" })
     .notNull()
     .default(sql`(unixepoch())`),

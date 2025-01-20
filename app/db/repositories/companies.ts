@@ -20,10 +20,15 @@ export const companiesRepository = {
   upsert(data: typeof companies.$inferInsert) {
     return this.upsertMany([data]);
   },
-  findByNit(nit: number) {
+  getCompanyInfo(nit: number) {
     return db.query.companies.findFirst({
       where: eq(companies.nit, nit),
-      columns: { nit: true, name: true },
+      columns: {
+        state: true,
+        city: true,
+        address: true,
+        companySize: true,
+      },
     });
   },
   findFirst(

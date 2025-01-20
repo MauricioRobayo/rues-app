@@ -1,4 +1,5 @@
 import { chambersRepository } from "@/app/db/repositories/chambers";
+import { companiesRepository } from "@/app/db/repositories/companies";
 import { tokenRepository } from "@/app/db/repositories/tokens";
 import { VALID_RUES_CATEGORIES } from "@/app/shared/lib/constants";
 import {
@@ -71,7 +72,7 @@ export async function getRuesDataByNit(nit: number) {
     return null;
   }
   const { data, token } = advancedSearchResponse;
-  const [fileResponse, businessEstablishmentsResponse, chamber] =
+  const [fileResponse, businessEstablishmentsResponse, chamber, company] =
     await Promise.all([
       rues.getFile({ id: data.id_rm }),
       rues.getBusinessEstablishments({
@@ -79,6 +80,7 @@ export async function getRuesDataByNit(nit: number) {
         token,
       }),
       chambersRepository.findByCode(Number(data.cod_camara)),
+      companiesRepository.getCompanyInfo(nit),
     ]);
 
   const result: {
@@ -87,6 +89,9 @@ export async function getRuesDataByNit(nit: number) {
     >;
     details?: File;
     establishments?: BusinessEstablishmentsResponse["registros"];
+    company?: Awaited<
+      ReturnType<(typeof companiesRepository)["getCompanyInfo"]>
+    >;
     rues: BusinessRecord;
   } = {
     rues: data,
@@ -102,6 +107,10 @@ export async function getRuesDataByNit(nit: number) {
 
   if (businessEstablishmentsResponse.status === "success") {
     result.establishments = businessEstablishmentsResponse.data.registros;
+  }
+
+  if (company) {
+    result.company = company;
   }
 
   return result;
