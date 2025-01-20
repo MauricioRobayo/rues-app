@@ -1,5 +1,5 @@
 import { ruesSyncRepository } from "@/app/db/repositories/rues-sync";
-import { handler } from "@/app/rues/handler";
+import { handler } from "@/app/api/rues/handler";
 import { after } from "next/server";
 
 const syncToken = process.env.RUES_SYNC_TOKEN;
