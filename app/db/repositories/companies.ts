@@ -15,14 +15,13 @@ export const companiesRepository = {
       .onConflictDoUpdate({
         target: companies.nit,
         set: {
-          name: excludedName,
-          address: excludedAddress,
-          size: excludedSize,
-          city: excludedCity,
-          state: excludedState,
+          name: sql`COALESCE(${excludedName}, ${companies.name})`,
+          address: sql`COALESCE(${excludedAddress}, ${companies.address})`,
+          size: sql`COALESCE(${excludedSize}, ${companies.size})`,
+          city: sql`COALESCE(${excludedCity}, ${companies.city})`,
+          state: sql`COALESCE(${excludedState}, ${companies.state})`,
           timestamp: sql`unixepoch()`,
         },
-        setWhere: sql`${companies.name} != ${excludedName}`,
       });
   },
   upsert(data: typeof companies.$inferInsert) {
