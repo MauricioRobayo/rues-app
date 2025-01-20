@@ -111,184 +111,184 @@ export default async function page({ params }: PageProps) {
   );
 }
 
-const getCompanyData = unstable_cache(
-  cache(async (nit: number) => {
-    const [companyData, siis] = await Promise.all([
-      getRuesDataByNit(nit),
-      siisApi(nit),
-    ]);
+async function getCompanyData(nit: number) {
+  const [companyData, siis] = await Promise.all([
+    getRuesDataByNit(nit),
+    siisApi(nit),
+  ]);
 
-    if (!companyData?.rues) {
-      return null;
-    }
+  if (!companyData?.rues) {
+    return null;
+  }
 
-    after(async () => {
-      await companiesRepository.upsert({
-        nit,
-        name: companyData.rues.razon_social,
-      });
-    });
-
-    const registrationDate = gatDateFromDetailsDate(
-      companyData.details?.["fecha_matricula"],
-    );
-
-    const companySlug = slugifyCompanyName(companyData.rues.razon_social);
-    const slug = `${companySlug}-${nit}`;
-
-    return {
+  after(async () => {
+    await companiesRepository.upsert({
+      nit,
       name: companyData.rues.razon_social,
-      nit: companyData.rues.nit,
-      fullNit: formatNit(Number(companyData.rues.nit)),
-      isActive: companyData.rues.estado_matricula === "ACTIVA",
-      slug,
-      details: [
-        {
-          label: "Razón social",
-          value: companyData.rues["razon_social"],
+    });
+  });
+
+  const registrationDate = gatDateFromDetailsDate(
+    companyData.details?.["fecha_matricula"],
+  );
+
+  const companySlug = slugifyCompanyName(companyData.rues.razon_social);
+  const slug = `${companySlug}-${nit}`;
+
+  return {
+    name: companyData.rues.razon_social,
+    nit: companyData.rues.nit,
+    fullNit: formatNit(Number(companyData.rues.nit)),
+    isActive: companyData.rues.estado_matricula === "ACTIVA",
+    slug,
+    details: [
+      {
+        label: "Razón social",
+        value: companyData.rues["razon_social"],
+      },
+      { label: "NIT", value: companyData.rues["nit"] },
+      { label: "DV", value: companyData.rues["dv"] },
+      {
+        label: "Matrícula",
+        value: companyData.rues["matricula"],
+      },
+      { label: "Sigla", value: companyData.rues["sigla"] },
+      {
+        label: "Organización jurídica",
+        value: companyData.rues["organizacion_juridica"],
+      },
+      {
+        label: "Estado",
+        value: companyData.rues["estado_matricula"],
+      },
+      {
+        label: "Fecha de creación",
+        value: registrationDate,
+      },
+      {
+        label: "Antigüedad",
+        value: getYearsOfBusiness(registrationDate),
+      },
+      {
+        label: "Fecha de renovación",
+        value: gatDateFromDetailsDate(
+          companyData.details?.["fecha_renovacion"],
+        ),
+      },
+      {
+        label: "Fecha de actualización",
+        value: gatDateFromDetailsDate(
+          companyData.details?.["fecha_actualizacion"],
+        ),
+      },
+      {
+        label: "Fecha de cancelación",
+        value: gatDateFromDetailsDate(
+          companyData.details?.["fecha_cancelacion"],
+        ),
+      },
+      {
+        label: "Último año renovado",
+        value: companyData.details?.["ultimo_ano_renovado"],
+      },
+      {
+        label: "Indicador de emprendimiento social",
+        value: companyData.details?.["indicador_emprendimiento_social"],
+      },
+      {
+        label: "Tipo de sociedad",
+        value: companyData.details?.["tipo_sociedad"],
+      },
+      {
+        label: "Extinción de dominio",
+        value: companyData.details?.["extincion_dominio"],
+      },
+      { label: "Región", value: siis?.["region"] },
+      { label: "Departamento", value: siis?.["departamento"] },
+      { label: "Ciudad", value: siis?.["ciudad"] },
+      { label: "Macro sector", value: siis?.["macroSector"] },
+      { label: "Sector", value: siis?.["sector"] },
+      {
+        label: "Actividad económica",
+        value: getEconomicActivitiesFromDetails(companyData.details),
+      },
+    ],
+    chamber: [
+      { label: "Nombre", value: companyData.chamber?.["name"] },
+      { label: "Dirección", value: companyData.chamber?.["address"] },
+      { label: "Ciudad", value: companyData.chamber?.["city"] },
+      { label: "Departamento", value: companyData.chamber?.["state"] },
+      {
+        label: "Certificado de tradición",
+        value: {
+          url: companyData.details?.["url_venta_certificados"],
+          label: "Descargar certificado de tradición en línea",
         },
-        { label: "NIT", value: companyData.rues["nit"] },
-        { label: "DV", value: companyData.rues["dv"] },
-        {
-          label: "Matrícula",
-          value: companyData.rues["matricula"],
-        },
-        { label: "Sigla", value: companyData.rues["sigla"] },
-        {
-          label: "Organización jurídica",
-          value: companyData.rues["organizacion_juridica"],
-        },
-        {
-          label: "Estado",
-          value: companyData.rues["estado_matricula"],
-        },
-        {
-          label: "Fecha de creación",
-          value: registrationDate,
-        },
-        {
-          label: "Antigüedad",
-          value: getYearsOfBusiness(registrationDate),
-        },
-        {
-          label: "Fecha de renovación",
-          value: gatDateFromDetailsDate(
-            companyData.details?.["fecha_renovacion"],
-          ),
-        },
-        {
-          label: "Fecha de actualización",
-          value: gatDateFromDetailsDate(
-            companyData.details?.["fecha_actualizacion"],
-          ),
-        },
-        {
-          label: "Fecha de cancelación",
-          value: gatDateFromDetailsDate(
-            companyData.details?.["fecha_cancelacion"],
-          ),
-        },
-        {
-          label: "Último año renovado",
-          value: companyData.details?.["ultimo_ano_renovado"],
-        },
-        {
-          label: "Indicador de emprendimiento social",
-          value: companyData.details?.["indicador_emprendimiento_social"],
-        },
-        {
-          label: "Tipo de sociedad",
-          value: companyData.details?.["tipo_sociedad"],
-        },
-        {
-          label: "Extinción de dominio",
-          value: companyData.details?.["extincion_dominio"],
-        },
-        { label: "Región", value: siis?.["region"] },
-        { label: "Departamento", value: siis?.["departamento"] },
-        { label: "Ciudad", value: siis?.["ciudad"] },
-        { label: "Macro sector", value: siis?.["macroSector"] },
-        { label: "Sector", value: siis?.["sector"] },
-        {
-          label: "Actividad económica",
-          value: getEconomicActivitiesFromDetails(companyData.details),
-        },
-      ],
-      chamber: [
-        { label: "Nombre", value: companyData.chamber?.["name"] },
-        { label: "Dirección", value: companyData.chamber?.["address"] },
-        { label: "Ciudad", value: companyData.chamber?.["city"] },
-        { label: "Departamento", value: companyData.chamber?.["state"] },
-        {
-          label: "Certificado de tradición",
-          value: {
-            url: companyData.details?.["url_venta_certificados"],
-            label: "Descargar certificado de tradición en línea",
-          },
-        },
-      ],
-      businessEstablishments: (companyData.establishments ?? []).map(
-        (establishment) => {
-          const creationDate = gatDateFromDetailsDate(
-            establishment["FECHA_MATRICULA"],
-          );
-          return {
-            name: establishment["RAZON_SOCIAL"],
-            id: establishment["MATRICULA"],
-            details: [
-              {
-                label: "Razón social",
-                value: establishment["RAZON_SOCIAL"],
-              },
-              {
-                label: "Sigla",
-                value: establishment["SIGLA"],
-              },
-              {
-                label: "Matrícula",
-                value: establishment["MATRICULA"],
-              },
-              {
-                label: "Tipo de sociedad",
-                value: establishment["DESC_TIPO_SOCIEDAD"],
-              },
-              {
-                label: "Organización jurídica",
-                value: establishment["DESC_ORGANIZACION_JURIDICA"],
-              },
-              {
-                label: "Categoría",
-                value: establishment["CATEGORIA_MATRICULA"],
-              },
-              {
-                label: "Estado",
-                value: establishment["DESC_ESTADO_MATRICULA"],
-              },
-              {
-                label: "Fecha de constitución",
-                value: creationDate,
-              },
-              {
-                label: "Antigüedad",
-                value: getYearsOfBusiness(creationDate),
-              },
-              {
-                label: "Fecha de renovación",
-                value: gatDateFromDetailsDate(
-                  establishment["FECHA_RENOVACION"],
-                ),
-              },
-              {
-                label: "Último año renovado",
-                value: establishment["ULTIMO_ANO_RENOVADO"],
-              },
-            ],
-          };
-        },
-      ),
-    };
-  }),
-);
+      },
+    ],
+    businessEstablishments: (companyData.establishments ?? []).map(
+      (establishment) => {
+        const creationDate = gatDateFromDetailsDate(
+          establishment["FECHA_MATRICULA"],
+        );
+        return {
+          name: establishment["RAZON_SOCIAL"],
+          id: establishment["MATRICULA"],
+          details: [
+            {
+              label: "Razón social",
+              value: establishment["RAZON_SOCIAL"],
+            },
+            {
+              label: "Sigla",
+              value: establishment["SIGLA"],
+            },
+            {
+              label: "Matrícula",
+              value: establishment["MATRICULA"],
+            },
+            {
+              label: "Tipo de sociedad",
+              value: establishment["DESC_TIPO_SOCIEDAD"],
+            },
+            {
+              label: "Organización jurídica",
+              value: establishment["DESC_ORGANIZACION_JURIDICA"],
+            },
+            {
+              label: "Categoría",
+              value: establishment["CATEGORIA_MATRICULA"],
+            },
+            {
+              label: "Estado",
+              value: establishment["DESC_ESTADO_MATRICULA"],
+            },
+            {
+              label: "Fecha de constitución",
+              value: creationDate,
+            },
+            {
+              label: "Antigüedad",
+              value: getYearsOfBusiness(creationDate),
+            },
+            {
+              label: "Fecha de renovación",
+              value: gatDateFromDetailsDate(establishment["FECHA_RENOVACION"]),
+            },
+            {
+              label: "Último año renovado",
+              value: establishment["ULTIMO_ANO_RENOVADO"],
+            },
+          ],
+        };
+      },
+    ),
+  };
+}
+
+const getCompanyDataCached = unstable_cache(cache(getCompanyData), undefined, {
+  revalidate: 2 * 24 * 60 * 60, // 2 Days
+});
 
 function getYearsOfBusiness(date?: Date) {
   return date
@@ -359,7 +359,7 @@ async function getPageData(company: string) {
 
   // Cache at the NIT level to avoid multiple path segments with same NIT
   // triggering multiple duplicated API calls
-  const companyData = await getCompanyData(nit);
+  const companyData = await getCompanyDataCached(nit);
 
   if (!companyData) {
     notFound();
