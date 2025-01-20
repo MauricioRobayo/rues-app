@@ -1,6 +1,7 @@
 "use server";
 
 import { getToken } from "@/app/[company]/services/rues";
+import { RECAPTCHA_SEARCH_ACTION } from "@/app/shared/lib/constants";
 import { isValidNit } from "@/app/shared/lib/isValidNit";
 import { verifyRecaptcha } from "@/app/shared/lib/verifyRecaptcha";
 import { mapRuesResultToCompanySummary } from "@/app/shared/mappers/mapRuesResultToCompany";
@@ -19,7 +20,12 @@ export async function search({
   if (!companyName) {
     return null;
   }
-  if (!(await verifyRecaptcha({ token: recaptchaToken, action: "SEARCH" }))) {
+  if (
+    !(await verifyRecaptcha({
+      token: recaptchaToken,
+      action: RECAPTCHA_SEARCH_ACTION,
+    }))
+  ) {
     return null;
   }
 
@@ -37,7 +43,11 @@ const getSearchResultsByCompanyName = unstable_cache(
       return null;
     }
     return (response.data.registros ?? [])
-      .filter((record) => isValidNit(Number(record.nit)))
+      .filter(
+        (record) =>
+          isValidNit(Number(record.nit)) &&
+          record.categoria === "SOCIEDAD ó PERSONA JURIDICA PRINCIPAL ó ESAL",
+      )
       .map(mapRuesResultToCompanySummary);
   },
   undefined,
