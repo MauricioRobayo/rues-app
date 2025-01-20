@@ -15,6 +15,7 @@ import {
   Grid,
   Heading,
   TextField,
+  Text,
 } from "@radix-ui/themes";
 import { useQuery } from "@tanstack/react-query";
 import Form from "next/form";
@@ -42,7 +43,14 @@ export function Search() {
         <PageContainer size="2">
           <Recaptcha />
           <Flex direction="column" gap="4">
-            <Heading>Buscar Empresa</Heading>
+            <Heading>
+              Buscar Empresa
+              {companyName && (
+                <Text color="gray" weight="light">
+                  : {companyName}
+                </Text>
+              )}
+            </Heading>
             <Form action="/">
               <Container size="1">
                 <Grid

@@ -8,10 +8,6 @@ export default {
       colors: {
         brand: colors.sky[700],
       },
-      fontFamily: {
-        brand: ["var(--font-montserrat)"],
-        sans: ["var(--font-roboto-flex)"],
-      },
     },
   },
   plugins: [],
