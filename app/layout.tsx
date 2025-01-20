@@ -3,12 +3,12 @@ import "@radix-ui/themes/styles.css";
 import { Logo } from "@/app/(search)/components/Logo";
 import { Nit } from "@/app/(search)/components/Nit";
 import { GoogleTagManager } from "@next/third-parties/google";
-import { Box, Flex, Link, Text, Theme } from "@radix-ui/themes";
+import { Box, Flex, Text, Theme } from "@radix-ui/themes";
 import type { Metadata } from "next";
-import NextLink from "next/link";
 import { Email } from "react-obfuscate-email";
 import "./globals.css";
 import { PageContainer } from "@/app/shared/component/PageContainer";
+import { Link } from "@/app/shared/component/Link";
 
 export const metadata: Metadata = {
   title: "Registro NIT",
@@ -31,10 +31,8 @@ export default function RootLayout({
                 <Flex dir="row" justify="between">
                   <header>
                     <div>
-                      <Link asChild underline="none" color="sky">
-                        <NextLink href="/">
-                          <Logo />
-                        </NextLink>
+                      <Link underline="none" href="/">
+                        <Logo />
                       </Link>
                     </div>
                   </header>

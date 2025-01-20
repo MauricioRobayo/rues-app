@@ -2,8 +2,8 @@
 
 import type { CompanySummary } from "@/app/shared/component/CompanyCard";
 import { CompanyStatusBadge } from "@/app/shared/component/CompanyStatusBadge";
-import { Card, Flex, Heading, Separator, Link } from "@radix-ui/themes";
-import NextLink from "next/link";
+import { Link } from "@/app/shared/component/Link";
+import { Card, Flex, Heading, Separator } from "@radix-ui/themes";
 
 export function SearchResults({
   results,
@@ -32,12 +32,10 @@ export function SearchResults({
               asChild
             >
               <li>
-                <Link asChild underline="none">
-                  <NextLink href={result.slug} prefetch={false}>
-                    <Heading itemProp="name" as="h2" size="4">
-                      {result.name}
-                    </Heading>
-                  </NextLink>
+                <Link underline="none" href={result.slug} prefetch={false}>
+                  <Heading itemProp="name" as="h2" size="4">
+                    {result.name}
+                  </Heading>
                 </Link>
                 <Flex align="center" gap="2">
                   <Heading as="h3" size="3" itemProp="taxID">
