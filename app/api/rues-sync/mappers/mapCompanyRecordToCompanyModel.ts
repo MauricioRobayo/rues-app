@@ -7,5 +7,9 @@ export function mapCompanyRecordToCompanyModel(
   return {
     name: company.razon_social,
     nit: Number(company.numero_identificacion),
+    address: company.direccion_comercial,
+    city: company.municipio,
+    state: company.departamento,
+    size: company.desc_tamano_empresa,
   };
 }

@@ -1,4 +1,4 @@
-import { mapCompanyRecordToCompanyModel } from "@/app/api/rues-sync/mappers/map-company-record-to-company-model";
+import { mapCompanyRecordToCompanyModel } from "@/app/api/rues-sync/mappers/mapCompanyRecordToCompanyModel";
 import {
   getFileUrl,
   getTotal,
