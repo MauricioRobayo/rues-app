@@ -1,3 +1,4 @@
+import { CompanyStatusBadge } from "@/app/[company]/Badge";
 import { CompanyDetails } from "@/app/[company]/components/CompanyDetails";
 import { getRuesDataByNit } from "@/app/[company]/services/rues";
 import { siisApi } from "@/app/[company]/services/siis";
@@ -9,7 +10,6 @@ import { parseCompanyPathSegment } from "@/app/lib/parse-company-path-segment";
 import { slugifyCompanyName } from "@/app/lib/slugify-company-name";
 import type { File } from "@mauriciorobayo/rues-api";
 import {
-  Badge,
   Box,
   Card,
   Container,
@@ -56,7 +56,7 @@ export default async function page({ params }: PageProps) {
     <article itemScope itemType="https://schema.org/Organization">
       <Box asChild style={{ position: "sticky", top: 0, background: "white" }}>
         <header>
-          <Container px="4" py="8">
+          <Container px="4" py={{ initial: "6", sm: "8" }}>
             <Card size="4" variant="ghost">
               <Heading itemProp="name" color="sky">
                 {companyData.name}
@@ -65,23 +65,16 @@ export default async function page({ params }: PageProps) {
                 <Heading as="h2" size="4" itemProp="taxID">
                   NIT: {companyData.fullNit}
                 </Heading>
-                <Badge
-                  color={companyData.isActive ? "green" : "red"}
-                  size="1"
-                  variant="outline"
-                  style={{ textTransform: "uppercase" }}
-                >
-                  {companyData.isActive ? "Activa" : "Cancelada"}
-                </Badge>
+                <CompanyStatusBadge isActive={companyData.isActive} />
               </Flex>
             </Card>
           </Container>
-          <Separator mb="6" size="4" />
+          <Separator mb={{ initial: "4", sm: "4" }} size="4" />
         </header>
       </Box>
       <Container px="4">
         <Grid columns={{ initial: "1", sm: "2" }} gapX="8" width="auto">
-          <Section size="2" id="detalles-de-la-empresa">
+          <Section size={{ initial: "1", sm: "2" }} id="detalles-de-la-empresa">
             <Heading as="h3" size="4" mb="2">
               Detalles de la Empresa
             </Heading>
