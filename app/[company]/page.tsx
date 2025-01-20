@@ -1,4 +1,4 @@
-import { CompanyStatusBadge } from "@/app/[company]/Badge";
+import { CompanyStatusBadge } from "@/app/shared-components/CompanyStatusBadge";
 import { CompanyDetails } from "@/app/[company]/components/CompanyDetails";
 import { getRuesDataByNit } from "@/app/[company]/services/rues";
 import { siisApi } from "@/app/[company]/services/siis";
@@ -12,7 +12,6 @@ import type { File } from "@mauriciorobayo/rues-api";
 import {
   Box,
   Card,
-  Container,
   Flex,
   Grid,
   Heading,
@@ -26,6 +25,7 @@ import { unstable_cache } from "next/cache";
 import { notFound, permanentRedirect } from "next/navigation";
 import { after } from "next/server";
 import { cache } from "react";
+import { PageContainer } from "@/app/shared-components/PageContainer";
 
 interface PageProps {
   params: Promise<{ company: string }>;
@@ -56,7 +56,7 @@ export default async function page({ params }: PageProps) {
     <article itemScope itemType="https://schema.org/Organization">
       <Box asChild style={{ position: "sticky", top: 0, background: "white" }}>
         <header>
-          <Container px="4" py={{ initial: "6", sm: "8" }}>
+          <PageContainer py={{ initial: "6", sm: "8" }}>
             <Card size="4" variant="ghost">
               <Heading itemProp="name" color="sky">
                 {companyData.name}
@@ -68,11 +68,11 @@ export default async function page({ params }: PageProps) {
                 <CompanyStatusBadge isActive={companyData.isActive} />
               </Flex>
             </Card>
-          </Container>
+          </PageContainer>
           <Separator mb={{ initial: "4", sm: "4" }} size="4" />
         </header>
       </Box>
-      <Container px="4">
+      <PageContainer>
         <Grid columns={{ initial: "1", sm: "2" }} gapX="8" width="auto">
           <Section size={{ initial: "1", sm: "2" }} id="detalles-de-la-empresa">
             <Heading as="h3" size="4" mb="2">
@@ -106,7 +106,7 @@ export default async function page({ params }: PageProps) {
             )}
           </Box>
         </Grid>
-      </Container>
+      </PageContainer>
     </article>
   );
 }

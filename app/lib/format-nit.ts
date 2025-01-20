@@ -16,7 +16,7 @@ export function formatNit(
 ) {
   let formattedNit = showDecimalSeparator
     ? numberFormatter.format(Number(nit))
-    : nit;
+    : String(nit);
   if (showVerificationDigit) {
     const dv = getVerificationDigit(nit);
     formattedNit += `-${dv}`;

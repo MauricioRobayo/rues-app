@@ -3,61 +3,88 @@
 import { search } from "@/app/(search)/actions";
 import { Recaptcha } from "@/app/(search)/components/Recaptcha";
 import { SearchResults } from "@/app/(search)/components/SearchResults";
-import type { BusinessRecord } from "@mauriciorobayo/rues-api";
+import type { Company } from "@/app/shared-components/CompanyCard";
+import { PageContainer } from "@/app/shared-components/PageContainer";
+import { MagnifyingGlassIcon } from "@radix-ui/react-icons";
+import {
+  Box,
+  Button,
+  Container,
+  Flex,
+  Grid,
+  Heading,
+  TextField,
+} from "@radix-ui/themes";
 import Form from "next/form";
-import { useSearchParams } from "next/navigation";
-import { useEffect, useState, useTransition } from "react";
-import { Container } from "@radix-ui/themes";
+import { useState, useTransition } from "react";
 
 export default function Page() {
   const [isPending, startTransition] = useTransition();
-  const [results, setResults] = useState<BusinessRecord[] | null>(null);
-  const searchParams = useSearchParams();
-  const companyName = searchParams.get("razon-social");
-  useEffect(() => {
-    async function getSearchResults() {
-      if (!companyName) {
-        return;
+  const [results, setResults] = useState<Company[] | null>(null);
+
+  async function searchByCompanyName(companyName: string) {
+    startTransition(async () => {
+      const token = await window.grecaptcha.enterprise.execute(
+        process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY,
+        { action: "SEARCH" },
+      );
+      const data = await search({ companyName, token });
+      if (data) {
+        setResults(data);
       }
-      startTransition(async () => {
-        if (!("grecaptcha" in window)) {
-          return;
-        }
-        const token = await window.grecaptcha.enterprise.execute(
-          process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY,
-          { action: "SEARCH" },
-        );
-        const data = await search({ companyName, token });
-        if (data) {
-          setResults(data);
-        }
-      });
-    }
-    getSearchResults();
-  }, [companyName]);
+    });
+  }
   return (
-    <Container>
-      <Recaptcha />
-      <Form
-        className="flex w-full flex-col items-center gap-2 sm:flex-row"
-        action="/"
-      >
-        <label htmlFor="razon-social">Razón Social</label>
-        <input
-          type="text"
-          id="razon-social"
-          name="razon-social"
-          className="min-w-80 rounded-md border border-brand px-4 py-2"
-          defaultValue={companyName ?? undefined}
-        />
-        <button
-          disabled={isPending}
-          className="w-full rounded-md border border-brand bg-brand px-4 py-2 text-white hover:bg-sky-800 disabled:bg-gray-200 sm:w-fit"
-        >
-          {isPending ? "&hellip;" : "Buscar"}
-        </button>
-      </Form>
-      <SearchResults results={results} />
-    </Container>
+    <Box py={{ initial: "6", sm: "8" }}>
+      <Flex direction="column" gap="8">
+        <PageContainer size="2">
+          <Recaptcha />
+          <Flex direction="column" gap="4">
+            <Heading>Buscar Empresa</Heading>
+            <Form
+              action="/"
+              onSubmit={(e) => {
+                const formData = new FormData(e.currentTarget);
+                const companyName = formData.get("razon-social")?.toString();
+                if (!companyName) {
+                  return;
+                }
+                searchByCompanyName(companyName);
+              }}
+            >
+              <Container size="1">
+                <Grid
+                  columns={{ initial: "1", sm: "1fr auto" }}
+                  gapX="2"
+                  gapY="4"
+                >
+                  <TextField.Root
+                    id="razon-social"
+                    name="razon-social"
+                    placeholder="Razón Social..."
+                    size="3"
+                  >
+                    <TextField.Slot>
+                      <MagnifyingGlassIcon height="16" width="16" />
+                    </TextField.Slot>
+                  </TextField.Root>
+                  <Button
+                    style={{ backgroundColor: "var(--sky-11)", color: "white" }}
+                    type="submit"
+                    size="3"
+                    loading={isPending}
+                  >
+                    Buscar
+                  </Button>
+                </Grid>
+              </Container>
+            </Form>
+          </Flex>
+        </PageContainer>
+        <PageContainer size="2">
+          <SearchResults results={results} />
+        </PageContainer>
+      </Flex>
+    </Box>
   );
 }

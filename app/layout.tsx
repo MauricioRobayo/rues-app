@@ -3,11 +3,12 @@ import "@radix-ui/themes/styles.css";
 import { Logo } from "@/app/(search)/components/Logo";
 import { Nit } from "@/app/(search)/components/Nit";
 import { GoogleTagManager } from "@next/third-parties/google";
-import { Box, Container, Flex, Link, Text, Theme } from "@radix-ui/themes";
+import { Box, Flex, Link, Text, Theme } from "@radix-ui/themes";
 import type { Metadata } from "next";
 import NextLink from "next/link";
 import { Email } from "react-obfuscate-email";
 import "./globals.css";
+import { PageContainer } from "@/app/shared-components/PageContainer";
 
 export const metadata: Metadata = {
   title: "Registro NIT",
@@ -26,7 +27,7 @@ export default function RootLayout({
         <Theme accentColor="sky">
           <Flex direction="column" style={{ height: "100vh" }}>
             <Box style={{ background: "var(--sky-a2)" }}>
-              <Container p="4">
+              <PageContainer py="4">
                 <Flex dir="row" justify="between">
                   <header>
                     <div>
@@ -41,7 +42,7 @@ export default function RootLayout({
                     <Nit />
                   </Text>
                 </Flex>
-              </Container>
+              </PageContainer>
             </Box>
             <main style={{ flexGrow: 1 }}>{children}</main>
             <Box
@@ -50,11 +51,11 @@ export default function RootLayout({
               py="8"
             >
               <footer>
-                <Container>
+                <PageContainer>
                   <Flex align="center" direction="column">
                     <Email email="info@registronit.com" />
                   </Flex>
-                </Container>
+                </PageContainer>
               </footer>
             </Box>
           </Flex>

@@ -1,10 +1,16 @@
-import { Badge } from "@radix-ui/themes";
+import { Badge, type BadgeProps } from "@radix-ui/themes";
 
-export function CompanyStatusBadge({ isActive }: { isActive: boolean }) {
+export function CompanyStatusBadge({
+  isActive,
+  size = "1",
+}: {
+  isActive: boolean;
+  size?: BadgeProps["size"];
+}) {
   return (
     <Badge
       color={isActive ? "green" : "red"}
-      size="1"
+      size={size}
       variant="surface"
       style={{ textTransform: "uppercase" }}
     >

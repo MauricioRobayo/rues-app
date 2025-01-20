@@ -1,16 +1,11 @@
 "use client";
 
-import { CompanyStatusBadge } from "@/app/[company]/Badge";
-import { formatNit } from "@/app/lib/format-nit";
-import { slugifyCompanyName } from "@/app/lib/slugify-company-name";
-import type { BusinessRecord } from "@mauriciorobayo/rues-api";
-import Link from "next/link";
+import type { Company } from "@/app/shared-components/CompanyCard";
+import { CompanyStatusBadge } from "@/app/shared-components/CompanyStatusBadge";
+import { Card, Flex, Heading, Separator, Link } from "@radix-ui/themes";
+import NextLink from "next/link";
 
-export function SearchResults({
-  results,
-}: {
-  results: BusinessRecord[] | null;
-}) {
+export function SearchResults({ results }: { results: Company[] | null }) {
   if (!results) {
     return null;
   }
@@ -20,27 +15,38 @@ export function SearchResults({
   }
 
   return (
-    <ul className="flex flex-col gap-4">
-      {results.map((result) => {
-        const companyUrl = `/${slugifyCompanyName(result.razon_social)}-${result.nit}`;
-        const isActive = result.estado_matricula === "ACTIVA";
-        return (
-          <li
-            key={result.id_rm}
-            className="rounded-sm border bg-gray-100 px-4 py-2 shadow-sm"
-          >
-            <Link href={companyUrl} prefetch={false}>
-              <h2 className="text-balance text-brand">{result.razon_social}</h2>
-              <div className="flex gap-2">
-                <h3 className="text-slate-600">
-                  NIT: {formatNit(Number(result.nit))}
-                </h3>
-                <CompanyStatusBadge isActive={isActive} />
-              </div>
-            </Link>
-          </li>
-        );
-      })}
-    </ul>
+    <Flex asChild direction="column" gap="4">
+      <ul>
+        {results.map((result) => {
+          return (
+            <Card
+              size="4"
+              variant="ghost"
+              itemScope
+              itemType="https://schema.org/Organization"
+              key={`${result.name}-${result.nit}`}
+              asChild
+            >
+              <li>
+                <Link asChild underline="none">
+                  <NextLink href={result.slug} prefetch={false}>
+                    <Heading itemProp="name" as="h2" size="4">
+                      {result.name}
+                    </Heading>
+                  </NextLink>
+                </Link>
+                <Flex align="center" gap="2">
+                  <Heading as="h3" size="3" itemProp="taxID">
+                    NIT: {result.fullNit}
+                  </Heading>
+                  <CompanyStatusBadge isActive={result.isActive} />
+                </Flex>
+                <Separator size="4" mt="4" />
+              </li>
+            </Card>
+          );
+        })}
+      </ul>
+    </Flex>
   );
 }
