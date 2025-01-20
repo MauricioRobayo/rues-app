@@ -9,6 +9,7 @@ import { Email } from "react-obfuscate-email";
 import "./globals.css";
 import { PageContainer } from "@/app/shared/component/PageContainer";
 import { Link } from "@/app/shared/component/Link";
+import NextTopLoader from "nextjs-toploader";
 
 export const metadata: Metadata = {
   title: "Registro NIT",
@@ -25,6 +26,7 @@ export default function RootLayout({
       <GoogleTagManager gtmId={process.env.NEXT_PUBLIC_GTM_ID ?? ""} />
       <body>
         <Theme accentColor="sky">
+          <NextTopLoader />
           <Flex direction="column" style={{ height: "100vh" }}>
             <Box style={{ background: "var(--sky-a2)" }}>
               <PageContainer py="4">

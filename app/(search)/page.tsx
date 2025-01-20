@@ -1,10 +1,15 @@
-import Search from "@/app/(search)/components/search";
+import { Search } from "@/app/(search)/components/search";
 import { Suspense } from "react";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import Providers from "@/app/(search)/providers";
 
 export default function Page() {
   return (
     <Suspense>
-      <Search />
+      <Providers>
+        <Search />
+        <ReactQueryDevtools initialIsOpen />
+      </Providers>
     </Suspense>
   );
 }

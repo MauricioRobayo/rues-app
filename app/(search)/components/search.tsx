@@ -3,7 +3,7 @@
 import { search } from "@/app/(search)/actions";
 import { Recaptcha } from "@/app/(search)/components/Recaptcha";
 import { SearchResults } from "@/app/(search)/components/SearchResults";
-import type { CompanySummary } from "@/app/shared/component/CompanyCard";
+import { useNormalizedCompanyName } from "@/app/(search)/hooks/useNormalizedCompanyName";
 import { PageContainer } from "@/app/shared/component/PageContainer";
 import { MagnifyingGlassIcon } from "@radix-ui/react-icons";
 import {
@@ -15,25 +15,26 @@ import {
   Heading,
   TextField,
 } from "@radix-ui/themes";
+import { useQuery } from "@tanstack/react-query";
 import Form from "next/form";
-import { useState, useTransition } from "react";
 
-export default function Page() {
-  const [isPending, startTransition] = useTransition();
-  const [results, setResults] = useState<CompanySummary[] | null>(null);
-
-  async function searchByCompanyName(companyName: string) {
-    startTransition(async () => {
+export function Search() {
+  const companyName = useNormalizedCompanyName();
+  const { isPending, data } = useQuery({
+    queryKey: [companyName],
+    queryFn: async function searchByCompanyName({ queryKey }) {
+      const companyName = queryKey.at(0);
+      if (!companyName) {
+        return;
+      }
       const token = await window.grecaptcha.enterprise.execute(
         process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY,
         { action: "SEARCH" },
       );
-      const data = await search({ companyName, token });
-      if (data) {
-        setResults(data);
-      }
-    });
-  }
+      return search({ companyName, token });
+    },
+    enabled: !!companyName,
+  });
   return (
     <Box py={{ initial: "6", sm: "8" }}>
       <Flex direction="column" gap="8">
@@ -41,17 +42,7 @@ export default function Page() {
           <Recaptcha />
           <Flex direction="column" gap="4">
             <Heading>Buscar Empresa</Heading>
-            <Form
-              action="/"
-              onSubmit={(e) => {
-                const formData = new FormData(e.currentTarget);
-                const companyName = formData.get("razon-social")?.toString();
-                if (!companyName) {
-                  return;
-                }
-                searchByCompanyName(companyName);
-              }}
-            >
+            <Form action="/">
               <Container size="1">
                 <Grid
                   columns={{ initial: "1", sm: "1fr auto" }}
@@ -63,6 +54,7 @@ export default function Page() {
                     name="razon-social"
                     placeholder="Razón Social..."
                     size="3"
+                    defaultValue={companyName ?? undefined}
                   >
                     <TextField.Slot>
                       <MagnifyingGlassIcon height="16" width="16" />
@@ -81,9 +73,11 @@ export default function Page() {
             </Form>
           </Flex>
         </PageContainer>
-        <PageContainer size="2">
-          <SearchResults results={results} />
-        </PageContainer>
+        {data && (
+          <PageContainer size="2">
+            <SearchResults results={data} />
+          </PageContainer>
+        )}
       </Flex>
     </Box>
   );
