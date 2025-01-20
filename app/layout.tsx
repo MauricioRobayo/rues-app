@@ -8,7 +8,7 @@ import type { Metadata } from "next";
 import NextLink from "next/link";
 import { Email } from "react-obfuscate-email";
 import "./globals.css";
-import { PageContainer } from "@/app/shared-components/PageContainer";
+import { PageContainer } from "@/app/shared/component/PageContainer";
 
 export const metadata: Metadata = {
   title: "Registro NIT",

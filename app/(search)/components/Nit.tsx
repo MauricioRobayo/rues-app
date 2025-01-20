@@ -1,6 +1,6 @@
 "use client";
 
-import { formatNit } from "@/app/lib/format-nit";
+import { formatNit } from "@/app/shared/lib/formatNit";
 import { usePathname } from "next/navigation";
 
 export function Nit({

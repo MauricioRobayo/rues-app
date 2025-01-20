@@ -1,7 +1,7 @@
-import { CompanyStatusBadge } from "@/app/shared-components/CompanyStatusBadge";
+import { CompanyStatusBadge } from "@/app/shared/component/CompanyStatusBadge";
 import { Card, Heading, Flex, type CardProps } from "@radix-ui/themes";
 
-export interface Company {
+export interface CompanySummary {
   name: string;
   fullNit: string;
   isActive: boolean;
@@ -14,7 +14,7 @@ export function CompanyCard({
   fullNit,
   isActive,
   ...props
-}: Company & CardProps) {
+}: CompanySummary & CardProps) {
   return (
     <Card {...props}>
       <Heading itemProp="name" color="sky">

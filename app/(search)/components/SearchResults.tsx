@@ -1,11 +1,15 @@
 "use client";
 
-import type { Company } from "@/app/shared-components/CompanyCard";
-import { CompanyStatusBadge } from "@/app/shared-components/CompanyStatusBadge";
+import type { CompanySummary } from "@/app/shared/component/CompanyCard";
+import { CompanyStatusBadge } from "@/app/shared/component/CompanyStatusBadge";
 import { Card, Flex, Heading, Separator, Link } from "@radix-ui/themes";
 import NextLink from "next/link";
 
-export function SearchResults({ results }: { results: Company[] | null }) {
+export function SearchResults({
+  results,
+}: {
+  results: CompanySummary[] | null;
+}) {
   if (!results) {
     return null;
   }

@@ -1,5 +1,5 @@
 import { generateSitemaps } from "@/app/(sitemap)/sitemap";
-import { BASE_URL } from "@/app/lib/constants";
+import { BASE_URL } from "@/app/shared/lib/constants";
 import { NextResponse } from "next/server";
 
 export const dynamic = "force-static";

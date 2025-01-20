@@ -1,6 +1,6 @@
-import { BASE_URL, MAX_URLS_PER_SITEMAP } from "@/app/lib/constants";
+import { BASE_URL, MAX_URLS_PER_SITEMAP } from "@/app/shared/lib/constants";
 import { companiesRepository } from "@/app/db/repositories/companies";
-import { slugifyCompanyName } from "@/app/lib/slugify-company-name";
+import { slugifyCompanyName } from "@/app/shared/lib/slugifyComponentName";
 import type { MetadataRoute } from "next";
 
 const isVercelProductionDeployment = process.env.VERCEL_ENV === "production";

@@ -1,13 +1,12 @@
-import { CompanyStatusBadge } from "@/app/shared-components/CompanyStatusBadge";
+import { CompanyStatusBadge } from "@/app/shared/component/CompanyStatusBadge";
 import { CompanyDetails } from "@/app/[company]/components/CompanyDetails";
 import { getRuesDataByNit } from "@/app/[company]/services/rues";
 import { siisApi } from "@/app/[company]/services/siis";
 import { companiesRepository } from "@/app/db/repositories/companies";
-import { BASE_URL } from "@/app/lib/constants";
-import { formatNit } from "@/app/lib/format-nit";
-import { isValidNit } from "@/app/lib/is-valid-nit";
-import { parseCompanyPathSegment } from "@/app/lib/parse-company-path-segment";
-import { slugifyCompanyName } from "@/app/lib/slugify-company-name";
+import { BASE_URL } from "@/app/shared/lib/constants";
+import { isValidNit } from "@/app/shared/lib/isValidNit";
+import { parseCompanyPathSegment } from "@/app/shared/lib/parseCompanyPathSegment";
+import { slugifyCompanyName } from "@/app/shared/lib/slugifyComponentName";
 import type { File } from "@mauriciorobayo/rues-api";
 import {
   Box,
@@ -25,7 +24,8 @@ import { unstable_cache } from "next/cache";
 import { notFound, permanentRedirect } from "next/navigation";
 import { after } from "next/server";
 import { cache } from "react";
-import { PageContainer } from "@/app/shared-components/PageContainer";
+import { PageContainer } from "@/app/shared/component/PageContainer";
+import { mapRuesResultToCompanySummary } from "@/app/shared/mappers/mapRuesResultToCompany";
 
 interface PageProps {
   params: Promise<{ company: string }>;
@@ -132,15 +132,8 @@ async function getCompanyData(nit: number) {
     companyData.details?.["fecha_matricula"],
   );
 
-  const companySlug = slugifyCompanyName(companyData.rues.razon_social);
-  const slug = `${companySlug}-${nit}`;
-
   return {
-    name: companyData.rues.razon_social,
-    nit: companyData.rues.nit,
-    fullNit: formatNit(Number(companyData.rues.nit)),
-    isActive: companyData.rues.estado_matricula === "ACTIVA",
-    slug,
+    ...mapRuesResultToCompanySummary(companyData.rues),
     details: [
       {
         label: "Razón social",

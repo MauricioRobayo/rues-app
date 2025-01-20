@@ -3,8 +3,8 @@
 import { search } from "@/app/(search)/actions";
 import { Recaptcha } from "@/app/(search)/components/Recaptcha";
 import { SearchResults } from "@/app/(search)/components/SearchResults";
-import type { Company } from "@/app/shared-components/CompanyCard";
-import { PageContainer } from "@/app/shared-components/PageContainer";
+import type { CompanySummary } from "@/app/shared/component/CompanyCard";
+import { PageContainer } from "@/app/shared/component/PageContainer";
 import { MagnifyingGlassIcon } from "@radix-ui/react-icons";
 import {
   Box,
@@ -20,7 +20,7 @@ import { useState, useTransition } from "react";
 
 export default function Page() {
   const [isPending, startTransition] = useTransition();
-  const [results, setResults] = useState<Company[] | null>(null);
+  const [results, setResults] = useState<CompanySummary[] | null>(null);
 
   async function searchByCompanyName(companyName: string) {
     startTransition(async () => {
