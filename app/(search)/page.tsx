@@ -8,7 +8,7 @@ export default function Page() {
     <Suspense>
       <Providers>
         <Search />
-        <ReactQueryDevtools initialIsOpen />
+        <ReactQueryDevtools position="left" initialIsOpen />
       </Providers>
     </Suspense>
   );
