@@ -192,19 +192,26 @@ async function getCompanyData(nit: number) {
         label: "Tipo de sociedad",
         value: companyData.details?.["tipo_sociedad"],
       },
-      { label: "Tamaño de la empresa", key: companyData.company?.companySize },
-      { label: "Dirección", key: companyData.company?.address },
+      {
+        label: "Tamaño de la empresa",
+        value: companyData.company?.companySize ?? undefined,
+      },
+      { label: "Dirección", value: companyData.company?.address ?? undefined },
       {
         label: "Extinción de dominio",
-        value: companyData.details?.["extincion_dominio"],
+        value: companyData.details?.extincion_dominio,
       },
       { label: "Región", value: siis?.region },
       {
         label: "Departamento",
-        value: siis?.["departamento"] ?? companyData.company?.state,
+        value:
+          siis?.["departamento"] ?? companyData.company?.state ?? undefined,
       },
-      { label: "Ciudad", value: siis?.ciudad ?? companyData.company?.city },
-      { label: "Macro sector", value: siis?.["macroSector"] },
+      {
+        label: "Ciudad",
+        value: siis?.ciudad ?? companyData.company?.city ?? undefined,
+      },
+      { label: "Macro sector", value: siis?.macroSector },
       { label: "Sector", value: siis?.sector },
       {
         label: "Actividad económica",
