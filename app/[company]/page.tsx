@@ -194,7 +194,7 @@ async function getCompanyData(nit: number) {
       },
       {
         label: "Tamaño de la empresa",
-        value: companyData.company?.companySize ?? undefined,
+        value: companyData.company?.size ?? undefined,
       },
       { label: "Dirección", value: companyData.company?.address ?? undefined },
       {

@@ -12,7 +12,7 @@ export const companies = sqliteTable("companies", {
   id: int().primaryKey({ autoIncrement: true }),
   nit: int().unique().notNull(),
   name: text().notNull(),
-  companySize: text(),
+  size: text(),
   state: text(),
   city: text(),
   address: text(),

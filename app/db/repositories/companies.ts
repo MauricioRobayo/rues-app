@@ -5,6 +5,10 @@ import { asc, count, eq, sql } from "drizzle-orm";
 export const companiesRepository = {
   upsertMany(data: (typeof companies.$inferInsert)[]) {
     const excludedName = sql.raw(`excluded.${companies.name.name}`);
+    const excludedAddress = sql.raw(`excluded.${companies.address.name}`);
+    const excludedSize = sql.raw(`excluded.${companies.size.name}`);
+    const excludedCity = sql.raw(`excluded.${companies.city.name}`);
+    const excludedState = sql.raw(`excluded.${companies.state.name}`);
     return db
       .insert(companies)
       .values(data)
@@ -12,6 +16,10 @@ export const companiesRepository = {
         target: companies.nit,
         set: {
           name: excludedName,
+          address: excludedAddress,
+          size: excludedSize,
+          city: excludedCity,
+          state: excludedState,
           timestamp: sql`unixepoch()`,
         },
         setWhere: sql`${companies.name} != ${excludedName}`,
@@ -27,7 +35,7 @@ export const companiesRepository = {
         state: true,
         city: true,
         address: true,
-        companySize: true,
+        size: true,
       },
     });
   },
