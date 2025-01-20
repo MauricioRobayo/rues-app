@@ -22,7 +22,7 @@ import Form from "next/form";
 
 export function Search() {
   const companyName = useNormalizedCompanyName();
-  const { isPending, data } = useQuery({
+  const { isLoading, data } = useQuery({
     queryKey: [companyName],
     queryFn: async function searchByCompanyName({ queryKey }) {
       const companyName = queryKey.at(0);
@@ -73,7 +73,7 @@ export function Search() {
                     style={{ backgroundColor: "var(--sky-11)", color: "white" }}
                     type="submit"
                     size="3"
-                    loading={isPending}
+                    loading={isLoading}
                   >
                     Buscar
                   </Button>
