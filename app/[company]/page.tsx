@@ -40,7 +40,7 @@ export async function generateMetadata({
   const companyData = await getPageData(company);
 
   return {
-    title: `${companyData.name} - NIT ${companyData.fullNit}`,
+    title: `${companyData.name} NIT ${companyData.fullNit}`,
     metadataBase: new URL(BASE_URL),
     alternates: {
       canonical: companyData.slug,
