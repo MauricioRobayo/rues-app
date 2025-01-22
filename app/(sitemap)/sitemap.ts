@@ -1,4 +1,5 @@
 import { BASE_URL, MAX_URLS_PER_SITEMAP } from "@/app/shared/lib/constants";
+import pRetry from "p-retry";
 import { companiesRepository } from "@/app/repositories/companies";
 import { slugifyCompanyName } from "@/app/shared/lib/slugifyComponentName";
 import type { MetadataRoute } from "next";
@@ -24,10 +25,14 @@ export default async function sitemap({
 }: {
   id: number;
 }): Promise<MetadataRoute.Sitemap> {
-  const companies = await companiesRepository.getAll({
-    offset: id * MAX_URLS_PER_SITEMAP,
-    limit: isVercelProductionDeployment ? MAX_URLS_PER_SITEMAP : 5,
-  });
+  const companies = await pRetry(
+    () =>
+      companiesRepository.getAll({
+        offset: id * MAX_URLS_PER_SITEMAP,
+        limit: isVercelProductionDeployment ? MAX_URLS_PER_SITEMAP : 5,
+      }),
+    { retries: 5 },
+  );
   return companies.map((company) => {
     const companySlug = slugifyCompanyName(company.name);
     const url = `${BASE_URL}/${companySlug}-${company.nit}`;
