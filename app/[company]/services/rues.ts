@@ -1,6 +1,6 @@
-import { chambersRepository } from "@/app/db/repositories/chambers";
-import { companiesRepository } from "@/app/db/repositories/companies";
-import { tokenRepository } from "@/app/db/repositories/tokens";
+import { chambersRepository } from "@/app/repositories/chambers";
+import { companiesRepository } from "@/app/repositories/companies";
+import { tokenRepository } from "@/app/repositories/tokens";
 import { VALID_RUES_CATEGORIES } from "@/app/shared/lib/constants";
 import {
   RUES,

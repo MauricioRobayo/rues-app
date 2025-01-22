@@ -2,7 +2,7 @@ import { CompanyStatusBadge } from "@/app/shared/component/CompanyStatusBadge";
 import { CompanyDetails } from "@/app/[company]/components/CompanyDetails";
 import { getRuesDataByNit } from "@/app/[company]/services/rues";
 import { siisApi } from "@/app/[company]/services/siis";
-import { companiesRepository } from "@/app/db/repositories/companies";
+import { companiesRepository } from "@/app/repositories/companies";
 import { BASE_URL } from "@/app/shared/lib/constants";
 import { isValidNit } from "@/app/shared/lib/isValidNit";
 import { parseCompanyPathSegment } from "@/app/shared/lib/parseCompanyPathSegment";
