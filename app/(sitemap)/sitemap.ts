@@ -31,7 +31,12 @@ export default async function sitemap({
         offset: id * MAX_URLS_PER_SITEMAP,
         limit: isVercelProductionDeployment ? MAX_URLS_PER_SITEMAP : 5,
       }),
-    { retries: 5 },
+    {
+      retries: 5,
+      onFailedAttempt: (error) => {
+        console.log("companiesRepository.getAll failed with error:", error);
+      },
+    },
   );
   return companies.map((company) => {
     const companySlug = slugifyCompanyName(company.name);
