@@ -2,6 +2,20 @@ import { db } from "@/app/db";
 import { companies } from "@/app/db/schema";
 import { asc, count, eq, sql } from "drizzle-orm";
 
+export function insertOrUpdateCompanyName(data: typeof companies.$inferInsert) {
+  const excludedName = sql.raw(`excluded.${companies.name.name}`);
+  return db
+    .insert(companies)
+    .values(data)
+    .onConflictDoUpdate({
+      target: companies.nit,
+      set: {
+        name: excludedName,
+        timestamp: sql`unixepoch()`,
+      },
+      setWhere: sql`${companies.name} != ${excludedName}`,
+    });
+}
 export const companiesRepository = {
   upsertMany(data: (typeof companies.$inferInsert)[]) {
     const excludedName = sql.raw(`excluded.${companies.name.name}`);

@@ -1,12 +1,14 @@
-import { CompanyStatusBadge } from "@/app/shared/component/CompanyStatusBadge";
 import { CompanyDetails } from "@/app/[company]/components/CompanyDetails";
 import { getRuesDataByNit } from "@/app/[company]/services/rues";
 import { siisApi } from "@/app/[company]/services/siis";
-import { companiesRepository } from "@/app/repositories/companies";
+import { insertOrUpdateCompanyName } from "@/app/repositories/companies";
+import { CompanyStatusBadge } from "@/app/shared/component/CompanyStatusBadge";
+import { PageContainer } from "@/app/shared/component/PageContainer";
 import { BASE_URL } from "@/app/shared/lib/constants";
 import { isValidNit } from "@/app/shared/lib/isValidNit";
 import { parseCompanyPathSegment } from "@/app/shared/lib/parseCompanyPathSegment";
 import { slugifyCompanyName } from "@/app/shared/lib/slugifyComponentName";
+import { mapRuesResultToCompanySummary } from "@/app/shared/mappers/mapRuesResultToCompany";
 import type { File } from "@mauriciorobayo/rues-api";
 import {
   Box,
@@ -24,8 +26,6 @@ import { unstable_cache } from "next/cache";
 import { notFound, permanentRedirect } from "next/navigation";
 import { after } from "next/server";
 import { cache } from "react";
-import { PageContainer } from "@/app/shared/component/PageContainer";
-import { mapRuesResultToCompanySummary } from "@/app/shared/mappers/mapRuesResultToCompany";
 
 interface PageProps {
   params: Promise<{ company: string }>;
@@ -122,7 +122,7 @@ async function getCompanyData(nit: number) {
   }
 
   after(async () => {
-    await companiesRepository.upsert({
+    await insertOrUpdateCompanyName({
       nit,
       name: companyData.rues.razon_social,
     });
