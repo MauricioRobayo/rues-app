@@ -1,7 +1,7 @@
 import { CompanyDetails } from "@/app/[company]/components/CompanyDetails";
 import { getRuesDataByNit } from "@/app/[company]/services/rues";
 import { siisApi } from "@/app/[company]/services/siis";
-import { insertOrUpdateCompanyName } from "@/app/repositories/companies";
+import { companiesRepository } from "@/app/repositories/companies";
 import { CompanyStatusBadge } from "@/app/shared/component/CompanyStatusBadge";
 import { PageContainer } from "@/app/shared/component/PageContainer";
 import { BASE_URL } from "@/app/shared/lib/constants";
@@ -122,7 +122,7 @@ async function getCompanyData(nit: number) {
   }
 
   after(async () => {
-    await insertOrUpdateCompanyName({
+    await companiesRepository.upsertName({
       nit,
       name: companyData.rues.razon_social,
     });

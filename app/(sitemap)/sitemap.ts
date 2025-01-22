@@ -24,7 +24,7 @@ export default async function sitemap({
 }: {
   id: number;
 }): Promise<MetadataRoute.Sitemap> {
-  const companies = await companiesRepository.getCompanies({
+  const companies = await companiesRepository.getAll({
     offset: id * MAX_URLS_PER_SITEMAP,
     limit: isVercelProductionDeployment ? MAX_URLS_PER_SITEMAP : 5,
   });

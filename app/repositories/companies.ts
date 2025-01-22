@@ -2,21 +2,20 @@ import { db } from "@/app/db";
 import { companies } from "@/app/db/schema";
 import { asc, count, eq, sql } from "drizzle-orm";
 
-export function insertOrUpdateCompanyName(data: { nit: number; name: string }) {
-  const excludedName = sql.raw(`excluded.${companies.name.name}`);
-  return db
-    .insert(companies)
-    .values(data)
-    .onConflictDoUpdate({
-      target: companies.nit,
-      set: {
-        name: excludedName,
-        timestamp: sql`unixepoch()`,
-      },
-      setWhere: sql`${companies.name} != ${excludedName}`,
-    });
-}
 export const companiesRepository = {
+  upsertName(data: { nit: number; name: string }) {
+    return db
+      .insert(companies)
+      .values(data)
+      .onConflictDoUpdate({
+        target: companies.nit,
+        set: {
+          name: sql`${data.name}`,
+          timestamp: sql`unixepoch()`,
+        },
+        setWhere: sql`${companies.name} != ${data.name}`,
+      });
+  },
   upsertMany(data: (typeof companies.$inferInsert)[]) {
     const excludedName = sql.raw(`excluded.${companies.name.name}`);
     const excludedAddress = sql.raw(`excluded.${companies.address.name}`);
@@ -61,7 +60,7 @@ export const companiesRepository = {
     const total = await db.select({ count: count() }).from(companies);
     return total.at(0)?.count;
   },
-  getCompanies({ limit, offset }: { limit: number; offset: number }) {
+  getAll({ limit, offset }: { limit: number; offset: number }) {
     return db
       .select({
         nit: companies.nit,
