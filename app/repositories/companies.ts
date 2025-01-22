@@ -2,7 +2,7 @@ import { db } from "@/app/db";
 import { companies } from "@/app/db/schema";
 import { asc, count, eq, sql } from "drizzle-orm";
 
-export function insertOrUpdateCompanyName(data: typeof companies.$inferInsert) {
+export function insertOrUpdateCompanyName(data: { nit: number; name: string }) {
   const excludedName = sql.raw(`excluded.${companies.name.name}`);
   return db
     .insert(companies)
@@ -29,17 +29,14 @@ export const companiesRepository = {
       .onConflictDoUpdate({
         target: companies.nit,
         set: {
-          name: sql`COALESCE(${excludedName}, ${companies.name})`,
-          address: sql`COALESCE(${excludedAddress}, ${companies.address})`,
-          size: sql`COALESCE(${excludedSize}, ${companies.size})`,
-          city: sql`COALESCE(${excludedCity}, ${companies.city})`,
-          state: sql`COALESCE(${excludedState}, ${companies.state})`,
+          name: sql.raw(`excluded.${excludedName}`),
+          address: sql.raw(`excluded.${excludedAddress}`),
+          size: sql.raw(`excluded.${excludedSize}`),
+          city: sql.raw(`excluded.${excludedCity}`),
+          state: sql.raw(`excluded.${excludedState}`),
           timestamp: sql`unixepoch()`,
         },
       });
-  },
-  upsert(data: typeof companies.$inferInsert) {
-    return this.upsertMany([data]);
   },
   getCompanyInfo(nit: number) {
     return db.query.companies.findFirst({
