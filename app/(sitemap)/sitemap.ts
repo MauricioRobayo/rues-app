@@ -29,7 +29,7 @@ export default async function sitemap({
     () =>
       companiesRepository.getAll({
         offset: id * MAX_URLS_PER_SITEMAP,
-        limit: isVercelProductionDeployment ? MAX_URLS_PER_SITEMAP : 5,
+        limit: isVercelProductionDeployment ? MAX_URLS_PER_SITEMAP : 10,
       }),
     {
       retries: 5,
