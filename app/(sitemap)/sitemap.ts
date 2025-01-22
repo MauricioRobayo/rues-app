@@ -26,7 +26,7 @@ export default async function sitemap({
 }): Promise<MetadataRoute.Sitemap> {
   const companies = await companiesRepository.getCompanies({
     offset: id * MAX_URLS_PER_SITEMAP,
-    limit: isVercelProductionDeployment ? MAX_URLS_PER_SITEMAP : 10,
+    limit: isVercelProductionDeployment ? MAX_URLS_PER_SITEMAP : 5,
   });
   return companies.map((company) => {
     const companySlug = slugifyCompanyName(company.name);
