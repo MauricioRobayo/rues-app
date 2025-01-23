@@ -18,12 +18,8 @@ export async function handler({
   const syncStartDate = latestRuesSync?.syncEndDate ?? "1910-01-01";
   const syncEndDate = new Date().toISOString().slice(0, 10);
   if (syncStartDate >= syncEndDate) {
-    return Response.json(
-      { message: "startDate is not before endDate" },
-      {
-        status: 500,
-      },
-    );
+    console.log("startDate is not before endDate");
+    return;
   }
   const filters = {
     endDate: syncEndDate,
