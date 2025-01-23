@@ -17,22 +17,17 @@ export const companiesRepository = {
       });
   },
   upsertMany(data: (typeof companies.$inferInsert)[]) {
-    const excludedName = sql.raw(`excluded.${companies.name.name}`);
-    const excludedAddress = sql.raw(`excluded.${companies.address.name}`);
-    const excludedSize = sql.raw(`excluded.${companies.size.name}`);
-    const excludedCity = sql.raw(`excluded.${companies.city.name}`);
-    const excludedState = sql.raw(`excluded.${companies.state.name}`);
     return db
       .insert(companies)
       .values(data)
       .onConflictDoUpdate({
         target: companies.nit,
         set: {
-          name: sql.raw(`excluded.${excludedName}`),
-          address: sql.raw(`excluded.${excludedAddress}`),
-          size: sql.raw(`excluded.${excludedSize}`),
-          city: sql.raw(`excluded.${excludedCity}`),
-          state: sql.raw(`excluded.${excludedState}`),
+          name: sql.raw(`excluded.${companies.name.name}`),
+          address: sql.raw(`excluded.${companies.address.name}`),
+          size: sql.raw(`excluded.${companies.size.name}`),
+          city: sql.raw(`excluded.${companies.city.name}`),
+          state: sql.raw(`excluded.${companies.state.name}`),
           timestamp: sql`unixepoch()`,
         },
       });
