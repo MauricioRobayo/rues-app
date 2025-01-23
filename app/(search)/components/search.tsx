@@ -46,9 +46,12 @@ export function Search() {
             <Heading>
               Buscar Empresa
               {companyName && (
-                <Text color="gray" weight="light">
-                  : {companyName}
-                </Text>
+                <>
+                  :{" "}
+                  <Text color="gray" weight="light">
+                    {companyName}
+                  </Text>
+                </>
               )}
             </Heading>
             <Form action="/">
@@ -64,6 +67,7 @@ export function Search() {
                     placeholder="Razón Social..."
                     size="3"
                     defaultValue={companyName ?? undefined}
+                    disabled={isLoading}
                   >
                     <TextField.Slot>
                       <MagnifyingGlassIcon height="16" width="16" />

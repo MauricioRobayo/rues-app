@@ -1,3 +1,4 @@
+import { ruesSyncRepository } from "@/app/repositories/rues-sync";
 import { handler } from "@/app/api/rues-sync/handler";
 import { after } from "next/server";
 
@@ -16,9 +17,27 @@ export async function POST(request: Request) {
     return new Response("Unauthorized", { status: 401 });
   }
 
-  after(() => {
-    handler({ debug: true });
+  const syncId = await ruesSyncRepository.insert({
+    startedAtMs: new Date(),
+    status: "started",
   });
 
-  return Response.json({ started: true });
+  if (!syncId) {
+    return Response.json(
+      {
+        message: "Could not generate rues_sync init record.",
+      },
+      {
+        status: 500,
+      },
+    );
+  }
+
+  console.log("RUES sync started successfully:", syncId);
+
+  after(() => {
+    handler({ syncId, debug: true });
+  });
+
+  return Response.json({ syncId });
 }

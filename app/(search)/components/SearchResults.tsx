@@ -28,7 +28,7 @@ export function SearchResults({
               variant="ghost"
               itemScope
               itemType="https://schema.org/Organization"
-              key={`${result.registrationId}`}
+              key={`${result.nit}`}
               asChild
             >
               <li>

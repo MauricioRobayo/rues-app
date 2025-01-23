@@ -1,7 +1,9 @@
-import { chambersRepository } from "@/app/db/repositories/chambers";
-import { companiesRepository } from "@/app/db/repositories/companies";
-import { tokenRepository } from "@/app/db/repositories/tokens";
+import { chambersRepository } from "@/app/repositories/chambers";
+import { companiesRepository } from "@/app/repositories/companies";
+import { tokenRepository } from "@/app/repositories/tokens";
 import { VALID_RUES_CATEGORIES } from "@/app/shared/lib/constants";
+import { mapRuesResultToCompanySummary } from "@/app/shared/mappers/mapRuesResultToCompany";
+import { processAdvancedSearchResults } from "@/app/shared/services/rues/processAdvancesSearchResults";
 import {
   RUES,
   type BusinessEstablishmentsResponse,
@@ -36,31 +38,26 @@ export async function getToken({
 
 async function advancedSearch(nit: number) {
   const token = await getToken();
-  const response = await rues.advancedSearch({ query: { nit }, token });
+  let response = await rues.advancedSearch({ query: { nit }, token });
 
-  if (response.status === "success") {
-    const data = response.data.registros?.at(0);
-    return data ? { data, token } : null;
+  if (response.statusCode === 401) {
+    console.log(
+      "RUES: Authentication failed with existing token. Getting a new token.",
+    );
+    const newToken = await getToken({ skipCache: true });
+    response = await rues.advancedSearch({
+      query: { nit },
+      token: newToken,
+    });
   }
-
-  if (response.statusCode !== 401) {
+  if (response.status !== "success") {
     return null;
   }
 
-  console.log(
-    "RUES: Authentication failed with existing token. Getting a new token.",
+  const data = processAdvancedSearchResults(response.data.registros ?? []).at(
+    0,
   );
-  const newToken = await getToken({ skipCache: true });
-  const newResponse = await rues.advancedSearch({
-    query: { nit },
-    token: newToken,
-  });
-  if (newResponse.status === "success") {
-    const data = newResponse.data.registros?.at(0);
-    return data ? { data, token } : null;
-  }
-
-  return null;
+  return data ? { data, token } : null;
 }
 
 export async function getRuesDataByNit(nit: number) {
@@ -114,4 +111,18 @@ export async function getRuesDataByNit(nit: number) {
   }
 
   return result;
+}
+
+export async function getSearchResultsByCompanyName(companyName: string) {
+  const token = await getToken();
+  const response = await rues.advancedSearch({
+    query: { razon: companyName },
+    token,
+  });
+  if (response.status === "error") {
+    return null;
+  }
+  return processAdvancedSearchResults(response.data.registros ?? []).map(
+    mapRuesResultToCompanySummary,
+  );
 }
