@@ -1,5 +1,5 @@
 import { CompanyDetails } from "@/app/[company]/components/CompanyDetails";
-import { getRuesDataByNit } from "@/app/[company]/services/rues";
+import { getRuesDataByNit } from "@/app/shared/services/rues/api";
 import { siisApi } from "@/app/[company]/services/siis";
 import { companiesRepository } from "@/app/repositories/companies";
 import { CompanyStatusBadge } from "@/app/shared/component/CompanyStatusBadge";

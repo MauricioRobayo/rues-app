@@ -1,4 +1,4 @@
-import { dedupeResults } from "@/app/(search)/dedupeResults";
+import { dedupeResults } from "@/app/(search)/processResults";
 import { expect, test } from "vitest";
 
 test("should preserve array when no duplicated NITs", () => {
