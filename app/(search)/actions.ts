@@ -1,5 +1,6 @@
 "use server";
 
+import { dedupeResults } from "@/app/(search)/dedupeResults";
 import { getToken } from "@/app/[company]/services/rues";
 import {
   RECAPTCHA_SEARCH_ACTION,
@@ -45,14 +46,14 @@ const getSearchResultsByCompanyName = unstable_cache(
     if (response.status === "error") {
       return null;
     }
-    return (response.data.registros ?? [])
-      .filter(
+    return dedupeResults(
+      (response.data.registros ?? []).filter(
         (record) =>
           isValidNit(Number(record.nit)) &&
           VALID_RUES_CATEGORIES.includes(record.categoria) &&
           !!record.id_rm,
-      )
-      .map(mapRuesResultToCompanySummary);
+      ),
+    ).map(mapRuesResultToCompanySummary);
   },
   undefined,
   {
