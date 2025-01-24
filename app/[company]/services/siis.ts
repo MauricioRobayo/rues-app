@@ -1,3 +1,5 @@
+import pRetry from "p-retry";
+
 export interface SiisResponse {
   _shards: Shards;
   hits: Hits;
@@ -108,17 +110,28 @@ export async function siisApi(nit: number): Promise<Source | null> {
     body,
   };
 
-  const response = await fetch(
-    "https://siis.ia.supersociedades.gov.co/qr/siis_empresas/_search",
-    requestOptions,
-  );
+  try {
+    const response = await pRetry(
+      () =>
+        fetch(
+          "https://siis.ia.supersociedades.gov.co/qr/siis_empresas/_search",
+          requestOptions,
+        ),
+      {
+        retries: 3,
+      },
+    );
 
-  if (!response.ok) {
-    console.error("Failed to fetch siis data. Status code:", response.status);
+    if (!response.ok) {
+      console.error("Failed to fetch siis data. Status code:", response.status);
+      return null;
+    }
+
+    const data: SiisResponse = await response.json();
+
+    return data.hits.hits.at(0)?._source ?? null;
+  } catch (err) {
+    console.error("Failed gettting Siis data", err);
     return null;
   }
-
-  const data: SiisResponse = await response.json();
-
-  return data.hits.hits.at(0)?._source ?? null;
 }

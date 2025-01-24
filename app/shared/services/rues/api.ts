@@ -10,6 +10,7 @@ import {
   type BusinessRecord,
   type File,
 } from "@mauriciorobayo/rues-api";
+import pRetry from "p-retry";
 
 const rues = new RUES();
 
@@ -38,7 +39,10 @@ export async function getToken({
 
 async function advancedSearch(nit: number) {
   const token = await getToken();
-  let response = await rues.advancedSearch({ query: { nit }, token });
+  let response = await rues.advancedSearch({
+    query: { nit },
+    token,
+  });
 
   if (response.statusCode === 401) {
     console.log(
@@ -76,8 +80,8 @@ export async function getRuesDataByNit(nit: number) {
         query: RUES.getBusinessDetails(data.id_rm),
         token,
       }),
-      chambersRepository.findByCode(Number(data.cod_camara)),
-      companiesRepository.getCompanyInfo(nit),
+      getChamberInfo(Number(data.cod_camara)),
+      getCompanyInfo(nit),
     ]);
 
   const result: {
@@ -125,4 +129,26 @@ export async function getSearchResultsByCompanyName(companyName: string) {
   return processAdvancedSearchResults(response.data.registros ?? []).map(
     mapRuesResultToCompanySummary,
   );
+}
+
+function getCompanyInfo(nit: number) {
+  try {
+    return pRetry(() => companiesRepository.getCompanyInfo(nit), {
+      retries: 3,
+    });
+  } catch (err) {
+    console.error("Failed to get company info", err);
+    return null;
+  }
+}
+
+function getChamberInfo(code: number) {
+  try {
+    return pRetry(() => chambersRepository.findByCode(Number(code)), {
+      retries: 3,
+    });
+  } catch (err) {
+    console.error("Failed to get chamber info", err);
+    return null;
+  }
 }
