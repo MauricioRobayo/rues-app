@@ -1,6 +1,6 @@
 import { CompanyDetails } from "@/app/[company]/components/CompanyDetails";
 import { getRuesDataByNit } from "@/app/shared/services/rues/api";
-import { siisApi } from "@/app/[company]/services/siis";
+import { getSiisInfo } from "@/app/[company]/services/siis";
 import { companiesRepository } from "@/app/repositories/companies";
 import { CompanyStatusBadge } from "@/app/shared/component/CompanyStatusBadge";
 import { PageContainer } from "@/app/shared/component/PageContainer";
@@ -114,7 +114,7 @@ export default async function page({ params }: PageProps) {
 async function getCompanyData(nit: number) {
   const [companyData, siis] = await Promise.all([
     getRuesDataByNit(nit),
-    siisApi(nit),
+    getSiisInfo(nit),
   ]);
 
   if (!companyData?.rues) {
