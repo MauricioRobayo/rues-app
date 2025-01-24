@@ -30,7 +30,7 @@ export interface Hit {
 }
 
 export interface Source {
-  // Only using this fields
+  // Only using this fields atm
   region: string;
   ciudad: string;
   departamento: string;
@@ -82,7 +82,7 @@ export interface Total {
   value: number;
   relation: string;
 }
-export async function siisApi(nit: number): Promise<Source | null> {
+export async function getSiisInfo(nit: number): Promise<Source | null> {
   const headers = new Headers();
   headers.append("Content-Type", "application/json");
 
