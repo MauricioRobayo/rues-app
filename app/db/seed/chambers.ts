@@ -409,3 +409,5 @@ export const allChambers = [
 export async function seedChambers() {
   await db.insert(chambers).values(allChambers).onConflictDoNothing();
 }
+
+seedChambers();
