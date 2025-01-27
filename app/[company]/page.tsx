@@ -292,7 +292,7 @@ async function getCompanyData(nit: number) {
 }
 
 const getCompanyDataCached = unstable_cache(cache(getCompanyData), undefined, {
-  revalidate: 8 * 24 * 60 * 60,
+  revalidate: 7 * 24 * 60 * 60,
 });
 
 function getYearsOfBusiness(date?: Date) {
