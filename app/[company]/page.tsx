@@ -309,6 +309,7 @@ function getEconomicActivitiesFromDetails(details: File | undefined) {
   }
   const economicActivities = [
     {
+      label: "ciiu_act_econ_pri",
       code: details["cod_ciiu_act_econ_pri"],
       description: details["desc_ciiu_act_econ_pri"],
     },
@@ -316,6 +317,7 @@ function getEconomicActivitiesFromDetails(details: File | undefined) {
 
   if (details["cod_ciiu_act_econ_sec"] && details["desc_ciiu_act_econ_sec"]) {
     economicActivities.push({
+      label: "ciiu_act_econ_sec",
       code: details["cod_ciiu_act_econ_sec"],
       description: details["desc_ciiu_act_econ_sec"],
     });
@@ -323,6 +325,7 @@ function getEconomicActivitiesFromDetails(details: File | undefined) {
 
   if (details["ciiu3"] && details["desc_ciiu3"]) {
     economicActivities.push({
+      label: "ciiu3",
       code: details["ciiu3"],
       description: details["desc_ciiu3"],
     });
@@ -330,6 +333,7 @@ function getEconomicActivitiesFromDetails(details: File | undefined) {
 
   if (details["ciiu4"] && details["desc_ciiu_act_econ_sec"]) {
     economicActivities.push({
+      label: "ciiu4",
       code: details["ciiu4"],
       description: details["desc_ciiu4"],
     });
