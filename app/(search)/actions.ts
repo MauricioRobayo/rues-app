@@ -31,6 +31,6 @@ const getSearchResultsByCompanyNameCached = unstable_cache(
   getSearchResultsByCompanyName,
   undefined,
   {
-    revalidate: 2 * 24 * 60 * 60,
+    revalidate: 8 * 24 * 60 * 60,
   },
 );
