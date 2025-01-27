@@ -122,10 +122,12 @@ async function getCompanyData(nit: number) {
   }
 
   after(async () => {
-    await companiesRepository.upsertName({
-      nit,
-      name: companyData.rues.razon_social,
-    });
+    if (companyData.company?.name !== companyData.rues.razon_social) {
+      await companiesRepository.upsertName({
+        nit,
+        name: companyData.rues.razon_social,
+      });
+    }
   });
 
   const registrationDate = gatDateFromDetailsDate(
