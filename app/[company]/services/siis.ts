@@ -131,7 +131,7 @@ export async function getSiisInfo(nit: number): Promise<Source | null> {
 
     return data.hits.hits.at(0)?._source ?? null;
   } catch (err) {
-    console.error("Failed gettting Siis data", err);
+    console.error("Failed getting Siis data", err);
     return null;
   }
 }

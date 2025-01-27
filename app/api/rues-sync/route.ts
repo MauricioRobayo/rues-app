@@ -35,8 +35,8 @@ export async function POST(request: Request) {
 
   console.log("RUES sync started successfully:", syncId);
 
-  after(() => {
-    handler({ syncId, debug: true });
+  after(async () => {
+    await handler({ syncId, debug: true });
   });
 
   return Response.json({ syncId });

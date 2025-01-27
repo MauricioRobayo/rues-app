@@ -82,3 +82,5 @@ export async function seedCompanies() {
     seedData.map(mapCompanyRecordToCompanyModel),
   );
 }
+
+seedCompanies();

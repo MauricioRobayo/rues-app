@@ -3,19 +3,23 @@ import { isValidNit } from "@/app/shared/lib/isValidNit";
 import type { BusinessRecord } from "@mauriciorobayo/rues-api";
 
 export function dedupeResults<
-  T extends Pick<BusinessRecord, "nit" | "estado_matricula">,
+  T extends Pick<
+    BusinessRecord,
+    "nit" | "estado_matricula" | "ultimo_ano_renovado"
+  >,
 >(results: T[]) {
-  const sortedResults = results.toSorted((a, b) => {
-    if (a.nit !== b.nit) {
-      return 0;
-    }
-    if (a.estado_matricula === "ACTIVA") {
-      return 1;
-    }
-    return -1;
-  });
-  return Array.from(
-    new Map(sortedResults.map((result) => [result.nit, result])).values(),
+  return [...Map.groupBy(results, ({ nit }) => nit).values()].map(
+    (groupResults) => {
+      const activeResult = groupResults.find(
+        ({ estado_matricula }) => estado_matricula === "ACTIVA",
+      );
+      return activeResult
+        ? activeResult
+        : groupResults.toSorted(
+            (a, b) =>
+              Number(b.ultimo_ano_renovado) - Number(a.ultimo_ano_renovado),
+          )[0];
+    },
   );
 }
 

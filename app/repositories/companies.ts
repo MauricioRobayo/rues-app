@@ -36,6 +36,7 @@ export const companiesRepository = {
     return db.query.companies.findFirst({
       where: eq(companies.nit, nit),
       columns: {
+        name: true,
         state: true,
         city: true,
         address: true,
