@@ -20,11 +20,11 @@ export function dedupeResults<
 }
 
 export function processAdvancedSearchResults(results: BusinessRecord[]) {
-  return dedupeResults(
-    (results ?? []).filter(
-      (record) =>
-        isValidNit(Number(record.nit)) &&
-        VALID_RUES_CATEGORIES.includes(record.categoria),
-    ),
+  const resultsWithValidNit = (results ?? []).filter(
+    (record) =>
+      isValidNit(Number(record.nit)) &&
+      VALID_RUES_CATEGORIES.includes(record.categoria),
   );
+  const groupedResults = Map.groupBy(resultsWithValidNit, ({ nit }) => nit);
+  return [...groupedResults.values()].flatMap(dedupeResults);
 }

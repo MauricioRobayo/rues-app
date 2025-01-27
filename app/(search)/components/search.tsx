@@ -1,6 +1,6 @@
 "use client";
 
-import { search } from "@/app/(search)/actions";
+import { searchByCompanyName } from "@/app/(search)/actions";
 import { Recaptcha } from "@/app/(search)/components/Recaptcha";
 import { SearchResults } from "@/app/(search)/components/SearchResults";
 import { useNormalizedCompanyName } from "@/app/(search)/hooks/useNormalizedCompanyName";
@@ -24,7 +24,7 @@ export function Search() {
   const companyName = useNormalizedCompanyName();
   const { isLoading, data } = useQuery({
     queryKey: [companyName],
-    queryFn: async function searchByCompanyName({ queryKey }) {
+    queryFn: async ({ queryKey }) => {
       const companyName = queryKey.at(0);
       if (!companyName) {
         return;
@@ -33,7 +33,7 @@ export function Search() {
         process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY,
         { action: RECAPTCHA_SEARCH_ACTION },
       );
-      return search({ companyName, token });
+      return searchByCompanyName({ companyName, token });
     },
     enabled: !!companyName,
   });

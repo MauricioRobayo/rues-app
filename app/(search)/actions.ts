@@ -5,7 +5,7 @@ import { verifyRecaptcha } from "@/app/shared/lib/verifyRecaptcha";
 import { getSearchResultsByCompanyName } from "@/app/shared/services/rues/api";
 import { unstable_cache } from "next/cache";
 
-export async function search({
+export async function searchByCompanyName({
   companyName,
   token: recaptchaToken,
 }: {
