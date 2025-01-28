@@ -23,7 +23,7 @@ export const tokenRepository = {
       throw new Error("Failed to get new RUES token");
     }
 
-    await redis.set(tokenKey, data.token, { ex: 5 * 24 * 60 * 60 });
+    await redis.set(tokenKey, data.token, { ex: 7 * 24 * 60 * 60 });
 
     return data.token;
   },
