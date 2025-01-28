@@ -11,7 +11,7 @@ const tokenKey = "ruesToken";
 export const tokenRepository = {
   async getToken({ skipCache = false }: { skipCache?: boolean } = {}) {
     if (!skipCache) {
-      const storedToken = await redis.get(tokenKey);
+      const storedToken = await redis.get<string>(tokenKey);
       if (storedToken) {
         return storedToken;
       }
