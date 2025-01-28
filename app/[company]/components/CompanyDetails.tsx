@@ -50,14 +50,16 @@ function getDetailValue(value: Value) {
     return (
       <ol>
         {value.map((item) => (
-          <DataList.Root orientation="horizontal" key={item.code}>
-            <DataList.Item key={item.label}>
-              <DataList.Label minWidth="0">
-                <Code>{item.code}</Code>
-              </DataList.Label>
-              <DataList.Value>{item.description}</DataList.Value>
-            </DataList.Item>
-          </DataList.Root>
+          <li key={item.label}>
+            <DataList.Root orientation="horizontal">
+              <DataList.Item>
+                <DataList.Label minWidth="0">
+                  <Code>{item.code}</Code>
+                </DataList.Label>
+                <DataList.Value>{item.description}</DataList.Value>
+              </DataList.Item>
+            </DataList.Root>
+          </li>
         ))}
       </ol>
     );
