@@ -1,5 +1,5 @@
 import { db } from "@/app/db";
-import { companies } from "@/app/db/schema";
+import { companies, chambers } from "@/app/db/schema";
 import { asc, count, eq, sql } from "drizzle-orm";
 
 export const companiesRepository = {
@@ -66,5 +66,16 @@ export const companiesRepository = {
       .from(companies)
       .limit(limit)
       .offset(offset);
+  },
+  findChamberByCode(code: number) {
+    return db.query.chambers.findFirst({
+      where: eq(chambers.code, code),
+      columns: {
+        name: true,
+        address: true,
+        city: true,
+        state: true,
+      },
+    });
   },
 };

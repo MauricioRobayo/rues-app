@@ -29,11 +29,11 @@ export function Search() {
       if (!companyName) {
         return;
       }
-      const token = await window.grecaptcha.enterprise.execute(
+      const recaptchaToken = await window.grecaptcha.enterprise.execute(
         process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY,
         { action: RECAPTCHA_SEARCH_ACTION },
       );
-      return searchByCompanyName({ companyName, token });
+      return searchByCompanyName({ companyName, recaptchaToken });
     },
     enabled: !!companyName,
   });
