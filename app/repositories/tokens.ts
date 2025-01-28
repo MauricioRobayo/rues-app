@@ -17,7 +17,6 @@ export const tokenRepository = {
       }
     }
 
-    console.log("*".repeat(500));
     const { status, data } = await RUES.getToken();
 
     if (status === "error") {
