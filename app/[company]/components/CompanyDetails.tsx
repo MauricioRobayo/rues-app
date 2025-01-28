@@ -1,13 +1,7 @@
 import { Code, DataList, Link } from "@radix-ui/themes";
 
-const dateFormatter = new Intl.DateTimeFormat("es-CO", {
-  dateStyle: "long",
-  timeZone: "America/Bogota",
-});
-
 type Value =
   | string
-  | Date
   | undefined
   | number
   | { url?: string; label: string }
@@ -42,10 +36,6 @@ export function CompanyDetails({
 }
 
 function getDetailValue(value: Value) {
-  if (value instanceof Date) {
-    return dateFormatter.format(value);
-  }
-
   if (Array.isArray(value)) {
     return (
       <ol>

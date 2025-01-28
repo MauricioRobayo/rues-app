@@ -27,6 +27,11 @@ import { notFound, permanentRedirect } from "next/navigation";
 import { after } from "next/server";
 import { cache } from "react";
 
+const dateFormatter = new Intl.DateTimeFormat("es-CO", {
+  dateStyle: "long",
+  timeZone: "America/Bogota",
+});
+
 interface PageProps {
   params: Promise<{ company: string }>;
 }
@@ -130,10 +135,6 @@ async function getCompanyData(nit: number) {
     }
   });
 
-  const registrationDate = gatDateFromDetailsDate(
-    companyData.details?.["fecha_matricula"],
-  );
-
   return {
     ...mapRuesResultToCompanySummary(companyData.rues),
     details: [
@@ -158,29 +159,23 @@ async function getCompanyData(nit: number) {
       },
       {
         label: "Fecha de creación",
-        value: registrationDate,
+        value: formatDetailsDate(companyData.details?.["fecha_matricula"]),
       },
       {
         label: "Antigüedad",
-        value: getYearsOfBusiness(registrationDate),
+        value: getYearsOfBusiness(companyData.details?.["fecha_matricula"]),
       },
       {
         label: "Fecha de renovación",
-        value: gatDateFromDetailsDate(
-          companyData.details?.["fecha_renovacion"],
-        ),
+        value: formatDetailsDate(companyData.details?.["fecha_renovacion"]),
       },
       {
         label: "Fecha de actualización",
-        value: gatDateFromDetailsDate(
-          companyData.details?.["fecha_actualizacion"],
-        ),
+        value: formatDetailsDate(companyData.details?.["fecha_actualizacion"]),
       },
       {
         label: "Fecha de cancelación",
-        value: gatDateFromDetailsDate(
-          companyData.details?.["fecha_cancelacion"],
-        ),
+        value: formatDetailsDate(companyData.details?.["fecha_cancelacion"]),
       },
       {
         label: "Último año renovado",
@@ -235,9 +230,6 @@ async function getCompanyData(nit: number) {
     ],
     businessEstablishments: (companyData.establishments ?? []).map(
       (establishment) => {
-        const creationDate = gatDateFromDetailsDate(
-          establishment["FECHA_MATRICULA"],
-        );
         return {
           name: establishment["RAZON_SOCIAL"],
           id: establishment["MATRICULA"],
@@ -272,15 +264,15 @@ async function getCompanyData(nit: number) {
             },
             {
               label: "Fecha de constitución",
-              value: creationDate,
+              value: formatDetailsDate(establishment["FECHA_MATRICULA"]),
             },
             {
               label: "Antigüedad",
-              value: getYearsOfBusiness(creationDate),
+              value: getYearsOfBusiness(establishment["FECHA_MATRICULA"]),
             },
             {
               label: "Fecha de renovación",
-              value: gatDateFromDetailsDate(establishment["FECHA_RENOVACION"]),
+              value: formatDetailsDate(establishment["FECHA_RENOVACION"]),
             },
             {
               label: "Último año renovado",
@@ -296,14 +288,6 @@ async function getCompanyData(nit: number) {
 const getCompanyDataCached = unstable_cache(cache(getCompanyData), undefined, {
   revalidate: 7 * 24 * 60 * 60,
 });
-
-function getYearsOfBusiness(date?: Date) {
-  return date
-    ? formatDistanceToNowStrict(date, {
-        locale: es,
-      })
-    : undefined;
-}
 
 function getEconomicActivitiesFromDetails(details: File | undefined) {
   if (!details) {
@@ -344,13 +328,29 @@ function getEconomicActivitiesFromDetails(details: File | undefined) {
   return economicActivities;
 }
 
-function gatDateFromDetailsDate(value?: string) {
+function getDateFromDetailsDate(value?: string) {
   if (!value?.trim() || value.length !== 8) {
     return undefined;
   }
   const formattedDate = `${value.slice(0, 4)}-${value.slice(4, 6)}-${value.slice(6, 8)}`;
   const date = new Date(formattedDate);
   return Number.isNaN(date.getTime()) ? undefined : date;
+}
+
+function getYearsOfBusiness(value?: string) {
+  const date = getDateFromDetailsDate(value);
+  if (date) {
+    return formatDistanceToNowStrict(date, {
+      locale: es,
+    });
+  }
+}
+
+function formatDetailsDate(value?: string) {
+  const date = getDateFromDetailsDate(value);
+  if (date) {
+    return dateFormatter.format(date);
+  }
 }
 
 // This function is unintentionally not cached so we can handle logic based
