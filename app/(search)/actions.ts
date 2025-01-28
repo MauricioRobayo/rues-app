@@ -2,15 +2,16 @@
 
 import { RECAPTCHA_SEARCH_ACTION } from "@/app/shared/lib/constants";
 import { verifyRecaptcha } from "@/app/shared/lib/verifyRecaptcha";
-import { getSearchResultsByCompanyName } from "@/app/shared/services/rues/api";
+import { mapRuesResultToCompanySummary } from "@/app/shared/mappers/mapRuesResultToCompany";
+import { advancedSearch } from "@/app/shared/services/rues/api";
 import { unstable_cache } from "next/cache";
 
 export async function searchByCompanyName({
   companyName,
-  token: recaptchaToken,
+  recaptchaToken,
 }: {
   companyName: string;
-  token: string;
+  recaptchaToken: string;
 }) {
   if (!companyName) {
     return null;
@@ -24,11 +25,14 @@ export async function searchByCompanyName({
     return null;
   }
 
-  return getSearchResultsByCompanyNameCached(companyName);
+  const response = await getSearchResultsByCompanyNameCached({
+    name: companyName,
+  });
+  return (response?.data ?? []).map(mapRuesResultToCompanySummary);
 }
 
 const getSearchResultsByCompanyNameCached = unstable_cache(
-  getSearchResultsByCompanyName,
+  advancedSearch,
   undefined,
   {
     revalidate: 7 * 24 * 60 * 60,

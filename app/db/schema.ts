@@ -1,13 +1,6 @@
 import { sql } from "drizzle-orm";
 import { int, sqliteTable, text, index } from "drizzle-orm/sqlite-core";
 
-export const tokens = sqliteTable("tokens", {
-  id: int().primaryKey({ autoIncrement: true }),
-  token: text().notNull(),
-  timestamp: int({ mode: "timestamp" })
-    .notNull()
-    .default(sql`(unixepoch())`),
-});
 export const companies = sqliteTable(
   "companies",
   {
