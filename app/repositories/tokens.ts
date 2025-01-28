@@ -1,18 +1,17 @@
 import { RUES } from "@mauriciorobayo/rues-api";
-import Redis from "ioredis";
+import { Redis } from "@upstash/redis";
+
+const redis = new Redis({
+  url: process.env.KV_REST_API_URL,
+  token: process.env.KV_REST_API_TOKEN,
+});
 
 const tokenKey = "ruesToken";
-
-const redisUrl = process.env.REDIS_URL;
-if (!redisUrl) {
-  throw new Error("Missing REDIS_URL env variable.");
-}
-const client = new Redis(redisUrl);
 
 export const tokenRepository = {
   async getToken({ skipCache = false }: { skipCache?: boolean } = {}) {
     if (!skipCache) {
-      const storedToken = await client.get(tokenKey);
+      const storedToken = await redis.get(tokenKey);
       if (storedToken) {
         return storedToken;
       }
@@ -25,8 +24,7 @@ export const tokenRepository = {
       throw new Error("Failed to get new RUES token");
     }
 
-    // redis.set("foo", "bar", "EX", 20);
-    await client.set(tokenKey, data.token, "EX", 5 * 24 * 60 * 60);
+    await redis.set(tokenKey, data.token, { ex: 5 * 24 * 60 * 60 });
 
     return data.token;
   },
