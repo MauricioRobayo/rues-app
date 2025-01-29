@@ -3,6 +3,7 @@ import { Code, DataList, Link } from "@radix-ui/themes";
 type Value =
   | string
   | undefined
+  | null
   | number
   | { url?: string; label: string }
   | { label: string; code: string; description: string }[];
