@@ -1,5 +1,9 @@
 import { CompanyDetails } from "@/app/[company]/components/CompanyDetails";
-import { getRuesDataByNit, queryNit } from "@/app/shared/services/rues/api";
+import {
+  getChamber,
+  getRuesDataByNit,
+  queryNit,
+} from "@/app/shared/services/rues/api";
 import { getSiisInfo } from "@/app/[company]/services/siis";
 import { companiesRepository } from "@/app/repositories/companies";
 import { CompanyStatusBadge } from "@/app/shared/component/CompanyStatusBadge";
@@ -85,14 +89,6 @@ export default async function page({ params }: PageProps) {
             <CompanyDetails details={companyData.details} />
           </Section>
           <Box>
-            {companyData.chamber.length > 0 && (
-              <Section size="2" id="camara-de-comercio">
-                <Heading as="h3" size="4" mb="2">
-                  Cámara de Comercio
-                </Heading>
-                <CompanyDetails details={companyData.chamber} />
-              </Section>
-            )}
             {companyData.businessEstablishments.length > 0 && (
               <Section size="2" id="establecimientos-comerciales">
                 <Heading as="h3" size="4" mb="4">
@@ -116,6 +112,14 @@ export default async function page({ params }: PageProps) {
                 </Flex>
               </Section>
             )}
+            {companyData.chamber && companyData.chamber.length > 0 && (
+              <Section size="2" id="camara-de-comercio">
+                <Heading as="h3" size="4" mb="2">
+                  Cámara de Comercio
+                </Heading>
+                <CompanyDetails details={companyData.chamber} />
+              </Section>
+            )}
           </Box>
         </Grid>
       </PageContainer>
@@ -127,6 +131,7 @@ async function getCompanyData(nit: number) {
   const queryResponse = await queryNit(nit);
 
   if (queryResponse?.data) {
+    const chamber = await getChamber(Number(queryResponse.data.codigo_camara));
     const record = queryResponse.data;
     return {
       ...mapRuesResultToCompanySummary(record),
@@ -170,7 +175,12 @@ async function getCompanyData(nit: number) {
         { label: "Departamento", value: record.dpto_comercial },
         // { label: "Teléfono comercial". value: record.telefono_comercial_1}
         // { label: "Correo electrónico", value: record.correo_electronico_comercial },
-        { label: "Objecto social", value: atob(record.objeto_social ?? "") },
+        {
+          label: "Objecto social",
+          value: Buffer.from(record.objeto_social ?? "", "base64").toString(
+            "utf-8",
+          ),
+        },
         {
           label: "Actividad económica de mayores ingresos",
           value: record.ciiu_mayores_ingresos,
@@ -194,7 +204,7 @@ async function getCompanyData(nit: number) {
           }),
         },
       ],
-      chamber: [],
+      chamber: getChamberDetails(chamber),
       businessEstablishments: (record.establecimientos ?? []).map(
         (establishment) => {
           return {
@@ -368,19 +378,7 @@ async function getCompanyData(nit: number) {
         }),
       },
     ],
-    chamber: [
-      { label: "Nombre", value: companyData.chamber?.["name"] },
-      { label: "Dirección", value: companyData.chamber?.["address"] },
-      { label: "Ciudad", value: companyData.chamber?.["city"] },
-      { label: "Departamento", value: companyData.chamber?.["state"] },
-      {
-        label: "Certificado de tradición",
-        value: {
-          url: companyData.details?.["url_venta_certificados"],
-          label: "Descargar certificado de tradición en línea",
-        },
-      },
-    ],
+    chamber: getChamberDetails(companyData.chamber),
     businessEstablishments: (companyData.establishments ?? []).map(
       (establishment) => {
         return {
@@ -551,4 +549,16 @@ async function getPageData(company: string) {
   }
 
   return companyData;
+}
+
+function getChamberDetails(chamber: Awaited<ReturnType<typeof getChamber>>) {
+  if (!chamber) {
+    return null;
+  }
+  return [
+    { label: "Nombre", value: chamber.name },
+    { label: "Dirección", value: chamber.address },
+    { label: "Ciudad", value: chamber.city },
+    { label: "Departamento", value: chamber.state },
+  ];
 }

@@ -101,7 +101,7 @@ export async function getRuesDataByNit({
         query: RUES.getBusinessDetails(data.id_rm),
         token,
       }),
-      getChamberInfo(Number(data.cod_camara)),
+      getChamber(Number(data.cod_camara)),
       getCompanyInfo(nit),
     ]);
 
@@ -149,7 +149,7 @@ function getCompanyInfo(nit: number) {
   }
 }
 
-function getChamberInfo(code: number) {
+export function getChamber(code: number) {
   try {
     return pRetry(() => companiesRepository.findChamberByCode(Number(code)), {
       retries: 3,
