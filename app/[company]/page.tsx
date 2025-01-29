@@ -140,7 +140,7 @@ async function getCompanyData(nit: number) {
         { label: "NIT", value: record.numero_identificacion },
         { label: "Dígito de verificación", value: record.digito_verificacion },
         { label: "Matrícula", value: record.matricula },
-        { label: "Estado de la matrícula", value: record.estado_matricula },
+        { label: "Estado", value: record.estado_matricula },
         { label: "Tipo de sociedad", value: record.tipo_sociedad },
         { label: "Organización jurídica", value: record.organizacion_juridica },
         {
@@ -173,8 +173,6 @@ async function getCompanyData(nit: number) {
         { label: "Código postal", value: record.codigo_postal_comercial },
         { label: "Municipio", value: record.municipio_comercial },
         { label: "Departamento", value: record.dpto_comercial },
-        // { label: "Teléfono comercial". value: record.telefono_comercial_1}
-        // { label: "Correo electrónico", value: record.correo_electronico_comercial },
         {
           label: "Objecto social",
           value: Buffer.from(record.objeto_social ?? "", "base64").toString(
@@ -299,18 +297,18 @@ async function getCompanyData(nit: number) {
       { label: "NIT", value: companyData.rues.nit },
       { label: "Dígito de verificación", value: companyData.rues.dv },
       {
-        label: "Estado de la matrícula",
+        label: "Matrícula",
         value: companyData.rues.matricula,
-      },
-      { label: "Sigla", value: companyData.rues.sigla },
-      {
-        label: "Organización jurídica",
-        value: companyData.rues.organizacion_juridica,
       },
       {
         label: "Estado",
         value: companyData.rues.estado_matricula,
       },
+      {
+        label: "Organización jurídica",
+        value: companyData.rues.organizacion_juridica,
+      },
+      { label: "Sigla", value: companyData.rues.sigla },
       {
         label: "Fecha de creación",
         value: formatDetailsDate(companyData.details?.["fecha_matricula"]),
