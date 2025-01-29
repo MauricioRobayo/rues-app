@@ -36,6 +36,10 @@ export function CompanyDetails({
 }
 
 function getDetailValue(value: Value) {
+  if (!value) {
+    return null;
+  }
+
   if (Array.isArray(value)) {
     return (
       <ol>
