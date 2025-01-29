@@ -19,7 +19,7 @@ export function CompanyDetails({
       orientation={horizontal ? "horizontal" : "vertical"}
       size={{ initial: "2", sm: "3" }}
     >
-      {details.map((detail) => {
+      {details?.map((detail) => {
         const value = getDetailValue(detail.value);
         if (!value) {
           return null;
@@ -55,13 +55,13 @@ function getDetailValue(value: Value) {
     );
   }
 
-  if (typeof value !== "object") {
-    return value;
-  }
-
-  if (value !== null && "url" in value && value.url) {
+  if (typeof value === "object") {
     return <Link href={value.url}>{value.label}</Link>;
   }
 
-  return null;
+  if (typeof value === "string") {
+    return value.trim();
+  }
+
+  return value;
 }

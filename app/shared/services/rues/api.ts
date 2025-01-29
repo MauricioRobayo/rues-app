@@ -10,11 +10,51 @@ import type {
 import * as RUES from "@mauriciorobayo/rues-api";
 import pRetry from "p-retry";
 
-export async function advancedSearch(
-  search: { nit: number } | { name: string },
-) {
+export async function queryNit(nit: number) {
+  let token = await tokenRepository.getToken();
+  let response = await RUES.queryNit({ nit, token });
+
+  if (response.statusCode === 401) {
+    console.warn(
+      "RUES: Authentication failed with existing token. Getting a new token.",
+    );
+    token = await tokenRepository.getToken({ skipCache: true });
+    response = await RUES.queryNit({ nit, token });
+  }
+
+  if (response.status !== "success") {
+    return { token };
+  }
+
+  const activeRecord = response.data.registros.find(
+    (record) => record.estado_matricula === "ACTIVA",
+  );
+
+  if (activeRecord) {
+    return { data: activeRecord, token };
+  }
+
+  const mostRecentRecord = response.data.registros
+    .sort(
+      (a, b) => Number(b.ultimo_ano_renovado) - Number(a.ultimo_ano_renovado),
+    )
+    .at(0);
+
+  return {
+    data: mostRecentRecord,
+    token,
+  };
+}
+
+export async function advancedSearch({
+  search,
+  token,
+}: {
+  search: { nit: number } | { name: string };
+  token?: string;
+}) {
+  token ??= await tokenRepository.getToken();
   const query = "nit" in search ? { nit: search.nit } : { razon: search.name };
-  const token = await tokenRepository.getToken();
   let response = await RUES.advancedSearch({
     query,
     token,
@@ -24,12 +64,13 @@ export async function advancedSearch(
     console.warn(
       "RUES: Authentication failed with existing token. Getting a new token.",
     );
-    const newToken = await tokenRepository.getToken({ skipCache: true });
+    token = await tokenRepository.getToken({ skipCache: true });
     response = await RUES.advancedSearch({
       query,
-      token: newToken,
+      token,
     });
   }
+
   if (response.status !== "success") {
     return null;
   }
@@ -38,9 +79,18 @@ export async function advancedSearch(
   return data ? { data, token } : null;
 }
 
-export async function getRuesDataByNit(nit: number) {
-  const advancedSearchResponse = await advancedSearch({ nit });
-  const { data: [data] = [], token } = advancedSearchResponse ?? {};
+export async function getRuesDataByNit({
+  nit,
+  token,
+}: {
+  nit: number;
+  token: string;
+}) {
+  const advancedSearchResponse = await advancedSearch({
+    search: { nit },
+    token,
+  });
+  const { data: [data] = [] } = advancedSearchResponse ?? {};
   if (!token || !VALID_RUES_CATEGORIES.includes(data.categoria)) {
     return null;
   }

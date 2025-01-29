@@ -26,7 +26,7 @@ export async function searchByCompanyName({
   }
 
   const response = await getSearchResultsByCompanyNameCached({
-    name: companyName,
+    search: { name: companyName },
   });
   return (response?.data ?? []).map(mapRuesResultToCompanySummary);
 }

@@ -1,15 +1,14 @@
 import { CompanyDetails } from "@/app/[company]/components/CompanyDetails";
-import { getRuesDataByNit } from "@/app/shared/services/rues/api";
+import { getRuesDataByNit, queryNit } from "@/app/shared/services/rues/api";
 import { getSiisInfo } from "@/app/[company]/services/siis";
 import { companiesRepository } from "@/app/repositories/companies";
 import { CompanyStatusBadge } from "@/app/shared/component/CompanyStatusBadge";
 import { PageContainer } from "@/app/shared/component/PageContainer";
-import { BASE_URL } from "@/app/shared/lib/constants";
+import { BASE_URL, COMPANY_SIZE } from "@/app/shared/lib/constants";
 import { isValidNit } from "@/app/shared/lib/isValidNit";
 import { parseCompanyPathSegment } from "@/app/shared/lib/parseCompanyPathSegment";
 import { slugifyCompanyName } from "@/app/shared/lib/slugifyComponentName";
 import { mapRuesResultToCompanySummary } from "@/app/shared/mappers/mapRuesResultToCompany";
-import type { File } from "@mauriciorobayo/rues-api";
 import {
   Box,
   Card,
@@ -86,27 +85,35 @@ export default async function page({ params }: PageProps) {
             <CompanyDetails details={companyData.details} />
           </Section>
           <Box>
-            <Section size="2" id="camara-de-comercio">
-              <Heading as="h3" size="4" mb="2">
-                Cámara de Comercio
-              </Heading>
-              <CompanyDetails details={companyData.chamber} />
-            </Section>
+            {companyData.chamber.length > 0 && (
+              <Section size="2" id="camara-de-comercio">
+                <Heading as="h3" size="4" mb="2">
+                  Cámara de Comercio
+                </Heading>
+                <CompanyDetails details={companyData.chamber} />
+              </Section>
+            )}
             {companyData.businessEstablishments.length > 0 && (
               <Section size="2" id="establecimientos-comerciales">
                 <Heading as="h3" size="4" mb="4">
                   Establecimientos Comerciales
                 </Heading>
-                {companyData.businessEstablishments.map((establishment) => {
-                  return (
-                    <details key={establishment.id}>
-                      <summary style={{ marginBottom: "1rem" }}>
-                        {establishment.name}
-                      </summary>
-                      <CompanyDetails details={establishment.details} />
-                    </details>
-                  );
-                })}
+                <Flex asChild direction="column" gap="2">
+                  <ul>
+                    {companyData.businessEstablishments.map((establishment) => {
+                      return (
+                        <li key={establishment.id}>
+                          <details>
+                            <summary>{establishment.name}</summary>
+                            <Box my="4" pl="4">
+                              <CompanyDetails details={establishment.details} />
+                            </Box>
+                          </details>
+                        </li>
+                      );
+                    })}
+                  </ul>
+                </Flex>
               </Section>
             )}
           </Box>
@@ -117,8 +124,145 @@ export default async function page({ params }: PageProps) {
 }
 
 async function getCompanyData(nit: number) {
+  const queryResponse = await queryNit(nit);
+
+  if (queryResponse?.data) {
+    const record = queryResponse.data;
+    return {
+      ...mapRuesResultToCompanySummary(record),
+      details: [
+        { label: "Razón social", value: record.razon_social },
+        { label: "NIT", value: record.numero_identificacion },
+        { label: "Dígito de verificación", value: record.digito_verificacion },
+        { label: "Matrícula", value: record.matricula },
+        { label: "Estado de la matrícula", value: record.estado_matricula },
+        { label: "Tipo de sociedad", value: record.tipo_sociedad },
+        { label: "Organización jurídica", value: record.organizacion_juridica },
+        {
+          label: "Categoría de la matrícula",
+          value: record.categoria_matricula,
+        },
+        {
+          label: "Fecha de matrícula",
+          value: formatDetailsDate(record.fecha_matricula),
+        },
+        {
+          label: "Antigüedad",
+          value: yearsDoingBusinesses(record.fecha_matricula),
+        },
+        { label: "Último año renovado", value: record.ultimo_ano_renovado },
+        {
+          label: "Fecha de renovación",
+          value: formatDetailsDate(record.fecha_renovacion),
+        },
+        {
+          label: "Fecha de cancelación",
+          value: formatDetailsDate(record.fecha_cancelacion),
+        },
+        {
+          label: "Tamaño de la empresa",
+          value: COMPANY_SIZE[record.codigo_tamano_empresa],
+        },
+        { label: "Dirección", value: record.direccion_comercial },
+        { label: "Zona comercial", value: record.zona_comercial },
+        { label: "Código postal", value: record.codigo_postal_comercial },
+        { label: "Municipio", value: record.municipio_comercial },
+        { label: "Departamento", value: record.dpto_comercial },
+        // { label: "Teléfono comercial". value: record.telefono_comercial_1}
+        // { label: "Correo electrónico", value: record.correo_electronico_comercial },
+        { label: "Objecto social", value: atob(record.objeto_social ?? "") },
+        {
+          label: "Actividad económica de mayores ingresos",
+          value: record.ciiu_mayores_ingresos,
+        },
+        { label: "Número de empleados", value: record.numero_empleados },
+        {
+          label: "Cantidad de establecimientos",
+          value: record.cantidad_establecimientos,
+        },
+        {
+          label: "Actividad económica",
+          value: getEconomicActivitiesFromDetails({
+            ciiu1: record.cod_ciiu_act_econ_pri,
+            ciiu2: record.cod_ciiu_act_econ_sec,
+            ciiu3: record.ciiu3,
+            ciiu4: record.ciiu4,
+            descCiiu1: record.desc_ciiu_act_econ_pri,
+            descCiiu2: record.desc_ciiu_act_econ_sec,
+            descCiiu3: record.desc_ciiu3,
+            descCiiu4: record.desc_ciiu4,
+          }),
+        },
+      ],
+      chamber: [],
+      businessEstablishments: (record.establecimientos ?? []).map(
+        (establishment) => {
+          return {
+            name: establishment.razon_social,
+            id: establishment.matricula,
+            details: [
+              {
+                label: "Razón social",
+                value: establishment.razon_social,
+              },
+              {
+                label: "Matrícula",
+                value: establishment.matricula,
+              },
+              {
+                label: "Fecha de matrícula",
+                value: formatDetailsDate(establishment.fecha_matricula),
+              },
+              {
+                label: "Antigüedad",
+                value: yearsDoingBusinesses(establishment.fecha_matricula),
+              },
+              {
+                label: "Fecha de cancelación",
+                value: formatDetailsDate(establishment.fecha_cancelacion),
+              },
+              {
+                label: "Último año renovado",
+                value: establishment.ultimo_ano_renovado,
+              },
+              {
+                label: "Fecha de renovación",
+                value: formatDetailsDate(establishment.fecha_renovacion),
+              },
+              {
+                label: "Dirección comercial",
+                value: establishment.direccion_comercial,
+              },
+              {
+                label: "Barrio comercial",
+                value: establishment.barrio_comercial,
+              },
+              {
+                label: "Descripción actividad económico",
+                value: establishment.desc_Act_Econ,
+              },
+              {
+                label: "Actividad económica",
+                value: getEconomicActivitiesFromDetails({
+                  ciiu1: establishment.ciiu1,
+                  ciiu2: establishment.ciiu2,
+                  ciiu3: establishment.ciiu3,
+                  ciiu4: establishment.ciiu4,
+                  descCiiu1: establishment.desc_ciiu1,
+                  descCiiu2: establishment.desc_ciiu2,
+                  descCiiu3: establishment.desc_ciiu3,
+                  descCiiu4: establishment.desc_ciiu4,
+                }),
+              },
+            ],
+          };
+        },
+      ),
+    };
+  }
+
   const [companyData, siis] = await Promise.all([
-    getRuesDataByNit(nit),
+    getRuesDataByNit({ nit, token: queryResponse.token }),
     getSiisInfo(nit),
   ]);
 
@@ -140,22 +284,22 @@ async function getCompanyData(nit: number) {
     details: [
       {
         label: "Razón social",
-        value: companyData.rues["razon_social"],
+        value: companyData.rues.razon_social,
       },
-      { label: "NIT", value: companyData.rues["nit"] },
-      { label: "DV", value: companyData.rues["dv"] },
+      { label: "NIT", value: companyData.rues.nit },
+      { label: "Dígito de verificación", value: companyData.rues.dv },
       {
-        label: "Matrícula",
-        value: companyData.rues["matricula"],
+        label: "Estado de la matrícula",
+        value: companyData.rues.matricula,
       },
-      { label: "Sigla", value: companyData.rues["sigla"] },
+      { label: "Sigla", value: companyData.rues.sigla },
       {
         label: "Organización jurídica",
-        value: companyData.rues["organizacion_juridica"],
+        value: companyData.rues.organizacion_juridica,
       },
       {
         label: "Estado",
-        value: companyData.rues["estado_matricula"],
+        value: companyData.rues.estado_matricula,
       },
       {
         label: "Fecha de creación",
@@ -163,7 +307,7 @@ async function getCompanyData(nit: number) {
       },
       {
         label: "Antigüedad",
-        value: getYearsOfBusiness(companyData.details?.["fecha_matricula"]),
+        value: yearsDoingBusinesses(companyData.details?.["fecha_matricula"]),
       },
       {
         label: "Fecha de renovación",
@@ -212,7 +356,16 @@ async function getCompanyData(nit: number) {
       { label: "Sector", value: siis?.sector },
       {
         label: "Actividad económica",
-        value: getEconomicActivitiesFromDetails(companyData.details),
+        value: getEconomicActivitiesFromDetails({
+          ciiu1: companyData.details?.cod_ciiu_act_econ_pri,
+          ciiu2: companyData.details?.cod_ciiu_act_econ_sec,
+          ciiu3: companyData.details?.ciiu3,
+          ciiu4: companyData.details?.ciiu4,
+          descCiiu1: companyData.details?.desc_ciiu_act_econ_pri,
+          descCiiu2: companyData.details?.desc_ciiu_act_econ_sec,
+          descCiiu3: companyData.details?.desc_ciiu3,
+          descCiiu4: companyData.details?.desc_ciiu4,
+        }),
       },
     ],
     chamber: [
@@ -231,52 +384,52 @@ async function getCompanyData(nit: number) {
     businessEstablishments: (companyData.establishments ?? []).map(
       (establishment) => {
         return {
-          name: establishment["RAZON_SOCIAL"],
-          id: establishment["MATRICULA"],
+          name: establishment.RAZON_SOCIAL,
+          id: establishment.MATRICULA,
           details: [
             {
               label: "Razón social",
-              value: establishment["RAZON_SOCIAL"],
+              value: establishment.RAZON_SOCIAL,
             },
             {
               label: "Sigla",
-              value: establishment["SIGLA"],
+              value: establishment.SIGLA,
             },
             {
               label: "Matrícula",
-              value: establishment["MATRICULA"],
+              value: establishment.MATRICULA,
             },
             {
               label: "Tipo de sociedad",
-              value: establishment["DESC_TIPO_SOCIEDAD"],
+              value: establishment.DESC_TIPO_SOCIEDAD,
             },
             {
               label: "Organización jurídica",
-              value: establishment["DESC_ORGANIZACION_JURIDICA"],
+              value: establishment.DESC_ORGANIZACION_JURIDICA,
             },
             {
               label: "Categoría",
-              value: establishment["CATEGORIA_MATRICULA"],
+              value: establishment.CATEGORIA_MATRICULA,
             },
             {
               label: "Estado",
-              value: establishment["DESC_ESTADO_MATRICULA"],
+              value: establishment.DESC_ESTADO_MATRICULA,
             },
             {
               label: "Fecha de constitución",
-              value: formatDetailsDate(establishment["FECHA_MATRICULA"]),
+              value: formatDetailsDate(establishment.FECHA_MATRICULA),
             },
             {
               label: "Antigüedad",
-              value: getYearsOfBusiness(establishment["FECHA_MATRICULA"]),
+              value: yearsDoingBusinesses(establishment.FECHA_MATRICULA),
             },
             {
               label: "Fecha de renovación",
-              value: formatDetailsDate(establishment["FECHA_RENOVACION"]),
+              value: formatDetailsDate(establishment.FECHA_RENOVACION),
             },
             {
               label: "Último año renovado",
-              value: establishment["ULTIMO_ANO_RENOVADO"],
+              value: establishment.ULTIMO_ANO_RENOVADO,
             },
           ],
         };
@@ -289,39 +442,54 @@ const getCompanyDataCached = unstable_cache(cache(getCompanyData), undefined, {
   revalidate: 7 * 24 * 60 * 60,
 });
 
-function getEconomicActivitiesFromDetails(details: File | undefined) {
+function getEconomicActivitiesFromDetails(details: {
+  ciiu1?: string;
+  ciiu2?: string;
+  ciiu3?: string;
+  ciiu4?: string;
+  descCiiu1?: string;
+  descCiiu2?: string;
+  descCiiu3?: string;
+  descCiiu4?: string;
+}) {
   if (!details) {
     return [];
   }
-  const economicActivities = [
-    {
-      label: "ciiu_act_econ_pri",
-      code: details["cod_ciiu_act_econ_pri"],
-      description: details["desc_ciiu_act_econ_pri"],
-    },
-  ];
+  const economicActivities: {
+    label: string;
+    code: string;
+    description: string;
+  }[] = [];
 
-  if (details["cod_ciiu_act_econ_sec"] && details["desc_ciiu_act_econ_sec"]) {
+  if (details.ciiu1 && details.descCiiu1) {
     economicActivities.push({
-      label: "ciiu_act_econ_sec",
-      code: details["cod_ciiu_act_econ_sec"],
-      description: details["desc_ciiu_act_econ_sec"],
+      label: "ciiu1",
+      code: details.ciiu1,
+      description: details.descCiiu1,
     });
   }
 
-  if (details["ciiu3"] && details["desc_ciiu3"]) {
+  if (details.ciiu2 && details.descCiiu2) {
+    economicActivities.push({
+      label: "ciiu2",
+      code: details.ciiu2,
+      description: details.descCiiu2,
+    });
+  }
+
+  if (details.ciiu3 && details.descCiiu3) {
     economicActivities.push({
       label: "ciiu3",
-      code: details["ciiu3"],
-      description: details["desc_ciiu3"],
+      code: details.ciiu3,
+      description: details.descCiiu3,
     });
   }
 
-  if (details["ciiu4"] && details["desc_ciiu_act_econ_sec"]) {
+  if (details.ciiu4 && details.descCiiu4) {
     economicActivities.push({
       label: "ciiu4",
-      code: details["ciiu4"],
-      description: details["desc_ciiu4"],
+      code: details.ciiu4,
+      description: details.descCiiu4,
     });
   }
 
@@ -337,7 +505,7 @@ function getDateFromDetailsDate(value?: string) {
   return Number.isNaN(date.getTime()) ? undefined : date;
 }
 
-function getYearsOfBusiness(value?: string) {
+function yearsDoingBusinesses(value?: string) {
   const date = getDateFromDetailsDate(value);
   if (date) {
     return formatDistanceToNowStrict(date, {
