@@ -1,4 +1,4 @@
-import { RUES } from "@mauriciorobayo/rues-api";
+import { getToken } from "@mauriciorobayo/rues-api";
 import { Redis } from "@upstash/redis";
 
 const redis = new Redis({
@@ -6,7 +6,7 @@ const redis = new Redis({
   token: process.env.KV_REST_API_TOKEN,
 });
 
-const tokenKey = "ruesToken";
+const tokenKey = "token";
 
 export const tokenRepository = {
   async getToken({ skipCache = false }: { skipCache?: boolean } = {}) {
@@ -17,7 +17,7 @@ export const tokenRepository = {
       }
     }
 
-    const { status, data } = await RUES.getToken();
+    const { status, data } = await getToken();
 
     if (status === "error") {
       throw new Error("Failed to get new RUES token");

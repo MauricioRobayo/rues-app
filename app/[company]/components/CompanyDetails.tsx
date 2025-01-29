@@ -1,13 +1,7 @@
 import { Code, DataList, Link } from "@radix-ui/themes";
 
-const dateFormatter = new Intl.DateTimeFormat("es-CO", {
-  dateStyle: "long",
-  timeZone: "America/Bogota",
-});
-
 type Value =
   | string
-  | Date
   | undefined
   | number
   | { url?: string; label: string }
@@ -25,7 +19,7 @@ export function CompanyDetails({
       orientation={horizontal ? "horizontal" : "vertical"}
       size={{ initial: "2", sm: "3" }}
     >
-      {details.map((detail) => {
+      {details?.map((detail) => {
         const value = getDetailValue(detail.value);
         if (!value) {
           return null;
@@ -42,34 +36,32 @@ export function CompanyDetails({
 }
 
 function getDetailValue(value: Value) {
-  if (value instanceof Date) {
-    return dateFormatter.format(value);
-  }
-
   if (Array.isArray(value)) {
     return (
       <ol>
         {value.map((item) => (
-          <DataList.Root orientation="horizontal" key={item.code}>
-            <DataList.Item key={item.label}>
-              <DataList.Label minWidth="0">
-                <Code>{item.code}</Code>
-              </DataList.Label>
-              <DataList.Value>{item.description}</DataList.Value>
-            </DataList.Item>
-          </DataList.Root>
+          <li key={item.label}>
+            <DataList.Root orientation="horizontal">
+              <DataList.Item>
+                <DataList.Label minWidth="0">
+                  <Code>{item.code}</Code>
+                </DataList.Label>
+                <DataList.Value>{item.description}</DataList.Value>
+              </DataList.Item>
+            </DataList.Root>
+          </li>
         ))}
       </ol>
     );
   }
 
-  if (typeof value !== "object") {
-    return value;
-  }
-
-  if (value !== null && "url" in value && value.url) {
+  if (typeof value === "object") {
     return <Link href={value.url}>{value.label}</Link>;
   }
 
-  return null;
+  if (typeof value === "string") {
+    return value.trim();
+  }
+
+  return value;
 }

@@ -2,22 +2,60 @@ import { companiesRepository } from "@/app/repositories/companies";
 import { tokenRepository } from "@/app/repositories/tokens";
 import { VALID_RUES_CATEGORIES } from "@/app/shared/lib/constants";
 import { processAdvancedSearchResults } from "@/app/shared/services/rues/processAdvancesSearchResults";
-import {
-  RUES,
-  type BusinessEstablishmentsResponse,
-  type BusinessRecord,
-  type File,
+import type {
+  BusinessEstablishmentsResponse,
+  BusinessRecord,
+  File,
 } from "@mauriciorobayo/rues-api";
+import * as RUES from "@mauriciorobayo/rues-api";
 import pRetry from "p-retry";
 
-const rues = new RUES();
+export async function queryNit(nit: number) {
+  let token = await tokenRepository.getToken();
+  let response = await RUES.queryNit({ nit, token });
 
-export async function advancedSearch(
-  search: { nit: number } | { name: string },
-) {
+  if (response.statusCode === 401) {
+    console.warn(
+      "RUES: Authentication failed with existing token. Getting a new token.",
+    );
+    token = await tokenRepository.getToken({ skipCache: true });
+    response = await RUES.queryNit({ nit, token });
+  }
+
+  if (response.status !== "success") {
+    return { token };
+  }
+
+  const activeRecord = response.data.registros.find(
+    (record) => record.estado_matricula === "ACTIVA",
+  );
+
+  if (activeRecord) {
+    return { data: activeRecord, token };
+  }
+
+  const mostRecentRecord = response.data.registros
+    .sort(
+      (a, b) => Number(b.ultimo_ano_renovado) - Number(a.ultimo_ano_renovado),
+    )
+    .at(0);
+
+  return {
+    data: mostRecentRecord,
+    token,
+  };
+}
+
+export async function advancedSearch({
+  search,
+  token,
+}: {
+  search: { nit: number } | { name: string };
+  token?: string;
+}) {
+  token ??= await tokenRepository.getToken();
   const query = "nit" in search ? { nit: search.nit } : { razon: search.name };
-  const token = await tokenRepository.getToken();
-  let response = await rues.advancedSearch({
+  let response = await RUES.advancedSearch({
     query,
     token,
   });
@@ -26,12 +64,13 @@ export async function advancedSearch(
     console.warn(
       "RUES: Authentication failed with existing token. Getting a new token.",
     );
-    const newToken = await tokenRepository.getToken({ skipCache: true });
-    response = await rues.advancedSearch({
+    token = await tokenRepository.getToken({ skipCache: true });
+    response = await RUES.advancedSearch({
       query,
-      token: newToken,
+      token,
     });
   }
+
   if (response.status !== "success") {
     return null;
   }
@@ -40,20 +79,29 @@ export async function advancedSearch(
   return data ? { data, token } : null;
 }
 
-export async function getRuesDataByNit(nit: number) {
-  const advancedSearchResponse = await advancedSearch({ nit });
-  const { data: [data] = [], token } = advancedSearchResponse ?? {};
-  if (!VALID_RUES_CATEGORIES.includes(data.categoria)) {
+export async function getRuesDataByNit({
+  nit,
+  token,
+}: {
+  nit: number;
+  token: string;
+}) {
+  const advancedSearchResponse = await advancedSearch({
+    search: { nit },
+    token,
+  });
+  const { data: [data] = [] } = advancedSearchResponse ?? {};
+  if (!token || !VALID_RUES_CATEGORIES.includes(data.categoria)) {
     return null;
   }
   const [fileResponse, businessEstablishmentsResponse, chamber, company] =
     await Promise.all([
-      rues.getFile({ id: data.id_rm }),
-      rues.getBusinessEstablishments({
+      RUES.getFile(data.id_rm),
+      RUES.getBusinessEstablishments({
         query: RUES.getBusinessDetails(data.id_rm),
         token,
       }),
-      getChamberInfo(Number(data.cod_camara)),
+      getChamber(Number(data.cod_camara)),
       getCompanyInfo(nit),
     ]);
 
@@ -101,7 +149,7 @@ function getCompanyInfo(nit: number) {
   }
 }
 
-function getChamberInfo(code: number) {
+export function getChamber(code: number) {
   try {
     return pRetry(() => companiesRepository.findChamberByCode(Number(code)), {
       retries: 3,

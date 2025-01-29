@@ -38,8 +38,8 @@ export function SearchResults({
                   </Heading>
                 </Link>
                 <Flex align="center" gap="2">
-                  <Heading as="h3" size="3" itemProp="taxID">
-                    NIT: {result.fullNit}
+                  <Heading as="h3" size="3" weight="regular">
+                    NIT: <span itemProp="taxID">{result.fullNit}</span>
                   </Heading>
                   <CompanyStatusBadge isActive={result.isActive} />
                 </Flex>
