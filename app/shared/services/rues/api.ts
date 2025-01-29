@@ -2,22 +2,20 @@ import { companiesRepository } from "@/app/repositories/companies";
 import { tokenRepository } from "@/app/repositories/tokens";
 import { VALID_RUES_CATEGORIES } from "@/app/shared/lib/constants";
 import { processAdvancedSearchResults } from "@/app/shared/services/rues/processAdvancesSearchResults";
-import {
-  RUES,
-  type BusinessEstablishmentsResponse,
-  type BusinessRecord,
-  type File,
+import type {
+  BusinessEstablishmentsResponse,
+  BusinessRecord,
+  File,
 } from "@mauriciorobayo/rues-api";
+import * as RUES from "@mauriciorobayo/rues-api";
 import pRetry from "p-retry";
-
-const rues = new RUES();
 
 export async function advancedSearch(
   search: { nit: number } | { name: string },
 ) {
   const query = "nit" in search ? { nit: search.nit } : { razon: search.name };
   const token = await tokenRepository.getToken();
-  let response = await rues.advancedSearch({
+  let response = await RUES.advancedSearch({
     query,
     token,
   });
@@ -27,7 +25,7 @@ export async function advancedSearch(
       "RUES: Authentication failed with existing token. Getting a new token.",
     );
     const newToken = await tokenRepository.getToken({ skipCache: true });
-    response = await rues.advancedSearch({
+    response = await RUES.advancedSearch({
       query,
       token: newToken,
     });
@@ -43,13 +41,13 @@ export async function advancedSearch(
 export async function getRuesDataByNit(nit: number) {
   const advancedSearchResponse = await advancedSearch({ nit });
   const { data: [data] = [], token } = advancedSearchResponse ?? {};
-  if (!VALID_RUES_CATEGORIES.includes(data.categoria)) {
+  if (!token || !VALID_RUES_CATEGORIES.includes(data.categoria)) {
     return null;
   }
   const [fileResponse, businessEstablishmentsResponse, chamber, company] =
     await Promise.all([
-      rues.getFile({ id: data.id_rm }),
-      rues.getBusinessEstablishments({
+      RUES.getFile(data.id_rm),
+      RUES.getBusinessEstablishments({
         query: RUES.getBusinessDetails(data.id_rm),
         token,
       }),
