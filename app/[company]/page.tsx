@@ -1,4 +1,5 @@
 import { CompanyDetails } from "@/app/[company]/components/CompanyDetails";
+import chardet from "chardet";
 import {
   getChamber,
   getRuesDataByNit,
@@ -175,18 +176,7 @@ async function getCompanyData(nit: number) {
         { label: "Departamento", value: record.dpto_comercial },
         {
           label: "Objecto social",
-          value: Buffer.from(record.objeto_social ?? "", "base64").toString(
-            "utf-8",
-          ),
-        },
-        {
-          label: "Actividad económica de mayores ingresos",
-          value: record.ciiu_mayores_ingresos,
-        },
-        { label: "Número de empleados", value: record.numero_empleados },
-        {
-          label: "Cantidad de establecimientos",
-          value: record.cantidad_establecimientos,
+          value: decodeBase64(record.objeto_social),
         },
         {
           label: "Actividad económica",
@@ -200,6 +190,14 @@ async function getCompanyData(nit: number) {
             descCiiu3: record.desc_ciiu3,
             descCiiu4: record.desc_ciiu4,
           }),
+        },
+        {
+          label: "Actividad económica de mayores ingresos",
+          value: record.ciiu_mayores_ingresos,
+        },
+        {
+          label: "Cantidad de establecimientos",
+          value: record.cantidad_establecimientos,
         },
       ],
       chamber: getChamberDetails(chamber),
@@ -559,4 +557,18 @@ function getChamberDetails(chamber: Awaited<ReturnType<typeof getChamber>>) {
     { label: "Ciudad", value: chamber.city },
     { label: "Departamento", value: chamber.state },
   ];
+}
+
+function decodeBase64(base64Text?: string) {
+  if (!base64Text) {
+    return null;
+  }
+
+  const buffer = Buffer.from(base64Text, "base64");
+
+  const encoding = chardet.detect(buffer);
+
+  const isLatin1 = encoding === "ISO-8859-1" || encoding === "windows-1252";
+
+  return buffer.toString(isLatin1 ? "latin1" : "utf-8");
 }

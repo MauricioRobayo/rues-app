@@ -3,6 +3,7 @@ import { Code, DataList, Link } from "@radix-ui/themes";
 type Value =
   | string
   | undefined
+  | null
   | number
   | { url?: string; label: string }
   | { label: string; code: string; description: string }[];
@@ -36,6 +37,10 @@ export function CompanyDetails({
 }
 
 function getDetailValue(value: Value) {
+  if (!value) {
+    return null;
+  }
+
   if (Array.isArray(value)) {
     return (
       <ol>
