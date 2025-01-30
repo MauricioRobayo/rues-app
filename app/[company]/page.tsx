@@ -1,5 +1,4 @@
 import { CompanyDetails } from "@/app/[company]/components/CompanyDetails";
-import chardet from "chardet";
 import {
   getChamber,
   getRuesDataByNit,
@@ -30,6 +29,7 @@ import { unstable_cache } from "next/cache";
 import { notFound, permanentRedirect } from "next/navigation";
 import { after } from "next/server";
 import { cache } from "react";
+import { decodeBase64 } from "@/app/shared/lib/decodeBase64";
 
 const dateFormatter = new Intl.DateTimeFormat("es-CO", {
   dateStyle: "long",
@@ -197,7 +197,7 @@ async function getCompanyData(nit: number) {
         },
         {
           label: "Cantidad de establecimientos",
-          value: record.cantidad_establecimientos,
+          value: Number(record.cantidad_establecimientos),
         },
       ],
       chamber: getChamberDetails(chamber),
@@ -557,18 +557,4 @@ function getChamberDetails(chamber: Awaited<ReturnType<typeof getChamber>>) {
     { label: "Ciudad", value: chamber.city },
     { label: "Departamento", value: chamber.state },
   ];
-}
-
-function decodeBase64(base64Text?: string) {
-  if (!base64Text) {
-    return null;
-  }
-
-  const buffer = Buffer.from(base64Text, "base64");
-
-  const encoding = chardet.detect(buffer);
-
-  const isLatin1 = encoding === "ISO-8859-1" || encoding === "windows-1252";
-
-  return buffer.toString(isLatin1 ? "latin1" : "utf-8");
 }
