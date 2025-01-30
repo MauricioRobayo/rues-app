@@ -87,7 +87,7 @@ export default async function page({ params }: PageProps) {
             <Heading as="h3" size="4" mb="2">
               Detalles de la Empresa
             </Heading>
-            <CompanyDetagils details={companyData.details} />
+            <CompanyDetails details={companyData.details} />
           </Section>
           <Box>
             {companyData.businessEstablishments.length > 0 && (
