@@ -61,7 +61,10 @@ function getDetailValue(value: Value) {
   }
 
   if (typeof value === "object") {
-    return <Link href={value.url}>{value.label}</Link>;
+    if (value.url && value.label) {
+      return <Link href={value.url}>{value.label}</Link>;
+    }
+    return null;
   }
 
   if (typeof value === "string") {
