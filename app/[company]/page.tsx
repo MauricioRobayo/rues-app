@@ -254,6 +254,20 @@ async function getCompanyData(nit: number) {
                 value: formatDetailsDate(establishment.fecha_renovacion),
               },
               {
+                label: "Teléfono",
+                value: {
+                  url: `tel:${establishment.telefono_comercial_1}`,
+                  label: establishment.telefono_comercial_1,
+                },
+              },
+              {
+                label: "Teléfono 2",
+                value: {
+                  url: `tel:${establishment.telefono_comercial_2}`,
+                  label: establishment.telefono_comercial_2,
+                },
+              },
+              {
                 label: "Dirección comercial",
                 value: establishment.direccion_comercial,
               },
