@@ -5,7 +5,7 @@ type Value =
   | undefined
   | null
   | number
-  | { url?: string; label: string }
+  | { url?: string; label?: string }
   | { label: string; code: string; description: string }[];
 
 export function CompanyDetails({
