@@ -170,6 +170,20 @@ async function getCompanyData(nit: number) {
           value: COMPANY_SIZE[record.codigo_tamano_empresa],
         },
         { label: "Dirección", value: record.direccion_comercial },
+        {
+          label: "Teléfono",
+          value: {
+            url: `tel:${record.telefono_comercial_1}`,
+            label: record.telefono_comercial_1,
+          },
+        },
+        {
+          label: "Teléfono 2",
+          value: {
+            url: `tel:${record.telefono_comercial_2}`,
+            label: record.telefono_comercial_2,
+          },
+        },
         { label: "Zona comercial", value: record.zona_comercial },
         { label: "Código postal", value: record.codigo_postal_comercial },
         { label: "Municipio", value: record.municipio_comercial },
@@ -198,6 +212,10 @@ async function getCompanyData(nit: number) {
         {
           label: "Cantidad de establecimientos",
           value: Number(record.cantidad_establecimientos),
+        },
+        {
+          label: "Número de empleados",
+          value: Number(record.numero_empleados),
         },
       ],
       chamber: getChamberDetails(chamber),

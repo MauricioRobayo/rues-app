@@ -5,7 +5,7 @@ type Value =
   | undefined
   | null
   | number
-  | { url?: string; label: string }
+  | { url?: string; label?: string }
   | { label: string; code: string; description: string }[];
 
 export function CompanyDetails({
@@ -61,7 +61,10 @@ function getDetailValue(value: Value) {
   }
 
   if (typeof value === "object") {
-    return <Link href={value.url}>{value.label}</Link>;
+    if (value.url && value.label) {
+      return <Link href={value.url}>{value.label}</Link>;
+    }
+    return null;
   }
 
   if (typeof value === "string") {

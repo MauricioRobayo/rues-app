@@ -8,7 +8,7 @@ export async function GET() {
   try {
     const totalSitemaps = await getTotalSitemaps();
 
-    const sitemapIndexXML = await buildSitemapIndex(totalSitemaps);
+    const sitemapIndexXML = buildSitemapIndex(totalSitemaps);
 
     return new NextResponse(sitemapIndexXML, {
       headers: {
@@ -22,7 +22,7 @@ export async function GET() {
   }
 }
 
-async function buildSitemapIndex(totalSitemaps: number) {
+function buildSitemapIndex(totalSitemaps: number) {
   let xml = '<?xml version="1.0" encoding="UTF-8"?>';
   xml += '<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">';
 
