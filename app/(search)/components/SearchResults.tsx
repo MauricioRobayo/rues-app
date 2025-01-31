@@ -1,9 +1,16 @@
 "use client";
 
-import type { CompanySummary } from "@/app/shared/component/CompanyCard";
 import { CompanyStatusBadge } from "@/app/shared/component/CompanyStatusBadge";
 import { Link } from "@/app/shared/component/Link";
 import { Card, Flex, Heading, Separator } from "@radix-ui/themes";
+
+export interface CompanySummary {
+  name: string;
+  fullNit: string;
+  isActive: boolean;
+  slug: string;
+  nit: string;
+}
 
 export function SearchResults({
   results,

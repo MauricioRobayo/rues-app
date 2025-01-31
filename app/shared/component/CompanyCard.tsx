@@ -1,13 +1,6 @@
+import type { CompanySummary } from "@/app/(search)/components/SearchResults";
 import { CompanyStatusBadge } from "@/app/shared/component/CompanyStatusBadge";
 import { Card, Heading, Flex, type CardProps } from "@radix-ui/themes";
-
-export interface CompanySummary {
-  name: string;
-  fullNit: string;
-  isActive: boolean;
-  slug: string;
-  nit: string;
-}
 
 export function CompanyCard({
   name,
