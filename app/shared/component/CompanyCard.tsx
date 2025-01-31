@@ -1,5 +1,5 @@
-import type { CompanySummary } from "@/app/(search)/components/SearchResults";
 import { CompanyStatusBadge } from "@/app/shared/component/CompanyStatusBadge";
+import type { CompanySummary } from "@/app/shared/mappers/mapRuesResultToCompany";
 import { Card, Heading, Flex, type CardProps } from "@radix-ui/themes";
 
 export function CompanyCard({
