@@ -67,14 +67,16 @@ export default async function page({ params }: PageProps) {
         <header>
           <PageContainer py={{ initial: "6", sm: "8" }}>
             <Card size="4" variant="ghost">
-              <Heading itemProp="name" color="sky">
-                {companyData.name}
-              </Heading>
-              <Flex align="center" gap="2">
-                <Heading as="h2" size="4" itemProp="taxID">
-                  NIT: {companyData.fullNit}
+              <Flex direction="column" gap="1">
+                <Heading itemProp="name" color="sky">
+                  {companyData.name}
                 </Heading>
-                <CompanyStatusBadge isActive={companyData.isActive} />
+                <Flex align="center" gap="2">
+                  <Heading as="h2" size="4" itemProp="taxID" weight="regular">
+                    NIT: {companyData.fullNit}
+                  </Heading>
+                  <CompanyStatusBadge isActive={companyData.isActive} />
+                </Flex>
               </Flex>
             </Card>
           </PageContainer>

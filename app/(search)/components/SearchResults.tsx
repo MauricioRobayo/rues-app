@@ -32,16 +32,18 @@ export function SearchResults({
               asChild
             >
               <li>
-                <Link underline="none" href={result.slug} prefetch={false}>
-                  <Heading itemProp="name" as="h2" size="4">
-                    {result.name}
-                  </Heading>
-                </Link>
-                <Flex align="center" gap="2">
-                  <Heading as="h3" size="3" weight="regular">
-                    NIT: <span itemProp="taxID">{result.fullNit}</span>
-                  </Heading>
-                  <CompanyStatusBadge isActive={result.isActive} />
+                <Flex direction="column" gap="1">
+                  <Link underline="none" href={result.slug} prefetch={false}>
+                    <Heading itemProp="name" as="h2" size="4" weight="medium">
+                      {result.name}
+                    </Heading>
+                  </Link>
+                  <Flex align="center" gap="2">
+                    <Heading as="h3" size="3" weight="regular">
+                      NIT: <span itemProp="taxID">{result.fullNit}</span>
+                    </Heading>
+                    <CompanyStatusBadge isActive={result.isActive} />
+                  </Flex>
                 </Flex>
                 <Separator size="4" mt="4" />
               </li>
