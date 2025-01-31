@@ -59,14 +59,6 @@ export function SearchResults({
                       mt={{ initial: "2", sm: "0" }}
                       details={[
                         {
-                          label: "Cámara de comercio",
-                          value: result.chamberName,
-                        },
-                        {
-                          label: "Último año renovado",
-                          value: result.lastRenewalYear,
-                        },
-                        {
                           label: "Matrícula",
                           value: (
                             <Flex gap="2" align="center">
@@ -74,6 +66,14 @@ export function SearchResults({
                               <CompanyStatusBadge isActive={result.isActive} />
                             </Flex>
                           ),
+                        },
+                        {
+                          label: "Cámara de comercio",
+                          value: result.chamberName,
+                        },
+                        {
+                          label: "Último año renovado",
+                          value: result.lastRenewalYear,
                         },
                         result.shortName
                           ? { label: "Sigla", value: result.shortName }
