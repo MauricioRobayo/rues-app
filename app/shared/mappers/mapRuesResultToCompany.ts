@@ -1,4 +1,4 @@
-import type { CompanySummary } from "@/app/shared/component/CompanyCard";
+import type { CompanySummary } from "@/app/(search)/components/SearchResults";
 import { formatNit } from "@/app/shared/lib/formatNit";
 import { slugifyCompanyName } from "@/app/shared/lib/slugifyComponentName";
 import type { BusinessRecord, CompanyRecord } from "@mauriciorobayo/rues-api";
