@@ -136,6 +136,8 @@ async function getCompanyData(nit: number) {
   if (queryResponse?.data) {
     const chamber = await getChamber(Number(queryResponse.data.codigo_camara));
     const record = queryResponse.data;
+    const summary = mapRuesResultToCompanySummary(record);
+
     return {
       ...mapRuesResultToCompanySummary(record),
       details: [
@@ -319,6 +321,7 @@ async function getCompanyData(nit: number) {
     }
   });
 
+  const summary = mapRuesResultToCompanySummary(companyData.rues);
   return {
     ...mapRuesResultToCompanySummary(companyData.rues),
     details: [

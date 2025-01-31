@@ -2,15 +2,8 @@
 
 import { CompanyStatusBadge } from "@/app/shared/component/CompanyStatusBadge";
 import { Link } from "@/app/shared/component/Link";
+import type { CompanySummary } from "@/app/shared/mappers/mapRuesResultToCompany";
 import { Card, Flex, Heading, Separator } from "@radix-ui/themes";
-
-export interface CompanySummary {
-  name: string;
-  fullNit: string;
-  isActive: boolean;
-  slug: string;
-  nit: string;
-}
 
 export function SearchResults({
   results,
