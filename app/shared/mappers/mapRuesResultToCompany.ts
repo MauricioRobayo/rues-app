@@ -11,10 +11,10 @@ export interface CompanySummary {
 }
 
 export interface BusinessSummary extends CompanySummary {
-  sigla: string;
+  shortName?: string;
   chamberName: string;
   registrationNumber: string;
-  lastRenewalYear: string;
+  lastRenewalYear: number;
 }
 
 export function mapRuesResultToCompanySummary(
@@ -41,10 +41,10 @@ export function mapRuesResultToCompanySummary(
     isActive: record.estado_matricula === "ACTIVA",
     slug: `/${slugifyCompanyName(record.razon_social)}-${record.nit}`,
     nit: record.nit,
-    sigla: record.sigla,
+    shortName: record.sigla,
     chamberName: record.nom_camara,
     registrationNumber: record.matricula,
-    lastRenewalYear: record.ultimo_ano_renovado,
+    lastRenewalYear: Number(record.ultimo_ano_renovado),
   };
 }
 
