@@ -22,10 +22,10 @@ export function mapRuesResultToCompanySummary(
 ): CompanySummary;
 export function mapRuesResultToCompanySummary(
   record: BusinessRecord,
-): BusinessRecord;
+): BusinessSummary;
 export function mapRuesResultToCompanySummary(
   record: BusinessRecord | CompanyRecord,
-): BusinessRecord | CompanySummary {
+): BusinessSummary | CompanySummary {
   if (isCompanyRecord(record)) {
     return {
       name: record.razon_social,

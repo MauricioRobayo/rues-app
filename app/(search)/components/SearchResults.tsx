@@ -2,13 +2,13 @@
 
 import { CompanyStatusBadge } from "@/app/shared/component/CompanyStatusBadge";
 import { Link } from "@/app/shared/component/Link";
-import type { CompanySummary } from "@/app/shared/mappers/mapRuesResultToCompany";
+import type { BusinessSummary } from "@/app/shared/mappers/mapRuesResultToCompany";
 import { Card, Flex, Heading, Separator } from "@radix-ui/themes";
 
 export function SearchResults({
   results,
 }: {
-  results: CompanySummary[] | null;
+  results: BusinessSummary[] | null;
 }) {
   if (!results) {
     return null;
