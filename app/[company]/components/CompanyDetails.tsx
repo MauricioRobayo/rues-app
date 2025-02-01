@@ -1,18 +1,15 @@
-import { Code, DataList, Link } from "@radix-ui/themes";
-
-type Value =
-  | string
-  | undefined
-  | null
-  | number
-  | { url?: string; label?: string }
-  | { label: string; code: string; description: string }[];
+import { DataList } from "@radix-ui/themes";
+import type { JSX } from "react";
 
 export function CompanyDetails({
   details,
   horizontal = false,
 }: {
-  details: { label: string; value: Value }[];
+  details: {
+    label: string;
+    value?: string | null | number;
+    render?: () => JSX.Element;
+  }[];
   horizontal?: boolean;
 }) {
   return (
@@ -21,55 +18,18 @@ export function CompanyDetails({
       size={{ initial: "2", sm: "3" }}
     >
       {details?.map((detail) => {
-        const value = getDetailValue(detail.value);
-        if (!value) {
+        if (!detail.value && !detail.render) {
           return null;
         }
         return (
           <DataList.Item key={detail.label}>
             <DataList.Label>{detail.label}</DataList.Label>
-            <DataList.Value>{value}</DataList.Value>
+            <DataList.Value>
+              {detail.render ? detail.render() : detail.value}
+            </DataList.Value>
           </DataList.Item>
         );
       })}
     </DataList.Root>
   );
-}
-
-function getDetailValue(value: Value) {
-  if (!value) {
-    return null;
-  }
-
-  if (Array.isArray(value)) {
-    return (
-      <ol>
-        {value.map((item) => (
-          <li key={item.label}>
-            <DataList.Root orientation="horizontal">
-              <DataList.Item>
-                <DataList.Label minWidth="0">
-                  <Code>{item.code}</Code>
-                </DataList.Label>
-                <DataList.Value>{item.description}</DataList.Value>
-              </DataList.Item>
-            </DataList.Root>
-          </li>
-        ))}
-      </ol>
-    );
-  }
-
-  if (typeof value === "object") {
-    if (value.url && value.label) {
-      return <Link href={value.url}>{value.label}</Link>;
-    }
-    return null;
-  }
-
-  if (typeof value === "string") {
-    return value.trim();
-  }
-
-  return value;
 }

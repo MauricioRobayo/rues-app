@@ -1,21 +1,25 @@
 import { CompanyDetails } from "@/app/[company]/components/CompanyDetails";
-import {
-  getChamber,
-  getRuesDataByNit,
-  queryNit,
-} from "@/app/shared/services/rues/api";
+import { CopyButton } from "@/app/[company]/components/CopyButton";
 import { getSiisInfo } from "@/app/[company]/services/siis";
 import { companiesRepository } from "@/app/repositories/companies";
 import { CompanyStatusBadge } from "@/app/shared/component/CompanyStatusBadge";
 import { PageContainer } from "@/app/shared/component/PageContainer";
 import { BASE_URL, COMPANY_SIZE } from "@/app/shared/lib/constants";
+import { decodeBase64 } from "@/app/shared/lib/decodeBase64";
 import { isValidNit } from "@/app/shared/lib/isValidNit";
 import { parseCompanyPathSegment } from "@/app/shared/lib/parseCompanyPathSegment";
 import { slugifyCompanyName } from "@/app/shared/lib/slugifyComponentName";
 import { mapRuesResultToCompanySummary } from "@/app/shared/mappers/mapRuesResultToCompany";
 import {
+  getChamber,
+  getRuesDataByNit,
+  queryNit,
+} from "@/app/shared/services/rues/api";
+import {
   Box,
   Card,
+  Code,
+  DataList,
   Flex,
   Grid,
   Heading,
@@ -29,7 +33,6 @@ import { unstable_cache } from "next/cache";
 import { notFound, permanentRedirect } from "next/navigation";
 import { after } from "next/server";
 import { cache } from "react";
-import { decodeBase64 } from "@/app/shared/lib/decodeBase64";
 
 const dateFormatter = new Intl.DateTimeFormat("es-CO", {
   dateStyle: "long",
@@ -73,9 +76,9 @@ export default async function page({ params }: PageProps) {
                 </Heading>
                 <Flex align="center" gap="2">
                   <Heading as="h2" size="4" itemProp="taxID" weight="regular">
-                    NIT: {companyData.fullNit}
+                    NIT {companyData.fullNit}
                   </Heading>
-                  <CompanyStatusBadge isActive={companyData.isActive} />
+                  <CopyButton value={companyData.nit} />
                 </Flex>
               </Flex>
             </Card>
@@ -141,10 +144,27 @@ async function getCompanyData(nit: number) {
       ...mapRuesResultToCompanySummary(record),
       details: [
         { label: "Razón social", value: record.razon_social },
-        { label: "NIT", value: record.numero_identificacion },
+        {
+          label: "NIT",
+          render: () => (
+            <Flex align="center" gap="2">
+              <Code variant="ghost">{record.numero_identificacion}</Code>
+              <CopyButton value={record.numero_identificacion} />
+            </Flex>
+          ),
+        },
         { label: "Dígito de verificación", value: record.digito_verificacion },
-        { label: "Matrícula", value: record.matricula },
-        { label: "Estado", value: record.estado_matricula },
+        {
+          label: "Matrícula",
+          render: () => (
+            <Flex align="center" gap="2">
+              <Code variant="ghost">{record.matricula}</Code>
+              <CompanyStatusBadge
+                isActive={record.estado_matricula === "ACTIVA"}
+              />
+            </Flex>
+          ),
+        },
         { label: "Tipo de sociedad", value: record.tipo_sociedad },
         { label: "Organización jurídica", value: record.organizacion_juridica },
         {
@@ -175,20 +195,23 @@ async function getCompanyData(nit: number) {
         { label: "Dirección", value: record.direccion_comercial },
         {
           label: "Teléfono",
-          value: {
-            url: `tel:${record.telefono_comercial_1}`,
-            label: record.telefono_comercial_1,
-          },
-        },
-        {
-          label: "Teléfono 2",
-          value: {
-            url: `tel:${record.telefono_comercial_2}`,
-            label: record.telefono_comercial_2,
-          },
+          render: () => (
+            <Flex gap="1">
+              <a href={`tel: ${record.telefono_comercial_1}`}>
+                {record.telefono_comercial_1}
+              </a>
+              {record.telefono_comercial_2 && (
+                <>
+                  /
+                  <a href={`tel: ${record.telefono_comercial_2}`}>
+                    {record.telefono_comercial_2}
+                  </a>
+                </>
+              )}
+            </Flex>
+          ),
         },
         { label: "Zona comercial", value: record.zona_comercial },
-        { label: "Código postal", value: record.codigo_postal_comercial },
         { label: "Municipio", value: record.municipio_comercial },
         { label: "Departamento", value: record.dpto_comercial },
         {
@@ -197,20 +220,27 @@ async function getCompanyData(nit: number) {
         },
         {
           label: "Actividad económica",
-          value: getEconomicActivitiesFromDetails({
-            ciiu1: record.cod_ciiu_act_econ_pri,
-            ciiu2: record.cod_ciiu_act_econ_sec,
-            ciiu3: record.ciiu3,
-            ciiu4: record.ciiu4,
-            descCiiu1: record.desc_ciiu_act_econ_pri,
-            descCiiu2: record.desc_ciiu_act_econ_sec,
-            descCiiu3: record.desc_ciiu3,
-            descCiiu4: record.desc_ciiu4,
-          }),
+          render: () => (
+            <EconomicActivities
+              activities={{
+                ciiu1: record.cod_ciiu_act_econ_pri,
+                ciiu2: record.cod_ciiu_act_econ_sec,
+                ciiu3: record.ciiu3,
+                ciiu4: record.ciiu4,
+                descCiiu1: record.desc_ciiu_act_econ_pri,
+                descCiiu2: record.desc_ciiu_act_econ_sec,
+                descCiiu3: record.desc_ciiu3,
+                descCiiu4: record.desc_ciiu4,
+              }}
+            />
+          ),
         },
         {
           label: "Actividad económica de mayores ingresos",
-          value: record.ciiu_mayores_ingresos,
+          render: () =>
+            record.ciiu_mayores_ingresos ? (
+              <Code>{record.ciiu_mayores_ingresos}</Code>
+            ) : null,
         },
         {
           label: "Cantidad de establecimientos",
@@ -258,25 +288,25 @@ async function getCompanyData(nit: number) {
               },
               {
                 label: "Teléfono",
-                value: {
-                  url: `tel:${establishment.telefono_comercial_1}`,
-                  label: establishment.telefono_comercial_1,
-                },
-              },
-              {
-                label: "Teléfono 2",
-                value: {
-                  url: `tel:${establishment.telefono_comercial_2}`,
-                  label: establishment.telefono_comercial_2,
-                },
+                render: () => (
+                  <Flex gap="1">
+                    <a href={`tel: ${record.telefono_comercial_1}`}>
+                      {record.telefono_comercial_1}
+                    </a>
+                    {record.telefono_comercial_2 && (
+                      <>
+                        /
+                        <a href={`tel: ${record.telefono_comercial_2}`}>
+                          {record.telefono_comercial_2}
+                        </a>
+                      </>
+                    )}
+                  </Flex>
+                ),
               },
               {
                 label: "Dirección comercial",
                 value: establishment.direccion_comercial,
-              },
-              {
-                label: "Barrio comercial",
-                value: establishment.barrio_comercial,
               },
               {
                 label: "Descripción actividad económico",
@@ -284,16 +314,20 @@ async function getCompanyData(nit: number) {
               },
               {
                 label: "Actividad económica",
-                value: getEconomicActivitiesFromDetails({
-                  ciiu1: establishment.ciiu1,
-                  ciiu2: establishment.ciiu2,
-                  ciiu3: establishment.ciiu3,
-                  ciiu4: establishment.ciiu4,
-                  descCiiu1: establishment.desc_ciiu1,
-                  descCiiu2: establishment.desc_ciiu2,
-                  descCiiu3: establishment.desc_ciiu3,
-                  descCiiu4: establishment.desc_ciiu4,
-                }),
+                render: () => (
+                  <EconomicActivities
+                    activities={{
+                      ciiu1: establishment.ciiu1,
+                      ciiu2: establishment.ciiu2,
+                      ciiu3: establishment.ciiu3,
+                      ciiu4: establishment.ciiu4,
+                      descCiiu1: establishment.desc_ciiu1,
+                      descCiiu2: establishment.desc_ciiu2,
+                      descCiiu3: establishment.desc_ciiu3,
+                      descCiiu4: establishment.desc_ciiu4,
+                    }}
+                  />
+                ),
               },
             ],
           };
@@ -327,16 +361,28 @@ async function getCompanyData(nit: number) {
         label: "Razón social",
         value: companyData.rues.razon_social,
       },
-      { label: "NIT", value: companyData.rues.nit },
+      {
+        label: "NIT",
+        render: () => (
+          <Flex align="center" gap="2">
+            <Code variant="ghost">{companyData.rues.nit}</Code>
+            <CopyButton value={companyData.rues.nit} />
+          </Flex>
+        ),
+      },
       { label: "Dígito de verificación", value: companyData.rues.dv },
       {
         label: "Matrícula",
-        value: companyData.rues.matricula,
+        render: () => (
+          <Flex align="center" gap="2">
+            <Code variant="ghost">{companyData.rues.matricula}</Code>
+            <CompanyStatusBadge
+              isActive={companyData.rues.estado_matricula === "ACTIVA"}
+            />
+          </Flex>
+        ),
       },
-      {
-        label: "Estado",
-        value: companyData.rues.estado_matricula,
-      },
+      { label: "Estado", value: companyData.rues.estado_matricula },
       {
         label: "Organización jurídica",
         value: companyData.rues.organizacion_juridica,
@@ -344,35 +390,35 @@ async function getCompanyData(nit: number) {
       { label: "Sigla", value: companyData.rues.sigla },
       {
         label: "Fecha de creación",
-        value: formatDetailsDate(companyData.details?.["fecha_matricula"]),
+        value: formatDetailsDate(companyData.details?.fecha_matricula),
       },
       {
         label: "Antigüedad",
-        value: yearsDoingBusinesses(companyData.details?.["fecha_matricula"]),
+        value: yearsDoingBusinesses(companyData.details?.fecha_matricula),
       },
       {
         label: "Fecha de renovación",
-        value: formatDetailsDate(companyData.details?.["fecha_renovacion"]),
+        value: formatDetailsDate(companyData.details?.fecha_renovacion),
       },
       {
         label: "Fecha de actualización",
-        value: formatDetailsDate(companyData.details?.["fecha_actualizacion"]),
+        value: formatDetailsDate(companyData.details?.fecha_actualizacion),
       },
       {
         label: "Fecha de cancelación",
-        value: formatDetailsDate(companyData.details?.["fecha_cancelacion"]),
+        value: formatDetailsDate(companyData.details?.fecha_cancelacion),
       },
       {
         label: "Último año renovado",
-        value: companyData.details?.["ultimo_ano_renovado"],
+        value: companyData.details?.ultimo_ano_renovado,
       },
       {
         label: "Indicador de emprendimiento social",
-        value: companyData.details?.["indicador_emprendimiento_social"],
+        value: companyData.details?.indicador_emprendimiento_social,
       },
       {
         label: "Tipo de sociedad",
-        value: companyData.details?.["tipo_sociedad"],
+        value: companyData.details?.tipo_sociedad,
       },
       {
         label: "Tamaño de la empresa",
@@ -397,16 +443,20 @@ async function getCompanyData(nit: number) {
       { label: "Sector", value: siis?.sector },
       {
         label: "Actividad económica",
-        value: getEconomicActivitiesFromDetails({
-          ciiu1: companyData.details?.cod_ciiu_act_econ_pri,
-          ciiu2: companyData.details?.cod_ciiu_act_econ_sec,
-          ciiu3: companyData.details?.ciiu3,
-          ciiu4: companyData.details?.ciiu4,
-          descCiiu1: companyData.details?.desc_ciiu_act_econ_pri,
-          descCiiu2: companyData.details?.desc_ciiu_act_econ_sec,
-          descCiiu3: companyData.details?.desc_ciiu3,
-          descCiiu4: companyData.details?.desc_ciiu4,
-        }),
+        render: () => (
+          <EconomicActivities
+            activities={{
+              ciiu1: companyData.details?.cod_ciiu_act_econ_pri,
+              ciiu2: companyData.details?.cod_ciiu_act_econ_sec,
+              ciiu3: companyData.details?.ciiu3,
+              ciiu4: companyData.details?.ciiu4,
+              descCiiu1: companyData.details?.desc_ciiu_act_econ_pri,
+              descCiiu2: companyData.details?.desc_ciiu_act_econ_sec,
+              descCiiu3: companyData.details?.desc_ciiu3,
+              descCiiu4: companyData.details?.desc_ciiu4,
+            }}
+          />
+        ),
       },
     ],
     chamber: getChamberDetails(companyData.chamber),
@@ -471,18 +521,22 @@ const getCompanyDataCached = unstable_cache(cache(getCompanyData), undefined, {
   revalidate: 7 * 24 * 60 * 60,
 });
 
-function getEconomicActivitiesFromDetails(details: {
-  ciiu1?: string;
-  ciiu2?: string;
-  ciiu3?: string;
-  ciiu4?: string;
-  descCiiu1?: string;
-  descCiiu2?: string;
-  descCiiu3?: string;
-  descCiiu4?: string;
+function EconomicActivities({
+  activities,
+}: {
+  activities: {
+    ciiu1?: string;
+    ciiu2?: string;
+    ciiu3?: string;
+    ciiu4?: string;
+    descCiiu1?: string;
+    descCiiu2?: string;
+    descCiiu3?: string;
+    descCiiu4?: string;
+  };
 }) {
-  if (!details) {
-    return [];
+  if (!activities) {
+    return null;
   }
   const economicActivities: {
     label: string;
@@ -490,39 +544,54 @@ function getEconomicActivitiesFromDetails(details: {
     description: string;
   }[] = [];
 
-  if (details.ciiu1 && details.descCiiu1) {
+  if (activities.ciiu1 && activities.descCiiu1) {
     economicActivities.push({
       label: "ciiu1",
-      code: details.ciiu1,
-      description: details.descCiiu1,
+      code: activities.ciiu1,
+      description: activities.descCiiu1,
     });
   }
 
-  if (details.ciiu2 && details.descCiiu2) {
+  if (activities.ciiu2 && activities.descCiiu2) {
     economicActivities.push({
       label: "ciiu2",
-      code: details.ciiu2,
-      description: details.descCiiu2,
+      code: activities.ciiu2,
+      description: activities.descCiiu2,
     });
   }
 
-  if (details.ciiu3 && details.descCiiu3) {
+  if (activities.ciiu3 && activities.descCiiu3) {
     economicActivities.push({
       label: "ciiu3",
-      code: details.ciiu3,
-      description: details.descCiiu3,
+      code: activities.ciiu3,
+      description: activities.descCiiu3,
     });
   }
 
-  if (details.ciiu4 && details.descCiiu4) {
+  if (activities.ciiu4 && activities.descCiiu4) {
     economicActivities.push({
       label: "ciiu4",
-      code: details.ciiu4,
-      description: details.descCiiu4,
+      code: activities.ciiu4,
+      description: activities.descCiiu4,
     });
   }
 
-  return economicActivities;
+  return (
+    <ol>
+      {economicActivities.map((item) => (
+        <li key={item.label}>
+          <DataList.Root orientation="horizontal">
+            <DataList.Item>
+              <DataList.Label minWidth="0">
+                <Code>{item.code}</Code>
+              </DataList.Label>
+              <DataList.Value>{item.description}</DataList.Value>
+            </DataList.Item>
+          </DataList.Root>
+        </li>
+      ))}
+    </ol>
+  );
 }
 
 function getDateFromDetailsDate(value?: string) {
@@ -588,8 +657,8 @@ function getChamberDetails(chamber: Awaited<ReturnType<typeof getChamber>>) {
   }
   return [
     { label: "Nombre", value: chamber.name },
-    { label: "Dirección", value: chamber.address },
-    { label: "Ciudad", value: chamber.city },
     { label: "Departamento", value: chamber.state },
+    { label: "Ciudad", value: chamber.city },
+    { label: "Dirección", value: chamber.address },
   ];
 }

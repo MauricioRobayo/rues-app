@@ -1,15 +1,9 @@
 "use client";
+import { CopyIcon } from "@radix-ui/react-icons";
+import { Flex, IconButton, Text } from "@radix-ui/themes";
 import { useState } from "react";
 
-export function Copy({
-  value,
-  className,
-  copiedClassName,
-}: {
-  value: string;
-  className?: string;
-  copiedClassName?: string;
-}) {
+export function CopyButton({ value }: { value: string }) {
   const [copied, setCopied] = useState(false);
 
   const handleCopy = async () => {
@@ -23,11 +17,25 @@ export function Copy({
   };
 
   return (
-    <button
-      onClick={handleCopy}
-      className={copied ? copiedClassName : className}
-    >
-      {copied ? "Copiado 👍" : "Copiar"}
-    </button>
+    <Flex gap="1">
+      <IconButton
+        size="1"
+        aria-label="Copy value"
+        color="gray"
+        variant="ghost"
+        onClick={handleCopy}
+      >
+        <CopyIcon />
+      </IconButton>
+      {copied && (
+        <Text
+          color="green"
+          size="1"
+          weight={{ initial: "regular", sm: "bold" }}
+        >
+          ✓ Copiado
+        </Text>
+      )}
+    </Flex>
   );
 }

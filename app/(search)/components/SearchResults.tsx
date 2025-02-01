@@ -6,6 +6,7 @@ import type { BusinessSummary } from "@/app/shared/mappers/mapRuesResultToCompan
 import {
   Box,
   Card,
+  Code,
   DataList,
   Flex,
   Grid,
@@ -52,7 +53,7 @@ export function SearchResults({
                     </Link>
                     <Flex align="center" gap="2">
                       <Heading as="h3" size="3" weight="regular">
-                        NIT: <span itemProp="taxID">{result.fullNit}</span>
+                        NIT <span itemProp="taxID">{result.fullNit}</span>
                       </Heading>
                     </Flex>
                     <Details
@@ -62,8 +63,13 @@ export function SearchResults({
                           label: "Matrícula",
                           value: (
                             <Flex gap="2" align="center">
-                              {result.registrationNumber}
-                              <CompanyStatusBadge isActive={result.isActive} />
+                              <Code variant="ghost">
+                                {result.registrationNumber}
+                              </Code>
+                              <CompanyStatusBadge
+                                isActive={result.isActive}
+                                size="1"
+                              />
                             </Flex>
                           ),
                         },
