@@ -4,7 +4,7 @@ export interface CompanyDto {
   name: string;
   shortName?: string;
   slug: string;
-  chamberName?: string;
+  chamber: { name: string; code: number };
   nit: number;
   fullNit: string;
   verificationDigit: number;

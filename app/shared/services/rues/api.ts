@@ -142,14 +142,3 @@ function getCompanyInfo(nit: number) {
     return null;
   }
 }
-
-export function getChamber(code: number) {
-  try {
-    return pRetry(() => companiesRepository.findChamberByCode(Number(code)), {
-      retries: 3,
-    });
-  } catch (err) {
-    console.error("Failed to get chamber info", err);
-    return null;
-  }
-}

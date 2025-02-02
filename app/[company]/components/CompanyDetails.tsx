@@ -1,14 +1,16 @@
 import { DataList } from "@radix-ui/themes";
-import type { JSX } from "react";
+import type { ReactNode } from "react";
+
+export interface CompanyDetail {
+  label: string;
+  value: ReactNode;
+}
 
 export function CompanyDetails({
   details,
   horizontal = false,
 }: {
-  details: {
-    label: string;
-    value?: string | null | number | JSX.Element;
-  }[];
+  details: CompanyDetail[];
   horizontal?: boolean;
 }) {
   return (

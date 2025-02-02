@@ -15,6 +15,7 @@ export function mapCompanyRecordToCompanyDto(data: CompanyRecord): CompanyDto {
     slug: `${slugifyCompanyName(data.razon_social)}-${data.numero_identificacion}`,
     nit: Number(data.numero_identificacion),
     fullNit: formatNit(Number(data.numero_identificacion)),
+    chamber: { name: data.camara, code: Number(data.codigo_camara) },
     verificationDigit: Number(data.digito_verificacion),
     registrationNumber: data.matricula,
     status: data.estado_matricula,
@@ -53,6 +54,7 @@ export function mapCompanyRecordToCompanyDto(data: CompanyRecord): CompanyDto {
     totalEmployees: data.numero_empleados
       ? Number(data.numero_empleados)
       : null,
-    establishments: data.establecimientos.map(mapStoreFrontToEstablishmentDto),
+    establishments:
+      data.establecimientos?.map(mapStoreFrontToEstablishmentDto) ?? [],
   };
 }

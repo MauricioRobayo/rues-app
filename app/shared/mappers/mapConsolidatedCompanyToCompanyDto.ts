@@ -20,6 +20,7 @@ export function mapConsolidatedCompanyToCompanyDto({
     nit: Number(rues.nit),
     fullNit: formatNit(Number(rues.nit)),
     verificationDigit: Number(rues.dv),
+    chamber: { name: rues.nom_camara, code: Number(rues.cod_camara) },
     registrationNumber: rues.matricula,
     status: rues.estado_matricula,
     isActive: rues.estado_matricula === "ACTIVA",
@@ -30,8 +31,8 @@ export function mapConsolidatedCompanyToCompanyDto({
     renewalDate: formatDetailsDate(details?.fecha_renovacion ?? ""),
     updatedDate: formatDetailsDate(details?.fecha_actualizacion ?? ""),
     cancellationDate: formatDetailsDate(details?.fecha_cancelacion ?? ""),
-    lastRenewalYear: details?.ultimo_ano_renovado
-      ? Number(details?.ultimo_ano_renovado)
+    lastRenewalYear: rues?.ultimo_ano_renovado
+      ? Number(rues?.ultimo_ano_renovado)
       : null,
     type: details?.tipo_sociedad,
     size: company?.size ?? null,

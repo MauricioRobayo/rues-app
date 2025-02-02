@@ -1,3 +1,5 @@
+import { Link } from "@radix-ui/themes";
+
 export default function PhoneNumbers({
   phoneNumbers,
 }: {
@@ -10,7 +12,7 @@ export default function PhoneNumbers({
     <ul>
       {phoneNumbers?.map((phoneNumber) => (
         <li key={phoneNumber}>
-          <a href={`tel:${phoneNumber}`}>{phoneNumber}</a>
+          <Link href={`tel:${phoneNumber}`}>{phoneNumber}</Link>
         </li>
       ))}
     </ul>

@@ -1,7 +1,9 @@
+import { Chamber } from "@/app/[company]/components/Chamber";
 import { CompanyDetails } from "@/app/[company]/components/CompanyDetails";
 import { CopyButton } from "@/app/[company]/components/CopyButton";
 import { EconomicActivities } from "@/app/[company]/components/EconomicActivities";
 import PhoneNumbers from "@/app/[company]/components/PhoneNumbers";
+import { getChamber } from "@/app/[company]/services/chambers";
 import { companiesRepository } from "@/app/repositories/companies";
 import { CompanyStatusBadge } from "@/app/shared/component/CompanyStatusBadge";
 import { PageContainer } from "@/app/shared/component/PageContainer";
@@ -19,12 +21,13 @@ import {
   Heading,
   Section,
   Separator,
+  Spinner,
 } from "@radix-ui/themes";
 import type { Metadata } from "next";
 import { unstable_cache } from "next/cache";
 import { notFound, permanentRedirect } from "next/navigation";
 import { after } from "next/server";
-import { cache } from "react";
+import { cache, Suspense } from "react";
 
 interface PageProps {
   params: Promise<{ company: string }>;
@@ -35,21 +38,21 @@ export const dynamic = "force-static";
 export async function generateMetadata({
   params,
 }: PageProps): Promise<Metadata> {
-  const { company } = await params;
-  const companyData = await getPageData(company);
+  const { company: slug } = await params;
+  const { company } = await getPageData(slug);
 
   return {
-    title: `${companyData.name} NIT ${companyData.fullNit}`,
+    title: `${company.name} NIT ${company.fullNit}`,
     metadataBase: new URL(BASE_URL),
     alternates: {
-      canonical: companyData.slug,
+      canonical: company.slug,
     },
   };
 }
 
 export default async function page({ params }: PageProps) {
   const { company: slug } = await params;
-  const company = await getPageData(slug);
+  const { company, chamber } = await getPageData(slug);
 
   const details = [
     { label: "Razón social", value: company.name },
@@ -105,7 +108,9 @@ export default async function page({ params }: PageProps) {
     },
     {
       label: "Actividad económica de mayores ingresos",
-      value: company.highestRevenueEconomicActivityCode,
+      value: company.highestRevenueEconomicActivityCode ? (
+        <Code>{company.highestRevenueEconomicActivityCode}</Code>
+      ) : null,
     },
     {
       label: "Cantidad de establecimientos",
@@ -114,7 +119,7 @@ export default async function page({ params }: PageProps) {
     { label: "Número de empleados", value: company.totalEmployees },
   ];
 
-  const establishments = company.establishments.map((establishment) => ({
+  const establishments = company.establishments?.map((establishment) => ({
     id: establishment.registrationNumber,
     name: establishment.name,
     details: [
@@ -223,14 +228,14 @@ export default async function page({ params }: PageProps) {
                 </Flex>
               </Section>
             )}
-            {/* {companyData.chamber && companyData.chamber.length > 0 && (
-              <Section size="2" id="camara-de-comercio">
-                <Heading as="h3" size="4" mb="2">
-                  Cámara de Comercio
-                </Heading>
-                <CompanyDetails details={companyData.chamber} />
-              </Section>
-            )} */}
+            <Section size="2" id="camara-de-comercio">
+              <Heading as="h3" size="4" mb="2">
+                Cámara de Comercio
+              </Heading>
+              <Suspense fallback={<Spinner />}>
+                <Chamber chamberPromise={chamber} />
+              </Suspense>
+            </Section>
           </Box>
         </Grid>
       </PageContainer>
@@ -268,10 +273,6 @@ async function getCompanyData(nit: number) {
   return companyData;
 }
 
-const getCompanyDataCached = unstable_cache(cache(getCompanyData), undefined, {
-  revalidate: 7 * 24 * 60 * 60,
-});
-
 // This function is unintentionally not cached so we can handle logic based
 // on the segmentPath which can be different given the same nit:
 //   - rnit.co/930123456
@@ -289,17 +290,25 @@ async function getPageData(company: string) {
 
   // Cache at the NIT level to avoid multiple path segments with same NIT
   // triggering multiple duplicated API calls
-  const companyData = await getCompanyDataCached(nit);
+  const data = await getCompanyDataCached(nit);
 
-  if (!companyData) {
+  if (!data) {
     notFound();
   }
 
-  const companySlug = slugifyCompanyName(companyData.name);
+  const companySlug = slugifyCompanyName(data.name);
 
   if (slug !== companySlug) {
     permanentRedirect(`${companySlug}-${nit}`);
   }
 
-  return companyData;
+  return { company: data, chamber: getChamberCached(data.chamber.code) };
 }
+
+const getCompanyDataCached = unstable_cache(cache(getCompanyData), undefined, {
+  revalidate: 7 * 24 * 60 * 60,
+});
+
+const getChamberCached = unstable_cache(cache(getChamber), undefined, {
+  revalidate: false, // cache indefinitely or until matching
+});

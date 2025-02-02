@@ -49,7 +49,7 @@ export function SearchResults({ results }: { results: CompanyDto[] | null }) {
                     </Link>
                     <Flex align="center" gap="2">
                       <Heading as="h3" size="3" weight="regular">
-                        NIT <span itemProp="taxID">{result.fullNit}</span>
+                        NIT: <span itemProp="taxID">{result.fullNit}</span>
                       </Heading>
                     </Flex>
                     <Details
@@ -71,7 +71,7 @@ export function SearchResults({ results }: { results: CompanyDto[] | null }) {
                         },
                         {
                           label: "Cámara de comercio",
-                          value: result.chamberName,
+                          value: result.chamber.name,
                         },
                         {
                           label: "Último año renovado",
