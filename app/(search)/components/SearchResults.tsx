@@ -1,8 +1,8 @@
 "use client";
 
+import type { CompanyDto } from "@/app/[company]/types/CompanyDto";
 import { CompanyStatusBadge } from "@/app/shared/component/CompanyStatusBadge";
 import { Link } from "@/app/shared/component/Link";
-import type { BusinessSummary } from "@/app/shared/mappers/mapRuesResultToCompany";
 import {
   Box,
   Card,
@@ -15,11 +15,7 @@ import {
 } from "@radix-ui/themes";
 import type { ReactNode } from "react";
 
-export function SearchResults({
-  results,
-}: {
-  results: BusinessSummary[] | null;
-}) {
+export function SearchResults({ results }: { results: CompanyDto[] | null }) {
   if (!results) {
     return null;
   }

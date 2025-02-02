@@ -23,13 +23,13 @@ export interface Hits {
 export interface Hit {
   _index: string;
   _type: string;
-  _source: Source;
+  _source: SiisData;
   _id: string;
   sort: number[];
   _score: null;
 }
 
-export interface Source {
+export interface SiisData {
   // Only using this fields atm
   region: string;
   ciudad: string;
@@ -82,7 +82,7 @@ export interface Total {
   value: number;
   relation: string;
 }
-export async function getSiisInfo(nit: number): Promise<Source | null> {
+export async function getSiisInfo(nit: number): Promise<SiisData | null> {
   const headers = new Headers();
   headers.append("Content-Type", "application/json");
 

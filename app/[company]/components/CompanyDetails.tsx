@@ -7,8 +7,7 @@ export function CompanyDetails({
 }: {
   details: {
     label: string;
-    value?: string | null | number;
-    render?: () => JSX.Element;
+    value?: string | null | number | JSX.Element;
   }[];
   horizontal?: boolean;
 }) {
@@ -18,15 +17,13 @@ export function CompanyDetails({
       size={{ initial: "2", sm: "3" }}
     >
       {details?.map((detail) => {
-        if (!detail.value && !detail.render) {
+        if (!detail.value) {
           return null;
         }
         return (
           <DataList.Item key={detail.label}>
             <DataList.Label>{detail.label}</DataList.Label>
-            <DataList.Value>
-              {detail.render ? detail.render() : detail.value}
-            </DataList.Value>
+            <DataList.Value>{detail.value}</DataList.Value>
           </DataList.Item>
         );
       })}

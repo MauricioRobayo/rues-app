@@ -1,3 +1,6 @@
+import { mapCompanyRecordToCompanyDto } from "@/app/shared/mappers/mapCompanyRecordToCompanyDto";
+import { mapConsolidatedCompanyToCompanyDto } from "@/app/shared/mappers/mapConsolidatedCompanyToCompanyDto";
+import { getSiisInfo, type SiisData } from "@/app/[company]/services/siis";
 import { companiesRepository } from "@/app/repositories/companies";
 import { tokenRepository } from "@/app/repositories/tokens";
 import { VALID_RUES_CATEGORIES } from "@/app/shared/lib/constants";
@@ -9,6 +12,14 @@ import type {
 } from "@mauriciorobayo/rues-api";
 import * as RUES from "@mauriciorobayo/rues-api";
 import pRetry from "p-retry";
+
+export interface ConsolidatedCompanyInfo {
+  details?: File;
+  establishments?: BusinessEstablishmentsResponse["registros"];
+  company?: Awaited<ReturnType<(typeof companiesRepository)["getCompanyInfo"]>>;
+  rues: BusinessRecord;
+  siis?: SiisData;
+}
 
 export async function queryNit(nit: number) {
   let token = await tokenRepository.getToken();
@@ -23,27 +34,20 @@ export async function queryNit(nit: number) {
   }
 
   if (response.status !== "success") {
-    return { token };
+    return { token, data: null };
   }
 
   const activeRecord = response.data.registros.find(
     (record) => record.estado_matricula === "ACTIVA",
   );
-
-  if (activeRecord) {
-    return { data: activeRecord, token };
-  }
-
   const mostRecentRecord = response.data.registros
     .sort(
       (a, b) => Number(b.ultimo_ano_renovado) - Number(a.ultimo_ano_renovado),
     )
     .at(0);
+  const record = activeRecord ?? mostRecentRecord;
 
-  return {
-    data: mostRecentRecord,
-    token,
-  };
+  return { data: record ? mapCompanyRecordToCompanyDto(record) : null, token };
 }
 
 export async function advancedSearch({
@@ -94,34 +98,20 @@ export async function getRuesDataByNit({
   if (!token || !VALID_RUES_CATEGORIES.includes(data.categoria)) {
     return null;
   }
-  const [fileResponse, businessEstablishmentsResponse, chamber, company] =
+  const [fileResponse, businessEstablishmentsResponse, company, siis] =
     await Promise.all([
       RUES.getFile(data.id_rm),
       RUES.getBusinessEstablishments({
         query: RUES.getBusinessDetails(data.id_rm),
         token,
       }),
-      getChamber(Number(data.cod_camara)),
       getCompanyInfo(nit),
+      getSiisInfo(nit),
     ]);
 
-  const result: {
-    chamber?: NonNullable<
-      Awaited<ReturnType<typeof companiesRepository.findChamberByCode>>
-    >;
-    details?: File;
-    establishments?: BusinessEstablishmentsResponse["registros"];
-    company?: Awaited<
-      ReturnType<(typeof companiesRepository)["getCompanyInfo"]>
-    >;
-    rues: BusinessRecord;
-  } = {
+  const result: ConsolidatedCompanyInfo = {
     rues: data,
   };
-
-  if (chamber) {
-    result.chamber = chamber;
-  }
 
   if (fileResponse.status === "success") {
     result.details = fileResponse.data.registros;
@@ -135,7 +125,11 @@ export async function getRuesDataByNit({
     result.company = company;
   }
 
-  return result;
+  if (siis) {
+    result.siis = siis;
+  }
+
+  return mapConsolidatedCompanyToCompanyDto(result);
 }
 
 function getCompanyInfo(nit: number) {

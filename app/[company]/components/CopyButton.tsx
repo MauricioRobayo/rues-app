@@ -3,12 +3,12 @@ import { CopyIcon } from "@radix-ui/react-icons";
 import { Flex, IconButton, Text } from "@radix-ui/themes";
 import { useState } from "react";
 
-export function CopyButton({ value }: { value: string }) {
+export function CopyButton({ value }: { value: string | number }) {
   const [copied, setCopied] = useState(false);
 
   const handleCopy = async () => {
     try {
-      await navigator.clipboard.writeText(value);
+      await navigator.clipboard.writeText(String(value));
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     } catch (error) {
