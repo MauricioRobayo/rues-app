@@ -11,6 +11,7 @@ import { isValidNit } from "@/app/shared/lib/isValidNit";
 import { parseCompanyPathSegment } from "@/app/shared/lib/parseCompanyPathSegment";
 import { slugifyCompanyName } from "@/app/shared/lib/slugifyComponentName";
 import { getRuesDataByNit, queryNit } from "@/app/shared/services/rues/api";
+import { GoogleMapsEmbed } from "@next/third-parties/google";
 import {
   Box,
   Card,
@@ -92,7 +93,25 @@ export default async function page({ params }: PageProps) {
     { label: "Fecha de renovación", value: data.renewalDate },
     { label: "Fecha de cancelación", value: data.cancellationDate },
     { label: "Tamaño de la empresa", value: data.size },
-    { label: "Dirección", value: data.address },
+    {
+      label: "Dirección",
+      value:
+        data.address &&
+        data.city &&
+        data.state &&
+        process.env.GOOGLE_MAPS_API_KEY ? (
+          <Flex direction="column" gap="2" width="100%">
+            {data.address}
+            <GoogleMapsEmbed
+              apiKey={process.env.GOOGLE_MAPS_API_KEY}
+              height={400}
+              width="100%"
+              mode="place"
+              q={`${data.address},${data.city},${data.state},Colombia`}
+            />
+          </Flex>
+        ) : null,
+    },
     {
       label: "Teléfono",
       value: data.phoneNumbers ? (
