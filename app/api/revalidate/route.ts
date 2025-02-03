@@ -14,9 +14,11 @@ export async function GET(request: NextRequest) {
     );
   }
   const path = request.nextUrl.searchParams.get("path");
+  const type = request.nextUrl.searchParams.get("type");
+  const isValidType = type === "page" || type === "layout";
 
   if (path) {
-    revalidatePath(path);
+    revalidatePath(path, isValidType ? type : undefined);
     return Response.json({ revalidated: true, now: Date.now() });
   }
 

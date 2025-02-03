@@ -23,7 +23,7 @@ export async function GET(
         },
       );
     }
-    const totalSitemaps = await getTotalSitemaps();
+    const totalSitemaps = await getTotalSitemapsCached();
     if (sitemapId < 0 || sitemapId >= totalSitemaps) {
       return Response.json(
         { message: "Not found" },
@@ -87,3 +87,7 @@ const getAllCompanies = unstable_cache((sitemapId) =>
     },
   ),
 );
+
+const getTotalSitemapsCached = unstable_cache(getTotalSitemaps, undefined, {
+  revalidate: 7 * 24 * 60 * 60,
+});
