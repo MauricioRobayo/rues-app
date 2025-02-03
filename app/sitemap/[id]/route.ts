@@ -42,7 +42,12 @@ export async function GET(
           lastModified: company.timestamp.toISOString(),
         };
       } catch (err) {
-        console.error("Sitemap failed on company:", company.nit, err);
+        console.error(
+          "Sitemap failed on company:",
+          company.nit,
+          JSON.stringify(company),
+          err,
+        );
         return null;
       }
     });
