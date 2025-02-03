@@ -110,7 +110,7 @@ export default async function page({ params }: PageProps) {
     {
       label: "Actividad económica de mayores ingresos",
       value: data.highestRevenueEconomicActivityCode ? (
-        <Code>{data.highestRevenueEconomicActivityCode}</Code>
+        <Code size="2">{data.highestRevenueEconomicActivityCode}</Code>
       ) : null,
     },
     {
