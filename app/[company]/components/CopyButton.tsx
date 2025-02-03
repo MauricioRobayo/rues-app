@@ -17,7 +17,7 @@ export function CopyButton({ value }: { value: string | number }) {
   };
 
   return (
-    <Flex gap="1">
+    <Flex gap="2">
       <IconButton
         size="1"
         aria-label="Copy value"

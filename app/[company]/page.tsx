@@ -20,6 +20,7 @@ import {
   Heading,
   Section,
   Separator,
+  Text,
 } from "@radix-ui/themes";
 import type { Metadata } from "next";
 import { unstable_cache } from "next/cache";
@@ -55,12 +56,7 @@ export default async function page({ params }: PageProps) {
   const details = [
     {
       label: "Razón social",
-      value: (
-        <Flex align="center" gap="2">
-          <Code variant="ghost">{data.name}</Code>
-          <CopyButton value={data.name} />
-        </Flex>
-      ),
+      value: data.name,
     },
     {
       label: "NIT",
