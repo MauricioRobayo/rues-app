@@ -53,7 +53,15 @@ export default async function page({ params }: PageProps) {
   const data = await getPageData(company);
 
   const details = [
-    { label: "Razón social", value: data.name },
+    {
+      label: "Razón social",
+      value: (
+        <Flex align="center" gap="2">
+          <Code variant="ghost">{data.name}</Code>
+          <CopyButton value={data.name} />
+        </Flex>
+      ),
+    },
     {
       label: "NIT",
       value: (
@@ -183,10 +191,10 @@ export default async function page({ params }: PageProps) {
                   {data.name}
                 </Heading>
                 <Flex align="center" gap="2">
-                  <Heading as="h2" size="4" itemProp="taxID" weight="regular">
-                    NIT {data.fullNit}
+                  <Heading as="h2" size="4" weight="regular">
+                    NIT: <span itemProp="taxID">{data.fullNit}</span>
                   </Heading>
-                  <CopyButton value={data.nit} />
+                  <CompanyStatusBadge isActive={data.isActive} variant="long" />
                 </Flex>
               </Flex>
             </Card>
