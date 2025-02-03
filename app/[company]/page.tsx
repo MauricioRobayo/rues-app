@@ -3,7 +3,6 @@ import { CompanyDetails } from "@/app/[company]/components/CompanyDetails";
 import { CopyButton } from "@/app/[company]/components/CopyButton";
 import { EconomicActivities } from "@/app/[company]/components/EconomicActivities";
 import PhoneNumbers from "@/app/[company]/components/PhoneNumbers";
-import { getChamber } from "@/app/[company]/services/chambers";
 import { companiesRepository } from "@/app/repositories/companies";
 import { CompanyStatusBadge } from "@/app/shared/component/CompanyStatusBadge";
 import { PageContainer } from "@/app/shared/component/PageContainer";
@@ -38,88 +37,88 @@ export const dynamic = "force-static";
 export async function generateMetadata({
   params,
 }: PageProps): Promise<Metadata> {
-  const { company: slug } = await params;
-  const { company } = await getPageData(slug);
+  const { company } = await params;
+  const data = await getPageData(company);
 
   return {
-    title: `${company.name} NIT ${company.fullNit}`,
+    title: `${data.name} NIT ${data.fullNit}`,
     metadataBase: new URL(BASE_URL),
     alternates: {
-      canonical: company.slug,
+      canonical: data.slug,
     },
   };
 }
 
 export default async function page({ params }: PageProps) {
-  const { company: slug } = await params;
-  const { company, chamber } = await getPageData(slug);
+  const { company } = await params;
+  const data = await getPageData(company);
 
   const details = [
-    { label: "Razón social", value: company.name },
+    { label: "Razón social", value: data.name },
     {
       label: "NIT",
       value: (
         <Flex align="center" gap="2">
-          <Code variant="ghost">{company.nit}</Code>
-          <CopyButton value={company.nit} />
+          <Code variant="ghost">{data.nit}</Code>
+          <CopyButton value={data.nit} />
         </Flex>
       ),
     },
     {
       label: "Dígito de verificación",
-      value: <Code variant="ghost">{company.verificationDigit}</Code>,
+      value: <Code variant="ghost">{data.verificationDigit}</Code>,
     },
     {
       label: "Matrícula",
       value: (
         <Flex align="center" gap="2">
-          <Code variant="ghost">{company.registrationNumber}</Code>
-          <CompanyStatusBadge isActive={company.isActive} />
+          <Code variant="ghost">{data.registrationNumber}</Code>
+          <CompanyStatusBadge isActive={data.isActive} />
         </Flex>
       ),
     },
     {
       label: "Estado",
-      value: company.status.split(" ").length > 1 ? company.status : null,
+      value: data.status.split(" ").length > 1 ? data.status : null,
     },
-    { label: "Tipo de sociedad", value: company.type },
-    { label: "Organización jurídica", value: company.legalEntityType },
-    { label: "Categoría de la matrícula", value: company.category },
-    { label: "Fecha de matrícula", value: company.registrationDate },
-    { label: "Antigüedad", value: company.yearsDoingBusinesses },
-    { label: "Último año renovado", value: company.lastRenewalYear },
-    { label: "Fecha de renovación", value: company.renewalDate },
-    { label: "Fecha de cancelación", value: company.cancellationDate },
-    { label: "Tamaño de la empresa", value: company.size },
-    { label: "Dirección", value: company.address },
+    { label: "Tipo de sociedad", value: data.type },
+    { label: "Organización jurídica", value: data.legalEntityType },
+    { label: "Categoría de la matrícula", value: data.category },
+    { label: "Fecha de matrícula", value: data.registrationDate },
+    { label: "Antigüedad", value: data.yearsDoingBusinesses },
+    { label: "Último año renovado", value: data.lastRenewalYear },
+    { label: "Fecha de renovación", value: data.renewalDate },
+    { label: "Fecha de cancelación", value: data.cancellationDate },
+    { label: "Tamaño de la empresa", value: data.size },
+    { label: "Dirección", value: data.address },
     {
       label: "Teléfono",
-      value: company.phoneNumbers ? (
-        <PhoneNumbers phoneNumbers={company.phoneNumbers} />
+      value: data.phoneNumbers ? (
+        <PhoneNumbers phoneNumbers={data.phoneNumbers} />
       ) : null,
     },
-    { label: "Zona comercial", value: company.area },
-    { label: "Municipio", value: company.city },
-    { label: "Departamento", value: company.state },
-    { label: "Objecto social", value: company.scope },
+    { label: "Zona comercial", value: data.area },
+    { label: "Municipio", value: data.city },
+    { label: "Departamento", value: data.state },
+    { label: "Objecto social", value: data.scope },
     {
       label: "Actividad económica",
-      value: <EconomicActivities activities={company.economicActivities} />,
+      value: <EconomicActivities activities={data.economicActivities} />,
     },
     {
       label: "Actividad económica de mayores ingresos",
-      value: company.highestRevenueEconomicActivityCode ? (
-        <Code>{company.highestRevenueEconomicActivityCode}</Code>
+      value: data.highestRevenueEconomicActivityCode ? (
+        <Code>{data.highestRevenueEconomicActivityCode}</Code>
       ) : null,
     },
     {
       label: "Cantidad de establecimientos",
-      value: company.totalBusinessEstablishments,
+      value: data.totalBusinessEstablishments,
     },
-    { label: "Número de empleados", value: company.totalEmployees },
+    { label: "Número de empleados", value: data.totalEmployees },
   ];
 
-  const establishments = company.establishments?.map((establishment) => ({
+  const establishments = data.establishments?.map((establishment) => ({
     id: establishment.registrationNumber,
     name: establishment.name,
     details: [
@@ -182,13 +181,13 @@ export default async function page({ params }: PageProps) {
             <Card size="4" variant="ghost">
               <Flex direction="column" gap="1">
                 <Heading itemProp="name" color="sky">
-                  {company.name}
+                  {data.name}
                 </Heading>
                 <Flex align="center" gap="2">
                   <Heading as="h2" size="4" itemProp="taxID" weight="regular">
-                    NIT {company.fullNit}
+                    NIT {data.fullNit}
                   </Heading>
-                  <CopyButton value={company.nit} />
+                  <CopyButton value={data.nit} />
                 </Flex>
               </Flex>
             </Card>
@@ -205,7 +204,7 @@ export default async function page({ params }: PageProps) {
             <CompanyDetails details={details} />
           </Section>
           <Box>
-            {company.establishments.length > 0 && (
+            {data.establishments.length > 0 && (
               <Section size="2" id="establecimientos-comerciales">
                 <Heading as="h3" size="4" mb="4">
                   Establecimientos Comerciales
@@ -233,7 +232,7 @@ export default async function page({ params }: PageProps) {
                 Cámara de Comercio
               </Heading>
               <Suspense fallback={<Spinner />}>
-                <Chamber chamberPromise={chamber} />
+                <Chamber code={data.chamber.code} />
               </Suspense>
             </Section>
           </Box>
@@ -302,13 +301,9 @@ async function getPageData(company: string) {
     permanentRedirect(`${companySlug}-${nit}`);
   }
 
-  return { company: data, chamber: getChamberCached(data.chamber.code) };
+  return data;
 }
 
 const getCompanyDataCached = unstable_cache(cache(getCompanyData), undefined, {
   revalidate: 7 * 24 * 60 * 60,
-});
-
-const getChamberCached = unstable_cache(cache(getChamber), undefined, {
-  revalidate: false, // cache indefinitely or until matching
 });

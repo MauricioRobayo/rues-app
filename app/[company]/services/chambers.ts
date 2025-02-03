@@ -2,7 +2,6 @@ import { companiesRepository } from "@/app/repositories/companies";
 import pRetry from "p-retry";
 
 export async function getChamber(code: number) {
-  await new Promise((resolve) => setTimeout(resolve, 5000));
   try {
     const chamber = await pRetry(
       () => companiesRepository.findChamberByCode(code),
