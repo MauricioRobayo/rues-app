@@ -22,7 +22,7 @@ import Form from "next/form";
 
 export function Search() {
   const companyName = useNormalizedCompanyName();
-  const { isLoading, data } = useQuery({
+  const { isLoading, data, isError } = useQuery({
     queryKey: [companyName],
     queryFn: async ({ queryKey }) => {
       const companyName = queryKey.at(0);
@@ -33,7 +33,14 @@ export function Search() {
         process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY,
         { action: RECAPTCHA_SEARCH_ACTION },
       );
-      return searchByCompanyName({ companyName, recaptchaToken });
+      const company = await searchByCompanyName({
+        companyName,
+        recaptchaToken,
+      });
+      if (!company) {
+        throw new Error("Search fetch failed");
+      }
+      return company;
     },
     enabled: !!companyName,
   });
@@ -86,11 +93,15 @@ export function Search() {
             </Form>
           </Flex>
         </PageContainer>
-        {data && (
-          <PageContainer size="2">
-            <SearchResults results={data} />
-          </PageContainer>
-        )}
+        <PageContainer size="2">
+          {isError && (
+            <Text color="red">
+              Algo ha salido mal. Por favor, vuelva a intentarlo en unos
+              minutos.
+            </Text>
+          )}
+          {data && <SearchResults results={data} />}
+        </PageContainer>
       </Flex>
     </Box>
   );

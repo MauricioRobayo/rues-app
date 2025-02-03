@@ -5,11 +5,7 @@ import { CompanyStatusBadge } from "@/app/shared/component/CompanyStatusBadge";
 import { Link } from "@/app/shared/component/Link";
 import { Box, Card, Flex, Heading, Separator, Text } from "@radix-ui/themes";
 
-export function SearchResults({ results }: { results: CompanyDto[] | null }) {
-  if (!results) {
-    return null;
-  }
-
+export function SearchResults({ results }: { results: CompanyDto[] }) {
   if (results.length === 0) {
     return <div>No se encontraron resultados.</div>;
   }
