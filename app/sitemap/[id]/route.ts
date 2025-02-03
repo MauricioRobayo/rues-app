@@ -23,7 +23,7 @@ export async function GET(
         },
       );
     }
-    const totalSitemaps = await getTotalSitemaps();
+    const totalSitemaps = await getTotalSitemapsCached();
     if (sitemapId < 0 || sitemapId >= totalSitemaps) {
       return Response.json(
         { message: "Not found" },
@@ -34,15 +34,27 @@ export async function GET(
     }
 
     const companies = (await getAllCompanies(sitemapId)).map((company) => {
-      const companySlug = slugifyCompanyName(company.name);
-      const url = `${BASE_URL}/${companySlug}-${company.nit}`;
-      return {
-        url,
-        lastModified: company.timestamp?.toISOString(),
-      };
+      try {
+        const companySlug = slugifyCompanyName(company.name);
+        const url = `${BASE_URL}/${companySlug}-${company.nit}`;
+        return {
+          url,
+          lastModified: company.timestamp.toISOString(),
+        };
+      } catch (err) {
+        console.error(
+          "Sitemap failed on company:",
+          company.nit,
+          JSON.stringify(company),
+          err,
+        );
+        return null;
+      }
     });
 
-    const sitemap = await buildSitemap(companies);
+    const sitemap = await buildSitemap(
+      companies.filter((company) => company !== null),
+    );
 
     return new NextResponse(sitemap, {
       headers: {
@@ -87,3 +99,7 @@ const getAllCompanies = unstable_cache((sitemapId) =>
     },
   ),
 );
+
+const getTotalSitemapsCached = unstable_cache(getTotalSitemaps, undefined, {
+  revalidate: 7 * 24 * 60 * 60,
+});
