@@ -20,7 +20,6 @@ import {
   Heading,
   Section,
   Separator,
-  Text,
 } from "@radix-ui/themes";
 import type { Metadata } from "next";
 import { unstable_cache } from "next/cache";
