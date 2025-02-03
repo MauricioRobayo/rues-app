@@ -2,6 +2,7 @@ import { Chamber, ChamberSkeleton } from "@/app/[company]/components/Chamber";
 import { CompanyDetails } from "@/app/[company]/components/CompanyDetails";
 import { CopyButton } from "@/app/[company]/components/CopyButton";
 import { EconomicActivities } from "@/app/[company]/components/EconomicActivities";
+import GoogleMaps from "@/app/[company]/components/GoogleMaps";
 import PhoneNumbers from "@/app/[company]/components/PhoneNumbers";
 import { companiesRepository } from "@/app/repositories/companies";
 import { CompanyStatusBadge } from "@/app/shared/component/CompanyStatusBadge";
@@ -92,7 +93,18 @@ export default async function page({ params }: PageProps) {
     { label: "Fecha de renovación", value: data.renewalDate },
     { label: "Fecha de cancelación", value: data.cancellationDate },
     { label: "Tamaño de la empresa", value: data.size },
-    { label: "Dirección", value: data.address },
+    {
+      label: "Dirección",
+      value:
+        data.address && data.city && data.state ? (
+          <Flex direction="column" gap="2" width="100%">
+            {data.address}
+            <GoogleMaps
+              q={`${data.address},${data.city},${data.state},Colombia`}
+            />
+          </Flex>
+        ) : null,
+    },
     {
       label: "Teléfono",
       value: data.phoneNumbers ? (
