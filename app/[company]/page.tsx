@@ -1,4 +1,4 @@
-import { Chamber } from "@/app/[company]/components/Chamber";
+import { Chamber, ChamberSkeleton } from "@/app/[company]/components/Chamber";
 import { CompanyDetails } from "@/app/[company]/components/CompanyDetails";
 import { CopyButton } from "@/app/[company]/components/CopyButton";
 import { EconomicActivities } from "@/app/[company]/components/EconomicActivities";
@@ -20,7 +20,6 @@ import {
   Heading,
   Section,
   Separator,
-  Spinner,
 } from "@radix-ui/themes";
 import type { Metadata } from "next";
 import { unstable_cache } from "next/cache";
@@ -231,7 +230,7 @@ export default async function page({ params }: PageProps) {
               <Heading as="h3" size="4" mb="2">
                 Cámara de Comercio
               </Heading>
-              <Suspense fallback={<Spinner />}>
+              <Suspense fallback={<ChamberSkeleton />}>
                 <Chamber code={data.chamber.code} />
               </Suspense>
             </Section>
