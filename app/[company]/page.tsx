@@ -97,11 +97,14 @@ export default async function page({ params }: PageProps) {
     {
       label: "Dirección",
       value:
-        data.address && data.city && data.state ? (
+        data.address &&
+        data.city &&
+        data.state &&
+        process.env.GOOGLE_MAPS_API_KEY ? (
           <Flex direction="column" gap="2" width="100%">
             {data.address}
             <GoogleMapsEmbed
-              apiKey={process.env.GOOGLE_MAPS_API_KEY ?? ""}
+              apiKey={process.env.GOOGLE_MAPS_API_KEY}
               height={400}
               width="100%"
               mode="place"
