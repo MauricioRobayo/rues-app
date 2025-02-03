@@ -2,7 +2,6 @@ import { Chamber, ChamberSkeleton } from "@/app/[company]/components/Chamber";
 import { CompanyDetails } from "@/app/[company]/components/CompanyDetails";
 import { CopyButton } from "@/app/[company]/components/CopyButton";
 import { EconomicActivities } from "@/app/[company]/components/EconomicActivities";
-import GoogleMaps from "@/app/[company]/components/GoogleMaps";
 import PhoneNumbers from "@/app/[company]/components/PhoneNumbers";
 import { companiesRepository } from "@/app/repositories/companies";
 import { CompanyStatusBadge } from "@/app/shared/component/CompanyStatusBadge";
