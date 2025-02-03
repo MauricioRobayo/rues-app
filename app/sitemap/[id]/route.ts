@@ -34,15 +34,22 @@ export async function GET(
     }
 
     const companies = (await getAllCompanies(sitemapId)).map((company) => {
-      const companySlug = slugifyCompanyName(company.name);
-      const url = `${BASE_URL}/${companySlug}-${company.nit}`;
-      return {
-        url,
-        lastModified: company.timestamp?.toISOString(),
-      };
+      try {
+        const companySlug = slugifyCompanyName(company.name);
+        const url = `${BASE_URL}/${companySlug}-${company.nit}`;
+        return {
+          url,
+          lastModified: company.timestamp.toISOString(),
+        };
+      } catch (err) {
+        console.error("Sitemap failed on company:", company.nit, err);
+        return null;
+      }
     });
 
-    const sitemap = await buildSitemap(companies);
+    const sitemap = await buildSitemap(
+      companies.filter((company) => company !== null),
+    );
 
     return new NextResponse(sitemap, {
       headers: {
