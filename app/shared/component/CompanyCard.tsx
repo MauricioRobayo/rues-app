@@ -1,5 +1,5 @@
+import type { CompanyDto } from "@/app/[company]/types/CompanyDto";
 import { CompanyStatusBadge } from "@/app/shared/component/CompanyStatusBadge";
-import type { CompanySummary } from "@/app/shared/mappers/mapRuesResultToCompany";
 import { Card, Heading, Flex, type CardProps } from "@radix-ui/themes";
 
 export function CompanyCard({
@@ -7,7 +7,7 @@ export function CompanyCard({
   fullNit,
   isActive,
   ...props
-}: CompanySummary & CardProps) {
+}: CompanyDto & CardProps) {
   return (
     <Card {...props}>
       <Heading itemProp="name" color="sky">

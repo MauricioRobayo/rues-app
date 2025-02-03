@@ -1,28 +1,11 @@
 "use client";
 
+import type { CompanyDto } from "@/app/[company]/types/CompanyDto";
 import { CompanyStatusBadge } from "@/app/shared/component/CompanyStatusBadge";
 import { Link } from "@/app/shared/component/Link";
-import type { BusinessSummary } from "@/app/shared/mappers/mapRuesResultToCompany";
-import {
-  Box,
-  Card,
-  DataList,
-  Flex,
-  Grid,
-  Heading,
-  Separator,
-} from "@radix-ui/themes";
-import type { ReactNode } from "react";
+import { Box, Card, Flex, Heading, Separator, Text } from "@radix-ui/themes";
 
-export function SearchResults({
-  results,
-}: {
-  results: BusinessSummary[] | null;
-}) {
-  if (!results) {
-    return null;
-  }
-
+export function SearchResults({ results }: { results: CompanyDto[] }) {
   if (results.length === 0) {
     return <div>No se encontraron resultados.</div>;
   }
@@ -40,47 +23,35 @@ export function SearchResults({
                   itemScope
                   itemType="https://schema.org/Organization"
                 >
-                  <Grid
-                    columns={{ initial: "1", sm: "1fr auto" }}
-                    gap={{ initial: "1", sm: "4" }}
-                    align="start"
-                  >
+                  <Flex direction="column" gap="1">
                     <Link underline="none" href={result.slug} prefetch={false}>
                       <Heading itemProp="name" as="h2" size="4" weight="medium">
                         {result.name}
                       </Heading>
                     </Link>
-                    <Flex align="center" gap="2">
+                    <Flex
+                      align={{ initial: "start", sm: "center" }}
+                      gap="2"
+                      direction={{ initial: "column", sm: "row" }}
+                    >
                       <Heading as="h3" size="3" weight="regular">
                         NIT: <span itemProp="taxID">{result.fullNit}</span>
                       </Heading>
+                      <CompanyStatusBadge
+                        isActive={result.isActive}
+                        variant="long"
+                        size="1"
+                      />
                     </Flex>
-                    <Details
-                      mt={{ initial: "2", sm: "0" }}
-                      details={[
-                        {
-                          label: "Cámara de comercio",
-                          value: result.chamberName,
-                        },
-                        {
-                          label: "Último año renovado",
-                          value: result.lastRenewalYear,
-                        },
-                        {
-                          label: "Matrícula",
-                          value: (
-                            <Flex gap="2" align="center">
-                              {result.registrationNumber}
-                              <CompanyStatusBadge isActive={result.isActive} />
-                            </Flex>
-                          ),
-                        },
-                        result.shortName
-                          ? { label: "Sigla", value: result.shortName }
-                          : null,
-                      ].filter((item) => item !== null)}
-                    />
-                  </Grid>
+                    <Text size="1" weight="light">
+                      {result.shortName ? `Sigla: ${result.shortName}` : null}
+                    </Text>
+                    <Flex gap="4" asChild>
+                      <Text size="1" weight="light">
+                        <div>{result.chamber.name}</div>
+                      </Text>
+                    </Flex>
+                  </Flex>
                   <Separator size="4" mt="4" />
                 </Card>
               </li>
@@ -89,31 +60,5 @@ export function SearchResults({
         })}
       </ul>
     </Flex>
-  );
-}
-
-function Details({
-  details,
-  ...props
-}: {
-  details: { label: string; value: ReactNode }[];
-} & DataList.RootProps) {
-  return (
-    <DataList.Root
-      size={{ initial: "1", sm: "2" }}
-      style={{ gap: "var(--space-2" }}
-      {...props}
-    >
-      {details.map(({ label, value }) => (
-        <DataList.Item key={label}>
-          <DataList.Label minWidth={{ initial: "8rem", sm: "10rem" }}>
-            {label}
-          </DataList.Label>
-          <DataList.Value>
-            <div>{value}</div>
-          </DataList.Value>
-        </DataList.Item>
-      ))}
-    </DataList.Root>
   );
 }

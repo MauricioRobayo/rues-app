@@ -2,10 +2,12 @@ import { Badge, type BadgeProps } from "@radix-ui/themes";
 
 export function CompanyStatusBadge({
   isActive,
-  size = "1",
+  size = "2",
+  variant = "short",
 }: {
   isActive: boolean;
   size?: BadgeProps["size"];
+  variant?: "long" | "short";
 }) {
   return (
     <Badge
@@ -14,6 +16,7 @@ export function CompanyStatusBadge({
       variant="surface"
       style={{ textTransform: "uppercase" }}
     >
+      {variant === "long" ? "Matrícula " : null}
       {isActive ? "Activa" : "Cancelada"}
     </Badge>
   );
