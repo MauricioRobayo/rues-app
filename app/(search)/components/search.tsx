@@ -81,7 +81,7 @@ export function Search() {
                     </TextField.Slot>
                   </TextField.Root>
                   <Button
-                    style={{ backgroundColor: "var(--sky-11)", color: "white" }}
+                    style={{ backgroundColor: "var(--blue-9)", color: "white" }}
                     type="submit"
                     size="3"
                     loading={isLoading}

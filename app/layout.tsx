@@ -25,10 +25,10 @@ export default function RootLayout({
     <html lang="es-CO">
       <GoogleTagManager gtmId={process.env.NEXT_PUBLIC_GTM_ID ?? ""} />
       <body>
-        <Theme accentColor="sky">
+        <Theme accentColor="blue">
           <NextTopLoader />
           <Flex direction="column" style={{ height: "100vh" }}>
-            <Box style={{ background: "var(--sky-a2)" }}>
+            <Box style={{ background: "var(--blue-a2)" }}>
               <PageContainer py="4">
                 <Flex dir="row" justify="between">
                   <header>
@@ -38,7 +38,7 @@ export default function RootLayout({
                       </Link>
                     </div>
                   </header>
-                  <Text color="sky" weight="bold">
+                  <Text color="blue" weight="bold">
                     <Nit />
                   </Text>
                 </Flex>
@@ -46,7 +46,7 @@ export default function RootLayout({
             </Box>
             <main style={{ flexGrow: 1 }}>{children}</main>
             <Box
-              style={{ background: "var(--sky-11)", color: "white" }}
+              style={{ background: "var(--blue-9)", color: "white" }}
               asChild
               py="8"
             >

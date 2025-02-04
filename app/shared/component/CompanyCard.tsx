@@ -10,7 +10,7 @@ export function CompanyCard({
 }: CompanyDto & CardProps) {
   return (
     <Card {...props}>
-      <Heading itemProp="name" color="sky">
+      <Heading itemProp="name" color="blue">
         {name}
       </Heading>
       <Flex align="center" gap="2">
