@@ -2,7 +2,6 @@ import { Chamber, ChamberSkeleton } from "@/app/[company]/components/Chamber";
 import { CompanyDetails } from "@/app/[company]/components/CompanyDetails";
 import { CopyButton } from "@/app/[company]/components/CopyButton";
 import { EconomicActivities } from "@/app/[company]/components/EconomicActivities";
-import GoogleMaps from "@/app/[company]/components/GoogleMaps";
 import PhoneNumbers from "@/app/[company]/components/PhoneNumbers";
 import { ToggleContent } from "@/app/[company]/components/ToogleContent";
 import { companiesRepository } from "@/app/repositories/companies";
@@ -95,6 +94,8 @@ export default async function page({ params }: PageProps) {
     { label: "Fecha de renovación", value: data.renewalDate },
     { label: "Fecha de cancelación", value: data.cancellationDate },
     { label: "Tamaño de la empresa", value: data.size },
+    { label: "Municipio", value: data.city },
+    { label: "Departamento", value: data.state },
     {
       label: "Dirección",
       value:
@@ -105,7 +106,7 @@ export default async function page({ params }: PageProps) {
           <Flex direction="column" gap="2" width="100%">
             {data.address}
             <Box>
-              <ToggleContent>
+              <ToggleContent label="Ver mapa">
                 <GoogleMapsEmbed
                   apiKey={process.env.GOOGLE_MAPS_API_KEY}
                   height={400}
@@ -118,15 +119,13 @@ export default async function page({ params }: PageProps) {
           </Flex>
         ) : null,
     },
+    { label: "Zona comercial", value: data.area },
     {
       label: "Teléfono",
       value: data.phoneNumbers ? (
         <PhoneNumbers phoneNumbers={data.phoneNumbers} />
       ) : null,
     },
-    { label: "Zona comercial", value: data.area },
-    { label: "Municipio", value: data.city },
-    { label: "Departamento", value: data.state },
     { label: "Objecto social", value: data.scope },
     {
       label: "Actividad económica",
