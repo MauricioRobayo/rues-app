@@ -1,4 +1,4 @@
-import { Link } from "@radix-ui/themes";
+import { Flex, Link } from "@radix-ui/themes";
 
 export default function PhoneNumbers({
   phoneNumbers,
@@ -9,12 +9,14 @@ export default function PhoneNumbers({
     return null;
   }
   return (
-    <ul>
-      {phoneNumbers?.map((phoneNumber) => (
-        <li key={phoneNumber}>
-          <Link href={`tel:${phoneNumber}`}>{phoneNumber}</Link>
-        </li>
-      ))}
-    </ul>
+    <Flex direction="column" gap="2" asChild>
+      <ul>
+        {phoneNumbers?.map((phoneNumber) => (
+          <li key={phoneNumber}>
+            <Link href={`tel:${phoneNumber}`}>{phoneNumber}</Link>
+          </li>
+        ))}
+      </ul>
+    </Flex>
   );
 }

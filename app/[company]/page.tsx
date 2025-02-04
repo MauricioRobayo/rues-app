@@ -3,6 +3,7 @@ import { CompanyDetails } from "@/app/[company]/components/CompanyDetails";
 import { CopyButton } from "@/app/[company]/components/CopyButton";
 import { EconomicActivities } from "@/app/[company]/components/EconomicActivities";
 import PhoneNumbers from "@/app/[company]/components/PhoneNumbers";
+import { ToggleContent } from "@/app/[company]/components/ToogleContent";
 import { companiesRepository } from "@/app/repositories/companies";
 import { CompanyStatusBadge } from "@/app/shared/component/CompanyStatusBadge";
 import { PageContainer } from "@/app/shared/component/PageContainer";
@@ -93,6 +94,8 @@ export default async function page({ params }: PageProps) {
     { label: "Fecha de renovación", value: data.renewalDate },
     { label: "Fecha de cancelación", value: data.cancellationDate },
     { label: "Tamaño de la empresa", value: data.size },
+    { label: "Municipio", value: data.city },
+    { label: "Departamento", value: data.state },
     {
       label: "Dirección",
       value:
@@ -102,25 +105,27 @@ export default async function page({ params }: PageProps) {
         process.env.GOOGLE_MAPS_API_KEY ? (
           <Flex direction="column" gap="2" width="100%">
             {data.address}
-            <GoogleMapsEmbed
-              apiKey={process.env.GOOGLE_MAPS_API_KEY}
-              height={400}
-              width="100%"
-              mode="place"
-              q={`${data.address},${data.city},${data.state},Colombia`}
-            />
+            <Box>
+              <ToggleContent label="Ver mapa">
+                <GoogleMapsEmbed
+                  apiKey={process.env.GOOGLE_MAPS_API_KEY}
+                  height={400}
+                  width="100%"
+                  mode="place"
+                  q={`${data.address},${data.city},${data.state},Colombia`}
+                />
+              </ToggleContent>
+            </Box>
           </Flex>
         ) : null,
     },
+    { label: "Zona comercial", value: data.area },
     {
       label: "Teléfono",
       value: data.phoneNumbers ? (
         <PhoneNumbers phoneNumbers={data.phoneNumbers} />
       ) : null,
     },
-    { label: "Zona comercial", value: data.area },
-    { label: "Municipio", value: data.city },
-    { label: "Departamento", value: data.state },
     { label: "Objecto social", value: data.scope },
     {
       label: "Actividad económica",
@@ -201,7 +206,7 @@ export default async function page({ params }: PageProps) {
           <PageContainer py={{ initial: "6", sm: "8" }}>
             <Card size="4" variant="ghost">
               <Flex direction="column" gap="1">
-                <Heading itemProp="name" color="sky">
+                <Heading itemProp="name" color="blue">
                   {data.name}
                 </Heading>
                 <Flex align="center" gap="2">
