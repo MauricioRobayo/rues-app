@@ -32,24 +32,22 @@ export function CopyButton({
   return (
     <Flex gap="2">
       <Tooltip content={copied ? "¡Copiado!" : tooltip}>
-        {copied ? (
-          <Flex gap="1" asChild align="center">
-            <Text color="green" size="2">
+        <IconButton
+          size="1"
+          aria-label="Copiar valor"
+          color="gray"
+          variant="ghost"
+          onClick={handleCopy}
+          disabled={copied}
+        >
+          {copied ? (
+            <AccessibleIcon label="Copiado">
               <CheckIcon color="green" />
-              <Box className="sm:hidden">Copiado</Box>
-            </Text>
-          </Flex>
-        ) : (
-          <IconButton
-            size="1"
-            aria-label="Copiar valor"
-            color="gray"
-            variant="ghost"
-            onClick={handleCopy}
-          >
+            </AccessibleIcon>
+          ) : (
             <CopyIcon />
-          </IconButton>
-        )}
+          )}
+        </IconButton>
       </Tooltip>
     </Flex>
   );
