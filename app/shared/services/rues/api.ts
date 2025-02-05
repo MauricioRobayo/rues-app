@@ -34,12 +34,11 @@ export async function queryNit(nit: number) {
           );
           token = await tokenRepository.getToken({ skipCache: true });
           response = await RUES.queryNit({ nit, token });
-
-          if (response.statusCode === 401) {
-            throw new AbortError(response.status);
-          }
         }
 
+        if (response.statusCode === 401 || response.statusCode === 404) {
+          throw new AbortError(`queryNit failed ${JSON.stringify(response)}`);
+        }
         if (response.status !== "success") {
           throw new Error(`queryNit failed: ${response.statusCode}`);
         }
@@ -98,9 +97,12 @@ export async function advancedSearch({
             query,
             token: ruesToken,
           });
-          if (response.statusCode === 401) {
-            throw new AbortError(response.status);
-          }
+        }
+
+        if (response.statusCode === 401 || response.statusCode === 404) {
+          throw new AbortError(
+            `advancedSearch failed ${JSON.stringify(response)}`,
+          );
         }
 
         if (response.status !== "success") {
@@ -154,7 +156,7 @@ export async function getRuesDataByNit({
     ]);
 
   const result: ConsolidatedCompanyInfo = {
-    rues: rues,
+    rues,
   };
 
   if (fileResponse.status === "success") {
