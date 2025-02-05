@@ -1,6 +1,6 @@
 "use client";
 
-import { ErrorRecovery } from "@/app/[company]/components/ErrorRecory";
+import { ErrorRecovery } from "@/app/[company]/components/ErrorRecovery";
 
 export default function Error({
   reset,

@@ -2,7 +2,7 @@ import { Chamber, ChamberSkeleton } from "@/app/[company]/components/Chamber";
 import { CompanyDetails } from "@/app/[company]/components/CompanyDetails";
 import { CopyButton } from "@/app/[company]/components/CopyButton";
 import { EconomicActivities } from "@/app/[company]/components/EconomicActivities";
-import { ErrorRecovery } from "@/app/[company]/components/ErrorRecory";
+import { ErrorRecovery } from "@/app/[company]/components/ErrorRecovery";
 import PhoneNumbers from "@/app/[company]/components/PhoneNumbers";
 import { ToggleContent } from "@/app/[company]/components/ToogleContent";
 import type { CompanyDto } from "@/app/[company]/types/CompanyDto";
@@ -301,6 +301,10 @@ const getCompanyDataCached = unstable_cache(cache(getCompanyData), undefined, {
 // to the APIs given the same NIT if we already got the data.
 async function getPageData(company: string) {
   const { nit, slug } = parseCompanyPathSegment(company);
+
+  if (nit === 500) {
+    throw new Error("Error page");
+  }
 
   if (!isValidNit(nit)) {
     notFound();
