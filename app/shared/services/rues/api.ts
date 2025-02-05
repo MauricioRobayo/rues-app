@@ -34,12 +34,11 @@ export async function queryNit(nit: number) {
           );
           token = await tokenRepository.getToken({ skipCache: true });
           response = await RUES.queryNit({ nit, token });
-
-          if (response.statusCode === 401) {
-            throw new AbortError(response.status);
-          }
         }
 
+        if (response.statusCode === 401 || response.statusCode === 404) {
+          throw new AbortError(`queryNit failed ${JSON.stringify(response)}`);
+        }
         if (response.status !== "success") {
           throw new Error(`queryNit failed: ${response.statusCode}`);
         }
@@ -67,7 +66,7 @@ export async function queryNit(nit: number) {
     return response;
   } catch (err) {
     console.error(`queryNit failed with error ${err}`);
-    return { token, data: null };
+    return { data: null, token };
   }
 }
 
@@ -78,30 +77,52 @@ export async function advancedSearch({
   search: { nit: number } | { name: string };
   token?: string;
 }) {
-  token ??= await tokenRepository.getToken();
-  const query = "nit" in search ? { nit: search.nit } : { razon: search.name };
-  let response = await RUES.advancedSearch({
-    query,
-    token,
-  });
+  let ruesToken = token ?? (await tokenRepository.getToken());
+  try {
+    const response = await pRetry(
+      async () => {
+        const query =
+          "nit" in search ? { nit: search.nit } : { razon: search.name };
+        let response = await RUES.advancedSearch({
+          query,
+          token: ruesToken,
+        });
 
-  if (response.statusCode === 401) {
-    console.warn(
-      "RUES: Authentication failed with existing token. Getting a new token.",
+        if (response.statusCode === 401) {
+          console.warn(
+            "RUES: Authentication failed with existing token. Getting a new token.",
+          );
+          ruesToken = await tokenRepository.getToken({ skipCache: true });
+          response = await RUES.advancedSearch({
+            query,
+            token: ruesToken,
+          });
+        }
+
+        if (response.statusCode === 401 || response.statusCode === 404) {
+          throw new AbortError(
+            `advancedSearch failed ${JSON.stringify(response)}`,
+          );
+        }
+
+        if (response.status !== "success") {
+          throw new Error(`advancedSearch failed: ${response.statusCode}`);
+        }
+
+        const data = processAdvancedSearchResults(
+          response.data.registros ?? [],
+        );
+        return { data, token: ruesToken };
+      },
+      {
+        retries: 3,
+      },
     );
-    token = await tokenRepository.getToken({ skipCache: true });
-    response = await RUES.advancedSearch({
-      query,
-      token,
-    });
+    return response;
+  } catch (err) {
+    console.error(`advancedSearch failed with error ${err}`);
+    return { data: null, token: ruesToken };
   }
-
-  if (response.status !== "success") {
-    return null;
-  }
-
-  const data = processAdvancedSearchResults(response.data.registros ?? []);
-  return data ? { data, token } : null;
 }
 
 export async function getRuesDataByNit({
@@ -115,15 +136,19 @@ export async function getRuesDataByNit({
     search: { nit },
     token,
   });
-  const { data: [data] = [] } = advancedSearchResponse ?? {};
-  if (!token || !VALID_RUES_CATEGORIES.includes(data.categoria)) {
+  const { data } = advancedSearchResponse ?? {};
+  if (!data || data.length === 0) {
+    return null;
+  }
+  const rues = data[0];
+  if (!token || !VALID_RUES_CATEGORIES.includes(rues.categoria)) {
     return null;
   }
   const [fileResponse, businessEstablishmentsResponse, company, siis] =
     await Promise.all([
-      RUES.getFile(data.id_rm),
+      RUES.getFile(rues.id_rm),
       RUES.getBusinessEstablishments({
-        query: RUES.getBusinessDetails(data.id_rm),
+        query: RUES.getBusinessDetails(rues.id_rm),
         token,
       }),
       getCompanyInfo(nit),
@@ -131,7 +156,7 @@ export async function getRuesDataByNit({
     ]);
 
   const result: ConsolidatedCompanyInfo = {
-    rues: data,
+    rues,
   };
 
   if (fileResponse.status === "success") {

@@ -1,9 +1,15 @@
 "use client";
-import { CopyIcon } from "@radix-ui/react-icons";
-import { Flex, IconButton, Text } from "@radix-ui/themes";
-import { useState } from "react";
+import { CheckIcon, CopyIcon } from "@radix-ui/react-icons";
+import { AccessibleIcon, Flex, IconButton, Tooltip } from "@radix-ui/themes";
+import { useState, type ReactNode } from "react";
 
-export function CopyButton({ value }: { value: string | number }) {
+export function CopyButton({
+  value,
+  tooltip,
+}: {
+  value: string | number;
+  tooltip: ReactNode;
+}) {
   const [copied, setCopied] = useState(false);
 
   const handleCopy = async () => {
@@ -18,24 +24,24 @@ export function CopyButton({ value }: { value: string | number }) {
 
   return (
     <Flex gap="2">
-      <IconButton
-        size="1"
-        aria-label="Copy value"
-        color="gray"
-        variant="ghost"
-        onClick={handleCopy}
-      >
-        <CopyIcon />
-      </IconButton>
-      {copied && (
-        <Text
-          color="green"
+      <Tooltip content={copied ? "¡Copiado!" : tooltip}>
+        <IconButton
           size="1"
-          weight={{ initial: "regular", sm: "bold" }}
+          aria-label="Copiar valor"
+          color="gray"
+          variant="ghost"
+          onClick={handleCopy}
+          disabled={copied}
         >
-          ✓ Copiado
-        </Text>
-      )}
+          {copied ? (
+            <AccessibleIcon label="Valor copiado">
+              <CheckIcon color="green" />
+            </AccessibleIcon>
+          ) : (
+            <CopyIcon />
+          )}
+        </IconButton>
+      </Tooltip>
     </Flex>
   );
 }

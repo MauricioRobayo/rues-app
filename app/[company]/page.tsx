@@ -64,7 +64,7 @@ export default async function page({ params }: PageProps) {
       value: (
         <Flex align="center" gap="2">
           <Code variant="ghost">{data.nit}</Code>
-          <CopyButton value={data.nit} />
+          <CopyButton value={data.nit} tooltip="Copiar NIT" />
         </Flex>
       ),
     },
@@ -209,10 +209,17 @@ export default async function page({ params }: PageProps) {
                 <Heading itemProp="name" color="blue">
                   {data.name}
                 </Heading>
-                <Flex align="center" gap="2">
-                  <Heading as="h2" size="4" weight="regular">
-                    NIT: <span itemProp="taxID">{data.fullNit}</span>
-                  </Heading>
+                <Flex
+                  align={{ initial: "start", sm: "center" }}
+                  gap="2"
+                  direction={{ initial: "column", sm: "row" }}
+                >
+                  <Flex justify="center" align="center" gap="2">
+                    <Heading as="h2" size="4" weight="regular">
+                      NIT: <span itemProp="taxID">{data.fullNit}</span>
+                    </Heading>
+                    <CopyButton value={data.nit} tooltip="Copiar NIT" />
+                  </Flex>
                   <CompanyStatusBadge isActive={data.isActive} variant="long" />
                 </Flex>
               </Flex>
