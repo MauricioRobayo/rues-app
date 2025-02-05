@@ -2,6 +2,7 @@ import { Chamber, ChamberSkeleton } from "@/app/[company]/components/Chamber";
 import { CompanyDetails } from "@/app/[company]/components/CompanyDetails";
 import { CopyButton } from "@/app/[company]/components/CopyButton";
 import { EconomicActivities } from "@/app/[company]/components/EconomicActivities";
+import { ErrorRecovery } from "@/app/[company]/components/ErrorRecory";
 import PhoneNumbers from "@/app/[company]/components/PhoneNumbers";
 import { ToggleContent } from "@/app/[company]/components/ToogleContent";
 import { companiesRepository } from "@/app/repositories/companies";
@@ -41,6 +42,12 @@ export async function generateMetadata({
   const { company } = await params;
   const data = await getPageData(company);
 
+  if (!data) {
+    return {
+      title: "Algo ha salido mal",
+    };
+  }
+
   return {
     title: `${data.name} NIT ${data.fullNit}`,
     metadataBase: new URL(BASE_URL),
@@ -53,6 +60,10 @@ export async function generateMetadata({
 export default async function page({ params }: PageProps) {
   const { company } = await params;
   const data = await getPageData(company);
+
+  if (!data) {
+    return <ErrorRecovery />;
+  }
 
   const details = [
     {
@@ -314,31 +325,36 @@ async function getCompanyData(nit: number) {
 // Get DO cache fetching the data based on the NIT, so we avoid doing requests
 // to the APIs given the same NIT if we already got the data.
 async function getPageData(company: string) {
-  const { nit, slug } = parseCompanyPathSegment(company);
+  try {
+    const { nit, slug } = parseCompanyPathSegment(company);
 
-  if (nit === 500) {
-    throw new Error("Error page");
+    if (nit === 500) {
+      throw new Error("Error page");
+    }
+
+    if (!isValidNit(nit)) {
+      notFound();
+    }
+
+    // Cache at the NIT level to avoid multiple path segments with same NIT
+    // triggering multiple duplicated API calls
+    const data = await getCompanyDataCached(nit);
+
+    if (!data) {
+      notFound();
+    }
+
+    const companySlug = slugifyCompanyName(data.name);
+
+    if (slug !== companySlug) {
+      permanentRedirect(`${companySlug}-${nit}`);
+    }
+
+    return data;
+  } catch (err) {
+    console.error("Failed fetching page data", err);
+    return null;
   }
-
-  if (!isValidNit(nit)) {
-    notFound();
-  }
-
-  // Cache at the NIT level to avoid multiple path segments with same NIT
-  // triggering multiple duplicated API calls
-  const data = await getCompanyDataCached(nit);
-
-  if (!data) {
-    notFound();
-  }
-
-  const companySlug = slugifyCompanyName(data.name);
-
-  if (slug !== companySlug) {
-    permanentRedirect(`${companySlug}-${nit}`);
-  }
-
-  return data;
 }
 
 const getCompanyDataCached = unstable_cache(cache(getCompanyData), undefined, {
