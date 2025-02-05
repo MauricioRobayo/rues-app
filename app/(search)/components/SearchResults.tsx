@@ -47,8 +47,8 @@ export function SearchResults({ results }: { results: CompanyDto[] }) {
                       {result.shortName ? `Sigla: ${result.shortName}` : null}
                     </Text>
                     <Flex gap="4" asChild>
-                      <Text size="1" weight="light">
-                        <div>{result.chamber.name}</div>
+                      <Text size="1" weight="light" title="Cámara de comercio">
+                        CC {result.chamber.name}
                       </Text>
                     </Flex>
                   </Flex>
