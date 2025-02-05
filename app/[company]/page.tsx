@@ -287,6 +287,46 @@ export default async function page({ params }: PageProps) {
   );
 }
 
+const getCompanyDataCached = unstable_cache(cache(getCompanyData), undefined, {
+  revalidate: 7 * 24 * 60 * 60,
+});
+
+// This function is unintentionally not cached so we can handle logic based
+// on the segmentPath which can be different given the same nit:
+//   - rnit.co/930123456
+//   - rnit.co/razon-social-930123456
+//   - rnit.co/razon-social-cambio-930123456
+// all of the above should trigger this uncached logic to do proper redirects
+// Get DO cache fetching the data based on the NIT, so we avoid doing requests
+// to the APIs given the same NIT if we already got the data.
+async function getPageData(company: string) {
+  const { nit, slug } = parseCompanyPathSegment(company);
+
+  if (!isValidNit(nit)) {
+    notFound();
+  }
+
+  // Cache at the NIT level to avoid multiple path segments with same NIT
+  // triggering multiple duplicated API calls
+  const response = await getCompanyDataCached(nit);
+
+  if (response.status === "error") {
+    return null;
+  }
+
+  if (!response.data) {
+    notFound();
+  }
+
+  const companySlug = slugifyCompanyName(response.data.name);
+
+  if (slug !== companySlug) {
+    permanentRedirect(`${companySlug}-${nit}`);
+  }
+
+  return response.data;
+}
+
 async function getCompanyData(
   nit: number,
 ): Promise<
@@ -338,47 +378,3 @@ async function getCompanyData(
     } as const;
   }
 }
-
-// This function is unintentionally not cached so we can handle logic based
-// on the segmentPath which can be different given the same nit:
-//   - rnit.co/930123456
-//   - rnit.co/razon-social-930123456
-//   - rnit.co/razon-social-cambio-930123456
-// all of the above should trigger this uncached logic to do proper redirects
-// Get DO cache fetching the data based on the NIT, so we avoid doing requests
-// to the APIs given the same NIT if we already got the data.
-async function getPageData(company: string) {
-  const { nit, slug } = parseCompanyPathSegment(company);
-
-  if (nit === 500) {
-    throw new Error("Trigger error page");
-  }
-
-  if (!isValidNit(nit)) {
-    notFound();
-  }
-
-  // Cache at the NIT level to avoid multiple path segments with same NIT
-  // triggering multiple duplicated API calls
-  const response = await getCompanyDataCached(nit);
-
-  if (response.status === "error") {
-    return null;
-  }
-
-  if (!response.data) {
-    notFound();
-  }
-
-  const companySlug = slugifyCompanyName(response.data.name);
-
-  if (slug !== companySlug) {
-    permanentRedirect(`${companySlug}-${nit}`);
-  }
-
-  return response.data;
-}
-
-const getCompanyDataCached = unstable_cache(cache(getCompanyData), undefined, {
-  revalidate: 7 * 24 * 60 * 60,
-});

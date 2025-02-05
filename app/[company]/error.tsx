@@ -8,5 +8,5 @@ export default function Error({
   error: Error & { digest?: string };
   reset: () => void;
 }) {
-  return <ErrorRecovery onAfterRevalidate={reset} />;
+  return <ErrorRecovery reset={reset} />;
 }
