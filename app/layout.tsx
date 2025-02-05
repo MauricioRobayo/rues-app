@@ -1,5 +1,3 @@
-import "@radix-ui/themes/styles.css";
-
 import { Logo } from "@/app/(search)/components/Logo";
 import { Nit } from "@/app/(search)/components/Nit";
 import { GoogleTagManager } from "@next/third-parties/google";

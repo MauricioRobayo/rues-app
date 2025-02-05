@@ -47,10 +47,9 @@ export function mapCompanyRecordToCompanyDto(data: CompanyRecord): CompanyDto {
       descCiiu3: data.desc_ciiu3,
       descCiiu4: data.desc_ciiu4,
     }),
-    highestRevenueEconomicActivityCode: data.ciiu_mayores_ingresos.padStart(
-      4,
-      "0",
-    ),
+    highestRevenueEconomicActivityCode: data.ciiu_mayores_ingresos
+      ? data.ciiu_mayores_ingresos.padStart(4, "0")
+      : null,
     totalBusinessEstablishments: data.cantidad_establecimientos
       ? Number(data.cantidad_establecimientos)
       : null,
