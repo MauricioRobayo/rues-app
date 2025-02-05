@@ -57,6 +57,13 @@ export function mapCompanyRecordToCompanyDto(data: CompanyRecord): CompanyDto {
       ? Number(data.numero_empleados)
       : null,
     establishments:
-      data.establecimientos?.map(mapStoreFrontToEstablishmentDto) ?? [],
+      data.establecimientos
+        ?.map((establishment) => {
+          if (!("name" in establishment)) {
+            return null;
+          }
+          return mapStoreFrontToEstablishmentDto(establishment);
+        })
+        .filter((establishment) => establishment !== null) ?? [],
   };
 }
