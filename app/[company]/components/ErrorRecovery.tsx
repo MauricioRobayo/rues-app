@@ -2,7 +2,7 @@
 
 import { revalidate } from "@/app/[company]/actions";
 import { PageContainer } from "@/app/shared/component/PageContainer";
-import { Box, Button, Flex, Heading, Spinner } from "@radix-ui/themes";
+import { Box, Button, Flex, Heading } from "@radix-ui/themes";
 import { useRouter } from "next/navigation";
 import { useTransition } from "react";
 
