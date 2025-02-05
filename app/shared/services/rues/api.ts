@@ -11,7 +11,7 @@ import type {
   File,
 } from "@mauriciorobayo/rues-api";
 import * as RUES from "@mauriciorobayo/rues-api";
-import pRetry from "p-retry";
+import pRetry, { AbortError } from "p-retry";
 
 export interface ConsolidatedCompanyInfo {
   details?: File;
@@ -23,31 +23,52 @@ export interface ConsolidatedCompanyInfo {
 
 export async function queryNit(nit: number) {
   let token = await tokenRepository.getToken();
-  let response = await RUES.queryNit({ nit, token });
+  try {
+    const response = pRetry(
+      async () => {
+        let response = await RUES.queryNit({ nit, token });
 
-  if (response.statusCode === 401) {
-    console.warn(
-      "RUES: Authentication failed with existing token. Getting a new token.",
+        if (response.statusCode === 401) {
+          console.warn(
+            "RUES: Authentication failed with existing token. Getting a new token.",
+          );
+          token = await tokenRepository.getToken({ skipCache: true });
+          response = await RUES.queryNit({ nit, token });
+
+          if (response.statusCode === 401) {
+            throw new AbortError(response.status);
+          }
+        }
+
+        if (response.status !== "success") {
+          throw new Error(`queryNit failed: ${response.statusCode}`);
+        }
+
+        const activeRecord = response.data.registros.find(
+          (record) => record.estado_matricula === "ACTIVA",
+        );
+        const mostRecentRecord = response.data.registros
+          .sort(
+            (a, b) =>
+              Number(b.ultimo_ano_renovado) - Number(a.ultimo_ano_renovado),
+          )
+          .at(0);
+        const record = activeRecord ?? mostRecentRecord;
+
+        return {
+          data: record ? mapCompanyRecordToCompanyDto(record) : null,
+          token,
+        };
+      },
+      {
+        retries: 3,
+      },
     );
-    token = await tokenRepository.getToken({ skipCache: true });
-    response = await RUES.queryNit({ nit, token });
-  }
-
-  if (response.status !== "success") {
+    return response;
+  } catch (err) {
+    console.error(`queryNit failed with error ${err}`);
     return { token, data: null };
   }
-
-  const activeRecord = response.data.registros.find(
-    (record) => record.estado_matricula === "ACTIVA",
-  );
-  const mostRecentRecord = response.data.registros
-    .sort(
-      (a, b) => Number(b.ultimo_ano_renovado) - Number(a.ultimo_ano_renovado),
-    )
-    .at(0);
-  const record = activeRecord ?? mostRecentRecord;
-
-  return { data: record ? mapCompanyRecordToCompanyDto(record) : null, token };
 }
 
 export async function advancedSearch({

@@ -28,7 +28,7 @@ export interface CompanyDto {
   city?: string;
   scope?: string | null;
   economicActivities: { label: string; code: string; description: string }[];
-  highestRevenueEconomicActivityCode?: string;
+  highestRevenueEconomicActivityCode?: string | null;
   totalBusinessEstablishments?: number | null;
   totalEmployees?: number | null;
   establishments: BusinessEstablishmentDto[];
