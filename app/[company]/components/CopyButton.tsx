@@ -1,13 +1,6 @@
 "use client";
 import { CheckIcon, CopyIcon } from "@radix-ui/react-icons";
-import {
-  Box,
-  Flex,
-  IconButton,
-  Text,
-  Tooltip,
-  AccessibleIcon,
-} from "@radix-ui/themes";
+import { AccessibleIcon, Flex, IconButton, Tooltip } from "@radix-ui/themes";
 import { useState, type ReactNode } from "react";
 
 export function CopyButton({
@@ -41,7 +34,7 @@ export function CopyButton({
           disabled={copied}
         >
           {copied ? (
-            <AccessibleIcon label="Copiado">
+            <AccessibleIcon label="Valor copiado">
               <CheckIcon color="green" />
             </AccessibleIcon>
           ) : (
