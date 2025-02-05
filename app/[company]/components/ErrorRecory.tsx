@@ -1,7 +1,9 @@
+"use client";
+
 import { revalidate } from "@/app/[company]/actions";
 import { PageContainer } from "@/app/shared/component/PageContainer";
 import { Flex, Heading, Box, Button, Text } from "@radix-ui/themes";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 export function ErrorRecovery({
@@ -28,7 +30,7 @@ export function ErrorRecovery({
                   setCountdown((countdown) => {
                     if (countdown <= 0) {
                       clearInterval(interval);
-                      (onAfterRevalidate ?? router.reload)();
+                      (onAfterRevalidate ?? router.refresh)();
                       return 0;
                     }
                     return countdown - 1;

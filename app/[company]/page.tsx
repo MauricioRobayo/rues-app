@@ -5,6 +5,7 @@ import { EconomicActivities } from "@/app/[company]/components/EconomicActivitie
 import { ErrorRecovery } from "@/app/[company]/components/ErrorRecory";
 import PhoneNumbers from "@/app/[company]/components/PhoneNumbers";
 import { ToggleContent } from "@/app/[company]/components/ToogleContent";
+import type { CompanyDto } from "@/app/[company]/types/CompanyDto";
 import { companiesRepository } from "@/app/repositories/companies";
 import { CompanyStatusBadge } from "@/app/shared/component/CompanyStatusBadge";
 import { PageContainer } from "@/app/shared/component/PageContainer";
@@ -286,34 +287,56 @@ export default async function page({ params }: PageProps) {
   );
 }
 
-async function getCompanyData(nit: number) {
-  const queryResponse = await queryNit(nit);
+async function getCompanyData(
+  nit: number,
+): Promise<
+  | { status: "error"; error: unknown }
+  | { status: "success"; data: CompanyDto | null }
+> {
+  try {
+    const queryResponse = await queryNit(nit);
 
-  if (queryResponse?.data) {
-    return queryResponse.data;
-  }
+    if (queryResponse?.data) {
+      return {
+        status: "success",
+        data: queryResponse.data,
+      };
+    }
 
-  const companyData = await getRuesDataByNit({
-    nit,
-    token: queryResponse.token,
-  });
-
-  if (!companyData) {
-    return null;
-  }
-
-  after(async () => {
-    // This record might not be in the db.
-    // If it is we always want to update it
-    // so the "lastmod" in the sitemap is
-    // also updated.
-    await companiesRepository.upsertName({
+    const companyData = await getRuesDataByNit({
       nit,
-      name: companyData.name,
+      token: queryResponse.token,
     });
-  });
 
-  return companyData;
+    if (!companyData) {
+      return {
+        status: "success",
+        data: null,
+      } as const;
+    }
+
+    after(async () => {
+      // This record might not be in the db.
+      // If it is we always want to update it
+      // so the "lastmod" in the sitemap is
+      // also updated.
+      await companiesRepository.upsertName({
+        nit,
+        name: companyData.name,
+      });
+    });
+
+    return {
+      status: "success",
+      data: companyData,
+    } as const;
+  } catch (err) {
+    console.error("Failed to get Company data for nit", nit, err);
+    return {
+      error: err,
+      status: "error",
+    } as const;
+  }
 }
 
 // This function is unintentionally not cached so we can handle logic based
@@ -325,36 +348,35 @@ async function getCompanyData(nit: number) {
 // Get DO cache fetching the data based on the NIT, so we avoid doing requests
 // to the APIs given the same NIT if we already got the data.
 async function getPageData(company: string) {
-  try {
-    const { nit, slug } = parseCompanyPathSegment(company);
+  const { nit, slug } = parseCompanyPathSegment(company);
 
-    if (nit === 500) {
-      throw new Error("Error page");
-    }
+  if (nit === 500) {
+    throw new Error("Trigger error page");
+  }
 
-    if (!isValidNit(nit)) {
-      notFound();
-    }
+  if (!isValidNit(nit)) {
+    notFound();
+  }
 
-    // Cache at the NIT level to avoid multiple path segments with same NIT
-    // triggering multiple duplicated API calls
-    const data = await getCompanyDataCached(nit);
+  // Cache at the NIT level to avoid multiple path segments with same NIT
+  // triggering multiple duplicated API calls
+  const response = await getCompanyDataCached(nit);
 
-    if (!data) {
-      notFound();
-    }
-
-    const companySlug = slugifyCompanyName(data.name);
-
-    if (slug !== companySlug) {
-      permanentRedirect(`${companySlug}-${nit}`);
-    }
-
-    return data;
-  } catch (err) {
-    console.error("Failed fetching page data", err);
+  if (response.status === "error") {
     return null;
   }
+
+  if (!response.data) {
+    notFound();
+  }
+
+  const companySlug = slugifyCompanyName(response.data.name);
+
+  if (slug !== companySlug) {
+    permanentRedirect(`${companySlug}-${nit}`);
+  }
+
+  return response.data;
 }
 
 const getCompanyDataCached = unstable_cache(cache(getCompanyData), undefined, {
