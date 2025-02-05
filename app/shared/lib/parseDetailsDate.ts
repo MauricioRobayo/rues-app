@@ -1,7 +1,5 @@
 export function parseDetailsDate(value: string) {
-  // some values might be missing, the first check
-  // for the value is important, do not remove it
-  if (!value || !value.trim() || value.length !== 8) {
+  if (!value.trim() || value.length !== 8) {
     return null;
   }
   const formattedDate = `${value.slice(0, 4)}-${value.slice(4, 6)}-${value.slice(6, 8)}`;

@@ -59,6 +59,7 @@ export function mapCompanyRecordToCompanyDto(data: CompanyRecord): CompanyDto {
     establishments:
       data.establecimientos
         ?.map((establishment) => {
+          // https://github.com/MauricioRobayo/rues-app/issues/30
           if (!("name" in establishment)) {
             return null;
           }
