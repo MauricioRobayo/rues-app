@@ -316,6 +316,10 @@ async function getCompanyData(nit: number) {
 async function getPageData(company: string) {
   const { nit, slug } = parseCompanyPathSegment(company);
 
+  if (nit === 500) {
+    throw new Error("Error page");
+  }
+
   if (!isValidNit(nit)) {
     notFound();
   }
