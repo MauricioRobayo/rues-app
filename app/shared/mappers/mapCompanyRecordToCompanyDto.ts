@@ -8,7 +8,6 @@ import { parseEconomicActivities } from "@/app/shared/lib/parseEconomicActivitie
 import { slugifyCompanyName } from "@/app/shared/lib/slugifyComponentName";
 import { yearsDoingBusinesses } from "@/app/shared/lib/yearsDoingBusinesses";
 import type { CompanyRecord } from "@mauriciorobayo/rues-api";
-
 export function mapCompanyRecordToCompanyDto(data: CompanyRecord): CompanyDto {
   return {
     name: data.razon_social,
