@@ -4,11 +4,11 @@ import { revalidate } from "@/app/[company]/actions";
 import { PageContainer } from "@/app/shared/component/PageContainer";
 import { Box, Button, Flex, Heading } from "@radix-ui/themes";
 import { useRouter } from "next/navigation";
-import { useTransition } from "react";
+import { useState } from "react";
 
 export function ErrorRecovery({ reset }: { reset?: () => void }) {
   const router = useRouter();
-  const [isPending, startTransition] = useTransition();
+  const [isRetrying, setIsRetrying] = useState(false);
   return (
     <PageContainer py={{ initial: "6", sm: "8" }}>
       <Flex direction="column" gap="4">
@@ -16,12 +16,14 @@ export function ErrorRecovery({ reset }: { reset?: () => void }) {
         <Box>
           <Button
             onClick={() => {
-              startTransition(() => {
-                revalidate(window.location.pathname);
+              revalidate(window.location.pathname);
+              setIsRetrying(true);
+              setTimeout(() => {
                 (reset ?? router.refresh)();
-              });
+                setIsRetrying(false);
+              }, 3000);
             }}
-            loading={isPending}
+            loading={isRetrying}
           >
             Volver a intentar
           </Button>
