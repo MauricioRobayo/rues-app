@@ -22,6 +22,7 @@ import {
   Flex,
   Grid,
   Heading,
+  Link,
   Section,
   Separator,
   Text,
@@ -99,6 +100,10 @@ export default async function page({ params }: PageProps) {
       label: "Estado",
       value: data.status.split(" ").length > 1 ? data.status : null,
     },
+    {
+      label: "Sigla",
+      value: data.shortName,
+    },
     { label: "Tipo de sociedad", value: data.type },
     { label: "Organización jurídica", value: data.legalEntityType },
     { label: "Categoría de la matrícula", value: data.category },
@@ -142,6 +147,25 @@ export default async function page({ params }: PageProps) {
         ) : null,
     },
     {
+      label: "Corre electrónico",
+      value: data.email ? (
+        <Box>
+          <ToggleContent label="Ver correo electrónico">
+            <Link href={`mailto:${data.email}`}>{data.email}</Link>
+          </ToggleContent>
+        </Box>
+      ) : null,
+    },
+    {
+      label: "Cantidad de establecimientos",
+      value: data.totalBusinessEstablishments,
+    },
+    { label: "Número de empleados", value: data.totalEmployees },
+    {
+      label: "Registro proponente",
+      value: data.bidderId,
+    },
+    {
       label: "Objecto social",
       value: data.scope ? (
         <Text dangerouslySetInnerHTML={{ __html: data.scope }} />
@@ -158,10 +182,31 @@ export default async function page({ params }: PageProps) {
       ) : null,
     },
     {
-      label: "Cantidad de establecimientos",
-      value: data.totalBusinessEstablishments,
+      label: "Representante legal",
+      value:
+        data.legalRepresentatives && data.legalRepresentatives.length > 0 ? (
+          <Flex asChild direction="column" gap="2">
+            <ol>
+              {data.legalRepresentatives.map(({ type, name }, index) => (
+                <Flex
+                  key={index}
+                  direction={{ initial: "column", sm: "row" }}
+                  gap={{ initial: "0", sm: "1" }}
+                  align={{ initial: "start", sm: "baseline" }}
+                  asChild
+                >
+                  <li>
+                    <Text size="1" color="gray" className="uppercase">
+                      {type}
+                    </Text>
+                    <Text>{name}</Text>
+                  </li>
+                </Flex>
+              ))}
+            </ol>
+          </Flex>
+        ) : null,
     },
-    { label: "Número de empleados", value: data.totalEmployees },
   ];
 
   const establishments = data.establishments?.map((establishment) => ({
@@ -198,9 +243,11 @@ export default async function page({ params }: PageProps) {
       },
       {
         label: "Teléfono",
-        value: establishment.phoneNumbers ? (
-          <PhoneNumbers phoneNumbers={establishment.phoneNumbers} />
-        ) : null,
+        value:
+          establishment.phoneNumbers &&
+          establishment.phoneNumbers.length > 0 ? (
+            <PhoneNumbers phoneNumbers={establishment.phoneNumbers} />
+          ) : null,
       },
       {
         label: "Dirección comercial",
