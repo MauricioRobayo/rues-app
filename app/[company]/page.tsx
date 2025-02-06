@@ -302,16 +302,12 @@ const getCompanyDataCached = unstable_cache(cache(getCompanyData), undefined, {
 async function getPageData(company: string) {
   const { nit, slug } = parseCompanyPathSegment(company);
 
-  if (nit === 500) {
-    throw new Error("Error page");
-  }
-
   if (!isValidNit(nit)) {
     notFound();
   }
 
-  // Cache at the NIT level to avoid multiple path segments with same NIT
-  // triggering multiple duplicated API calls
+  // Cache at the NIT level to avoid multiple path segments
+  // with same NIT triggering multiple duplicated API calls
   const response = await getCompanyDataCached(nit);
 
   if (response.status === "error") {
