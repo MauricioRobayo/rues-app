@@ -198,9 +198,11 @@ export default async function page({ params }: PageProps) {
       },
       {
         label: "Teléfono",
-        value: establishment.phoneNumbers ? (
-          <PhoneNumbers phoneNumbers={establishment.phoneNumbers} />
-        ) : null,
+        value:
+          establishment.phoneNumbers &&
+          establishment.phoneNumbers.length > 0 ? (
+            <PhoneNumbers phoneNumbers={establishment.phoneNumbers} />
+          ) : null,
       },
       {
         label: "Dirección comercial",
