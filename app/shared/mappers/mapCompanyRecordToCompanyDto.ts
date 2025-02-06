@@ -8,6 +8,7 @@ import { parseEconomicActivities } from "@/app/shared/lib/parseEconomicActivitie
 import { slugifyCompanyName } from "@/app/shared/lib/slugifyComponentName";
 import { yearsDoingBusinesses } from "@/app/shared/lib/yearsDoingBusinesses";
 import type { CompanyRecord } from "@mauriciorobayo/rues-api";
+import { getPhoneNumbers } from "@/app/shared/lib/getPhoneNumbers";
 export function mapCompanyRecordToCompanyDto(data: CompanyRecord): CompanyDto {
   return {
     name: data.razon_social,
@@ -29,9 +30,7 @@ export function mapCompanyRecordToCompanyDto(data: CompanyRecord): CompanyDto {
     cancellationDate: formatDetailsDate(data.fecha_cancelacion),
     size: COMPANY_SIZE[data.codigo_tamano_empresa] ?? null,
     address: data.direccion_comercial,
-    phoneNumbers: [data.telefono_comercial_1, data.telefono_comercial_2].filter(
-      (phoneNumber) => phoneNumber !== undefined,
-    ),
+    phoneNumbers: getPhoneNumbers(data),
     area: data.zona_comercial,
     state: data.dpto_comercial,
     city: data.municipio_comercial,

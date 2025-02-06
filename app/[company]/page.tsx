@@ -136,9 +136,10 @@ export default async function page({ params }: PageProps) {
     { label: "Zona comercial", value: data.area },
     {
       label: "Teléfono",
-      value: data.phoneNumbers ? (
-        <PhoneNumbers phoneNumbers={data.phoneNumbers} />
-      ) : null,
+      value:
+        data.phoneNumbers && data.phoneNumbers.length > 0 ? (
+          <PhoneNumbers phoneNumbers={data.phoneNumbers} />
+        ) : null,
     },
     {
       label: "Objecto social",
@@ -413,7 +414,7 @@ function companyDescription(company: CompanyDto) {
     description += `. Su dirección comercial es ${company.address}`;
   }
 
-  if (company.phoneNumbers) {
+  if (company.phoneNumbers?.[0]) {
     description += ` y su teléfono de contacto es ${company.phoneNumbers[0]}`;
   }
 
