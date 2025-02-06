@@ -34,12 +34,23 @@ export async function GET(
     }
 
     const companies = (await getAllCompanies(sitemapId)).map((company) => {
+      // Drizzle ORM should always return a Date object for the timestamp
+      // But constantly getting errors about toISOString() not being a method
+      // on company.timestamp. Sometimes we get back a string instead of an object.
+      // The try catch might be unnecessary but we want to prevent the sitemap
+      // generation to fail as the type of timestamp seems to be unreliable atm.
       try {
         const companySlug = slugifyCompanyName(company.name);
         const url = `${BASE_URL}/${companySlug}-${company.nit}`;
+        // There is a bug on Drizzle ORM
+        // Sometimes it returns a Date object and sometimes a string
+        const lastModified =
+          company.timestamp instanceof Date
+            ? company.timestamp.toISOString()
+            : new Date(company.timestamp).toISOString();
         return {
           url,
-          lastModified: company.timestamp.toISOString(),
+          lastModified,
         };
       } catch (err) {
         console.error(
