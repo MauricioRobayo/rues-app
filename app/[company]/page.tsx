@@ -334,6 +334,9 @@ async function getCompanyData(
   | { status: "success"; data: CompanyDto | null }
 > {
   try {
+    if (Math.random() > 0.5) {
+      throw new Error("Trigger fail");
+    }
     const queryResponse = await queryNit(nit);
 
     if (queryResponse?.data) {

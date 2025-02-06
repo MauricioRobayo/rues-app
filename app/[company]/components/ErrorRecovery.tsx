@@ -8,7 +8,7 @@ import { useTransition } from "react";
 
 export function ErrorRecovery({ reset }: { reset?: () => void }) {
   const router = useRouter();
-  const [pending, startTransition] = useTransition();
+  const [isPending, startTransition] = useTransition();
   return (
     <PageContainer py={{ initial: "6", sm: "8" }}>
       <Flex direction="column" gap="4">
@@ -21,7 +21,7 @@ export function ErrorRecovery({ reset }: { reset?: () => void }) {
                 (reset ?? router.refresh)();
               });
             }}
-            loading={pending}
+            loading={isPending}
           >
             Volver a intentar
           </Button>
