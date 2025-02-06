@@ -40,7 +40,7 @@ export async function queryNit(nit: number) {
           throw new AbortError(`queryNit failed ${JSON.stringify(response)}`);
         }
         if (response.status !== "success") {
-          throw new Error(`queryNit failed: ${response.statusCode}`);
+          throw new Error(`queryNit failed ${JSON.stringify(response)}`);
         }
 
         const activeRecord = response.data.registros.find(
@@ -65,7 +65,7 @@ export async function queryNit(nit: number) {
     );
     return response;
   } catch (err) {
-    console.error(`queryNit failed with error ${err}`);
+    console.error(err);
     return { data: null, token };
   }
 }
@@ -106,7 +106,7 @@ export async function advancedSearch({
         }
 
         if (response.status !== "success") {
-          throw new Error(`advancedSearch failed: ${response.statusCode}`);
+          throw new Error(`advancedSearch failed ${JSON.stringify(response)}`);
         }
 
         const data = processAdvancedSearchResults(
@@ -120,7 +120,7 @@ export async function advancedSearch({
     );
     return response;
   } catch (err) {
-    console.error(`advancedSearch failed with error ${err}`);
+    console.error(err);
     return { data: null, token: ruesToken };
   }
 }
