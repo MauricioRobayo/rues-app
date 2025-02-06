@@ -52,6 +52,7 @@ export async function generateMetadata({
 
   return {
     title: `${data.name} NIT ${data.fullNit}`,
+    description: companyDescription(data),
     metadataBase: new URL(BASE_URL),
     alternates: {
       canonical: data.slug,
@@ -247,6 +248,7 @@ export default async function page({ params }: PageProps) {
         </header>
       </Box>
       <PageContainer>
+        <Text>{companyDescription(data)}</Text>
         <Grid columns={{ initial: "1", sm: "2" }} gapX="8" width="auto">
           <Section size={{ initial: "1", sm: "2" }} id="detalles-de-la-empresa">
             <Heading as="h3" size="4" mb="2">
@@ -383,4 +385,43 @@ async function getCompanyData(
       status: "error",
     } as const;
   }
+}
+
+function companyDescription(company: CompanyDto) {
+  let description = `${company.name} NIT ${company.fullNit}`;
+
+  if (company.size) {
+    const companySize = company.size.toLocaleLowerCase();
+    if (company.size.toLowerCase().includes("empresa")) {
+      description += ` es una ${companySize}`;
+    } else {
+      description += ` es una ${companySize} empresa`;
+    }
+  } else {
+    description += " es una empresa";
+  }
+
+  if (company.city) {
+    description += ` ubicada en ${company.city}`;
+  }
+
+  if (company.state) {
+    description += `, ${company.state}`;
+  }
+
+  if (company.address) {
+    description += `. Su dirección comercial es ${company.address}`;
+  }
+
+  if (company.phoneNumbers) {
+    description += ` y su teléfono de contacto es ${company.phoneNumbers[0]}`;
+  }
+  description += `. Fundada hace ${company.yearsDoingBusinesses}`;
+
+  if (company.economicActivities && company.economicActivities.length > 0) {
+    const mainEconomicActivity = company.economicActivities[0];
+    description += `, su principal actividad económica corresponde al código CIIU ${mainEconomicActivity.code}: ${mainEconomicActivity.description}`;
+  }
+
+  return `${description}.`;
 }
