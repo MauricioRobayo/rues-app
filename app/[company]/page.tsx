@@ -24,6 +24,7 @@ import {
   Heading,
   Section,
   Separator,
+  Text,
 } from "@radix-ui/themes";
 import type { Metadata } from "next";
 import { unstable_cache } from "next/cache";
@@ -138,7 +139,12 @@ export default async function page({ params }: PageProps) {
         <PhoneNumbers phoneNumbers={data.phoneNumbers} />
       ) : null,
     },
-    { label: "Objecto social", value: data.scope },
+    {
+      label: "Objecto social",
+      value: data.scope ? (
+        <Text dangerouslySetInnerHTML={{ __html: data.scope }} />
+      ) : null,
+    },
     {
       label: "Actividad económica",
       value: <EconomicActivities activities={data.economicActivities} />,
