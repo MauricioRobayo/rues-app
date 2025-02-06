@@ -12,7 +12,8 @@ export function getPhoneNumbers(record: PhoneRecord) {
       ([key, value]) =>
         key.startsWith("telefono_comercial") &&
         typeof value === "string" &&
-        value.trim() !== "",
+        value.trim() !== "" &&
+        value.length >= 7,
     )
     .map(([, value]) => String(value));
 }
