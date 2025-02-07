@@ -3,7 +3,9 @@ import { CompanyDetails } from "@/app/[company]/components/CompanyDetails";
 import { CopyButton } from "@/app/[company]/components/CopyButton";
 import { EconomicActivities } from "@/app/[company]/components/EconomicActivities";
 import { ErrorRecovery } from "@/app/[company]/components/ErrorRecovery";
+import { LegalRepresentativePowers } from "@/app/[company]/components/LegalRepresentativePowers";
 import PhoneNumbers from "@/app/[company]/components/PhoneNumbers";
+import { ReadMore } from "@/app/[company]/components/ReadMore";
 import { ToggleContent } from "@/app/[company]/components/ToogleContent";
 import type { CompanyDto } from "@/app/[company]/types/CompanyDto";
 import { companiesRepository } from "@/app/repositories/companies";
@@ -167,9 +169,7 @@ export default async function page({ params }: PageProps) {
     },
     {
       label: "Objecto social",
-      value: data.scope ? (
-        <Text dangerouslySetInnerHTML={{ __html: data.scope }} />
-      ) : null,
+      value: data.scope ? <ReadMore text={data.scope} /> : null,
     },
     {
       label: "Actividad económica",
@@ -185,26 +185,31 @@ export default async function page({ params }: PageProps) {
       label: "Representante legal",
       value:
         data.legalRepresentatives && data.legalRepresentatives.length > 0 ? (
-          <Flex asChild direction="column" gap="2">
-            <ol>
-              {data.legalRepresentatives.map(({ type, name }, index) => (
-                <Flex
-                  key={index}
-                  direction={{ initial: "column", sm: "row" }}
-                  gap={{ initial: "0", sm: "1" }}
-                  align={{ initial: "start", sm: "baseline" }}
-                  asChild
-                >
-                  <li>
-                    <Text size="1" color="gray" className="uppercase">
-                      {type}
-                    </Text>
-                    <Text>{name}</Text>
-                  </li>
-                </Flex>
-              ))}
-            </ol>
-          </Flex>
+          <LegalRepresentativePowers
+            chamberCode={String(data.chamber.code).padStart(2, "0")}
+            registrationId={data.registrationNumber}
+          >
+            <Flex asChild direction="column" gap={{ initial: "2", sm: "0" }}>
+              <ol>
+                {data.legalRepresentatives.map(({ type, name }, index) => (
+                  <Flex
+                    key={index}
+                    direction={{ initial: "column", sm: "row" }}
+                    gap={{ initial: "0", sm: "1" }}
+                    align={{ initial: "start", sm: "baseline" }}
+                    asChild
+                  >
+                    <li>
+                      <Text size="1" color="gray" className="uppercase">
+                        {type}
+                      </Text>
+                      <Text>{name}</Text>
+                    </li>
+                  </Flex>
+                ))}
+              </ol>
+            </Flex>
+          </LegalRepresentativePowers>
         ) : null,
     },
   ];
