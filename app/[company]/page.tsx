@@ -4,6 +4,7 @@ import { CopyButton } from "@/app/[company]/components/CopyButton";
 import { EconomicActivities } from "@/app/[company]/components/EconomicActivities";
 import { ErrorRecovery } from "@/app/[company]/components/ErrorRecovery";
 import PhoneNumbers from "@/app/[company]/components/PhoneNumbers";
+import { ReadMore } from "@/app/[company]/components/ReadMore";
 import { ToggleContent } from "@/app/[company]/components/ToogleContent";
 import type { CompanyDto } from "@/app/[company]/types/CompanyDto";
 import { companiesRepository } from "@/app/repositories/companies";
@@ -167,9 +168,7 @@ export default async function page({ params }: PageProps) {
     },
     {
       label: "Objecto social",
-      value: data.scope ? (
-        <Text dangerouslySetInnerHTML={{ __html: data.scope }} />
-      ) : null,
+      value: data.scope ? <ReadMore text={data.scope} /> : null,
     },
     {
       label: "Actividad económica",
@@ -185,7 +184,7 @@ export default async function page({ params }: PageProps) {
       label: "Representante legal",
       value:
         data.legalRepresentatives && data.legalRepresentatives.length > 0 ? (
-          <Flex asChild direction="column" gap="2">
+          <Flex asChild direction="column" gap={{ initial: "2", sm: "0" }}>
             <ol>
               {data.legalRepresentatives.map(({ type, name }, index) => (
                 <Flex
