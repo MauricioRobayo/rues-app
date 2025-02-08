@@ -4,7 +4,7 @@ import { searchByCompanyName } from "@/app/(search)/actions";
 import { Recaptcha } from "@/app/(search)/components/Recaptcha";
 import { SearchResults } from "@/app/(search)/components/SearchResults";
 import { useNormalizedCompanyName } from "@/app/(search)/hooks/useNormalizedCompanyName";
-import { PageContainer } from "@/app/shared/component/PageContainer";
+import { PageContainer } from "@/app/shared/components/PageContainer";
 import { RECAPTCHA_SEARCH_ACTION } from "@/app/shared/lib/constants";
 import { MagnifyingGlassIcon } from "@radix-ui/react-icons";
 import {

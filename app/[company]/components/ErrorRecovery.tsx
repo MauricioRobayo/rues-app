@@ -1,7 +1,7 @@
 "use client";
 
 import { revalidate } from "@/app/[company]/actions";
-import { PageContainer } from "@/app/shared/component/PageContainer";
+import { PageContainer } from "@/app/shared/components/PageContainer";
 import { Box, Button, Flex, Heading } from "@radix-ui/themes";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
