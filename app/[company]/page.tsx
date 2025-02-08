@@ -188,23 +188,24 @@ export default async function page({ params }: PageProps) {
     },
     {
       label: "Representante legal",
-      value:
-        data.legalRepresentatives && data.legalRepresentatives.length > 0 ? (
-          <Flex direction="column" gap="2">
+      value: (
+        <Flex direction="column" gap="2">
+          {data.legalRepresentatives && data.legalRepresentatives.length > 0 ? (
             <LegalRepresentatives
               legalRepresentatives={data.legalRepresentatives}
             />
-            <details>
-              <summary>Facultades del representante legal</summary>
-              <Suspense fallback={<Spinner />}>
-                <LegalRepresentativePowers
-                  chamberCode={data.chamber.code}
-                  registrationId={data.registrationNumber}
-                />
-              </Suspense>
-            </details>
-          </Flex>
-        ) : null,
+          ) : null}
+          <details>
+            <summary>Facultades del representante legal</summary>
+            <Suspense fallback={<Spinner />}>
+              <LegalRepresentativePowers
+                chamberCode={data.chamber.code}
+                registrationId={data.registrationNumber}
+              />
+            </Suspense>
+          </details>
+        </Flex>
+      ),
     },
   ];
 
