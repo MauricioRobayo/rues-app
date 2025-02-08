@@ -296,7 +296,7 @@ export default async function page({ params }: PageProps) {
 }
 
 const getCompanyDataCached = unstable_cache(cache(getCompanyData), undefined, {
-  revalidate: 7 * 24 * 60 * 60,
+  revalidate: false,
 });
 
 // This function is unintentionally not cached so we can handle logic based
