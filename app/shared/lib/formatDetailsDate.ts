@@ -1,6 +1,6 @@
 import { parseDetailsDate } from "@/app/shared/lib/parseDetailsDate";
 
-const dateFormatter = new Intl.DateTimeFormat("es-CO", {
+export const dateFormatter = new Intl.DateTimeFormat("es-CO", {
   dateStyle: "long",
   timeZone: "America/Bogota",
 });
