@@ -7,6 +7,7 @@ import { LegalRepresentativePowers } from "@/app/[company]/components/LegalRepre
 import { LegalRepresentatives } from "@/app/[company]/components/LegalRepresentatives";
 import PhoneNumbers from "@/app/[company]/components/PhoneNumbers";
 import { ReadMore } from "@/app/[company]/components/ReadMore";
+import { RetrievedOn } from "@/app/[company]/components/RetrievedOn";
 import { ToggleContent } from "@/app/[company]/components/ToogleContent";
 import type { CompanyDto } from "@/app/[company]/types/CompanyDto";
 import { companiesRepository } from "@/app/repositories/companies";
@@ -338,6 +339,7 @@ export default async function page({ params }: PageProps) {
             </Section>
           </Box>
         </Grid>
+        <RetrievedOn retrievedOn={data.retrievedOn} />
       </PageContainer>
     </article>
   );

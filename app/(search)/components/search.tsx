@@ -1,7 +1,6 @@
 "use client";
 
 import { searchByCompanyName } from "@/app/(search)/actions";
-import { Recaptcha } from "@/app/(search)/components/Recaptcha";
 import { SearchResults } from "@/app/(search)/components/SearchResults";
 import { useNormalizedCompanyName } from "@/app/(search)/hooks/useNormalizedCompanyName";
 import { PageContainer } from "@/app/shared/components/PageContainer";
@@ -14,8 +13,8 @@ import {
   Flex,
   Grid,
   Heading,
-  TextField,
   Text,
+  TextField,
 } from "@radix-ui/themes";
 import { useQuery } from "@tanstack/react-query";
 import Form from "next/form";
@@ -48,7 +47,6 @@ export function Search() {
     <Box py={{ initial: "6", sm: "8" }}>
       <Flex direction="column" gap="8">
         <PageContainer size="2">
-          <Recaptcha />
           <Flex direction="column" gap="4">
             <Heading>
               Buscar Empresa

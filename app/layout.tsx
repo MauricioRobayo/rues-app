@@ -8,6 +8,7 @@ import "./globals.css";
 import { PageContainer } from "@/app/shared/components/PageContainer";
 import { Link } from "@/app/shared/components/Link";
 import NextTopLoader from "nextjs-toploader";
+import { Recaptcha } from "@/app/(search)/components/Recaptcha";
 
 export const metadata: Metadata = {
   title: "Registro NIT",
@@ -21,6 +22,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="es-CO">
+      <Recaptcha />
       <GoogleTagManager gtmId={process.env.NEXT_PUBLIC_GTM_ID ?? ""} />
       <body>
         <Theme accentColor="blue">
