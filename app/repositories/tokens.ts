@@ -8,8 +8,9 @@ const redis = new Redis({
 
 const tokenKey = "token";
 
-export const tokenRepository = {
+export const tokensRepository = {
   async getToken({ skipCache = false }: { skipCache?: boolean } = {}) {
+    console.log("This should only be called once!!!!!!");
     if (!skipCache) {
       const storedToken = await redis.get<string>(tokenKey);
       if (storedToken) {

@@ -4,18 +4,22 @@ import { CopyButton } from "@/app/[company]/components/CopyButton";
 import { EconomicActivities } from "@/app/[company]/components/EconomicActivities";
 import { ErrorRecovery } from "@/app/[company]/components/ErrorRecovery";
 import { LegalRepresentativePowers } from "@/app/[company]/components/LegalRepresentativePowers";
+import { LegalRepresentatives } from "@/app/[company]/components/LegalRepresentatives";
 import PhoneNumbers from "@/app/[company]/components/PhoneNumbers";
 import { ReadMore } from "@/app/[company]/components/ReadMore";
 import { ToggleContent } from "@/app/[company]/components/ToogleContent";
 import type { CompanyDto } from "@/app/[company]/types/CompanyDto";
 import { companiesRepository } from "@/app/repositories/companies";
-import { CompanyStatusBadge } from "@/app/shared/component/CompanyStatusBadge";
-import { PageContainer } from "@/app/shared/component/PageContainer";
+import { CompanyStatusBadge } from "@/app/shared/components/CompanyStatusBadge";
+import { PageContainer } from "@/app/shared/components/PageContainer";
 import { BASE_URL } from "@/app/shared/lib/constants";
 import { isValidNit } from "@/app/shared/lib/isValidNit";
 import { parseCompanyPathSegment } from "@/app/shared/lib/parseCompanyPathSegment";
 import { slugifyCompanyName } from "@/app/shared/lib/slugifyComponentName";
-import { getRuesDataByNit, queryNit } from "@/app/shared/services/rues/api";
+import {
+  getRuesDataByNit,
+  queryNit,
+} from "@/app/shared/services/rues/ruesService";
 import { GoogleMapsEmbed } from "@next/third-parties/google";
 import {
   Box,
@@ -27,6 +31,7 @@ import {
   Link,
   Section,
   Separator,
+  Spinner,
   Text,
 } from "@radix-ui/themes";
 import type { Metadata } from "next";
@@ -185,31 +190,20 @@ export default async function page({ params }: PageProps) {
       label: "Representante legal",
       value:
         data.legalRepresentatives && data.legalRepresentatives.length > 0 ? (
-          <LegalRepresentativePowers
-            chamberCode={String(data.chamber.code).padStart(2, "0")}
-            registrationId={data.registrationNumber}
-          >
-            <Flex asChild direction="column" gap={{ initial: "2", sm: "0" }}>
-              <ol>
-                {data.legalRepresentatives.map(({ type, name }, index) => (
-                  <Flex
-                    key={index}
-                    direction={{ initial: "column", sm: "row" }}
-                    gap={{ initial: "0", sm: "1" }}
-                    align={{ initial: "start", sm: "baseline" }}
-                    asChild
-                  >
-                    <li>
-                      <Text size="1" color="gray" className="uppercase">
-                        {type}
-                      </Text>
-                      <Text>{name}</Text>
-                    </li>
-                  </Flex>
-                ))}
-              </ol>
-            </Flex>
-          </LegalRepresentativePowers>
+          <Flex direction="column" gap="2">
+            <LegalRepresentatives
+              legalRepresentatives={data.legalRepresentatives}
+            />
+            <details>
+              <summary>Facultades del representante legal</summary>
+              <Suspense fallback={<Spinner />}>
+                <LegalRepresentativePowers
+                  chamberCode={data.chamber.code}
+                  registrationId={data.registrationNumber}
+                />
+              </Suspense>
+            </details>
+          </Flex>
         ) : null,
     },
   ];

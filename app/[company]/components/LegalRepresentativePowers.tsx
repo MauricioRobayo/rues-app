@@ -1,52 +1,26 @@
-"use client";
-import { Recaptcha } from "@/app/(search)/components/Recaptcha";
-import { getPowers } from "@/app/[company]/actions";
-import { RECAPTCHA_POWERS_ACTION } from "@/app/shared/lib/constants";
-import { Box, Button, Flex, Text } from "@radix-ui/themes";
-import { useState, useTransition, type ReactNode } from "react";
+import { getPowers } from "@/app/shared/services/rues/ruesService";
+import { Box, Text } from "@radix-ui/themes";
 
-export function LegalRepresentativePowers({
+export async function LegalRepresentativePowers({
   chamberCode,
   registrationId,
-  children,
 }: {
-  chamberCode: string;
+  chamberCode: number;
   registrationId: string;
-  children: ReactNode;
 }) {
-  const [powers, setPowers] = useState("");
-  const [isPending, startTransition] = useTransition();
+  await new Promise((resolve) => setTimeout(resolve, 10_000));
+  const powers = await getPowers({
+    chamberCode,
+    registrationId,
+  });
 
-  const handleOnClick = () => {
-    startTransition(async () => {
-      const recaptchaToken = await window.grecaptcha.enterprise.execute(
-        process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY,
-        { action: RECAPTCHA_POWERS_ACTION },
-      );
-      const data = await getPowers({
-        query: { chamberCode, businessRegistrationNumber: registrationId },
-        recaptchaToken,
-      });
-      setPowers(data ?? "");
-    });
-  };
+  if (!powers) {
+    return null;
+  }
+
   return (
-    <>
-      <Recaptcha />
-      {powers ? (
-        <Box p="2" className="rounded bg-[var(--gray-3)]">
-          <Text size="2" dangerouslySetInnerHTML={{ __html: powers }}></Text>
-        </Box>
-      ) : (
-        <Flex direction="column" gap="2">
-          {children}
-          <Box>
-            <Button onClick={handleOnClick} loading={isPending}>
-              Ver facultades
-            </Button>
-          </Box>
-        </Flex>
-      )}
-    </>
+    <Box p="2" className="rounded bg-[var(--gray-3)]">
+      <Text size="2" dangerouslySetInnerHTML={{ __html: powers }}></Text>
+    </Box>
   );
 }
