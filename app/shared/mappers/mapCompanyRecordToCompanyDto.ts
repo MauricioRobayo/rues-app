@@ -76,7 +76,7 @@ function getLegalRepresentative(data: CompanyRecord["vinculos"]) {
     "01": "principal",
     "02": "suplente",
   };
-  return data
+  return (data ?? [])
     .map((item) => {
       const type = typeMapping[item.codigo_tipo_vinculo];
       if (!type) {
