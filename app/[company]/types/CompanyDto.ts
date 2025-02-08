@@ -1,6 +1,7 @@
 import type { BusinessEstablishmentDto } from "@/app/[company]/types/BusinessEstablishmentDto";
 
 export interface CompanyDto {
+  retrievedOn: number;
   address: string | null;
   area?: string;
   bidderId?: string;
