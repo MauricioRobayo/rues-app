@@ -1,5 +1,6 @@
 import { getPowers } from "@/app/shared/services/rues/ruesService";
 import { Box, Text } from "@radix-ui/themes";
+import { unstable_cache } from "next/cache";
 
 export async function LegalRepresentativePowers({
   chamberCode,
@@ -8,8 +9,7 @@ export async function LegalRepresentativePowers({
   chamberCode: number;
   registrationId: string;
 }) {
-  await new Promise((resolve) => setTimeout(resolve, 10_000));
-  const powers = await getPowers({
+  const powers = await getPowersCached({
     chamberCode,
     registrationId,
   });
@@ -24,3 +24,7 @@ export async function LegalRepresentativePowers({
     </Box>
   );
 }
+
+const getPowersCached = unstable_cache(getPowers, undefined, {
+  revalidate: 7 * 24 * 60 * 60,
+});
