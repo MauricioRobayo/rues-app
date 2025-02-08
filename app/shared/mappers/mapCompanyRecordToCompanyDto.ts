@@ -10,6 +10,7 @@ import { yearsDoingBusinesses } from "@/app/shared/lib/yearsDoingBusinesses";
 import type { CompanyRecord } from "@mauriciorobayo/rues-api";
 export function mapCompanyRecordToCompanyDto(data: CompanyRecord): CompanyDto {
   return {
+    retrievedOn: Date.now(),
     name: data.razon_social,
     slug: `${slugifyCompanyName(data.razon_social)}-${data.numero_identificacion}`,
     nit: Number(data.numero_identificacion),
