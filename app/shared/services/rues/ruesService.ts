@@ -2,16 +2,17 @@ import { mapCompanyRecordToCompanyDto } from "@/app/shared/mappers/mapCompanyRec
 import { mapConsolidatedCompanyToCompanyDto } from "@/app/shared/mappers/mapConsolidatedCompanyToCompanyDto";
 import { getSiisInfo, type SiisData } from "@/app/[company]/services/siis";
 import { companiesRepository } from "@/app/repositories/companies";
-import { tokenRepository } from "@/app/repositories/tokens";
 import { VALID_RUES_CATEGORIES } from "@/app/shared/lib/constants";
 import { processAdvancedSearchResults } from "@/app/shared/services/rues/processAdvancesSearchResults";
-import type {
-  BusinessEstablishmentsResponse,
-  BusinessRecord,
-  File,
+import {
+  getLegalRepresentativePowers,
+  type BusinessEstablishmentsResponse,
+  type BusinessRecord,
+  type File,
 } from "@mauriciorobayo/rues-api";
 import * as RUES from "@mauriciorobayo/rues-api";
 import pRetry, { AbortError } from "p-retry";
+import { tokensService } from "@/app/shared/services/tokens/tokensService";
 
 export interface ConsolidatedCompanyInfo {
   details?: File;
@@ -22,7 +23,7 @@ export interface ConsolidatedCompanyInfo {
 }
 
 export async function queryNit(nit: number) {
-  let token = await tokenRepository.getToken();
+  let token = await tokensService.getToken();
   try {
     const response = pRetry(
       async () => {
@@ -32,7 +33,7 @@ export async function queryNit(nit: number) {
           console.warn(
             "RUES: Authentication failed with existing token. Getting a new token.",
           );
-          token = await tokenRepository.getToken({ skipCache: true });
+          token = await tokensService.getNewToken();
           response = await RUES.queryNit({ nit, token });
         }
 
@@ -77,7 +78,7 @@ export async function advancedSearch({
   search: { nit: number } | { name: string };
   token?: string;
 }) {
-  let ruesToken = token ?? (await tokenRepository.getToken());
+  let ruesToken = token ?? (await tokensService.getToken());
   try {
     const response = await pRetry(
       async () => {
@@ -92,7 +93,7 @@ export async function advancedSearch({
           console.warn(
             "RUES: Authentication failed with existing token. Getting a new token.",
           );
-          ruesToken = await tokenRepository.getToken({ skipCache: true });
+          ruesToken = await tokensService.getNewToken();
           response = await RUES.advancedSearch({
             query,
             token: ruesToken,
@@ -187,4 +188,31 @@ function getCompanyInfo(nit: number) {
     console.error("Failed to get company info", err);
     return null;
   }
+}
+
+export async function getPowers({
+  chamberCode,
+  registrationId,
+}: {
+  chamberCode: number;
+  registrationId: string;
+}) {
+  const token = await tokensService.getToken();
+  const response = await getLegalRepresentativePowers({
+    query: {
+      chamberCode: String(chamberCode).padStart(2, "0"),
+      businessRegistrationNumber: registrationId.padStart(10, "0"),
+    },
+    token,
+  });
+
+  if (response.statusCode === 401 || response.statusCode === 404) {
+    throw new AbortError(`queryNit failed ${JSON.stringify(response)}`);
+  }
+
+  if (response.status === "error") {
+    return null;
+  }
+
+  return response.data;
 }

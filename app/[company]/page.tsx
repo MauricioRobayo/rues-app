@@ -3,17 +3,23 @@ import { CompanyDetails } from "@/app/[company]/components/CompanyDetails";
 import { CopyButton } from "@/app/[company]/components/CopyButton";
 import { EconomicActivities } from "@/app/[company]/components/EconomicActivities";
 import { ErrorRecovery } from "@/app/[company]/components/ErrorRecovery";
+import { LegalRepresentativePowers } from "@/app/[company]/components/LegalRepresentativePowers";
+import { LegalRepresentatives } from "@/app/[company]/components/LegalRepresentatives";
 import PhoneNumbers from "@/app/[company]/components/PhoneNumbers";
+import { ReadMore } from "@/app/[company]/components/ReadMore";
 import { ToggleContent } from "@/app/[company]/components/ToogleContent";
 import type { CompanyDto } from "@/app/[company]/types/CompanyDto";
 import { companiesRepository } from "@/app/repositories/companies";
-import { CompanyStatusBadge } from "@/app/shared/component/CompanyStatusBadge";
-import { PageContainer } from "@/app/shared/component/PageContainer";
+import { CompanyStatusBadge } from "@/app/shared/components/CompanyStatusBadge";
+import { PageContainer } from "@/app/shared/components/PageContainer";
 import { BASE_URL } from "@/app/shared/lib/constants";
 import { isValidNit } from "@/app/shared/lib/isValidNit";
 import { parseCompanyPathSegment } from "@/app/shared/lib/parseCompanyPathSegment";
 import { slugifyCompanyName } from "@/app/shared/lib/slugifyComponentName";
-import { getRuesDataByNit, queryNit } from "@/app/shared/services/rues/api";
+import {
+  getRuesDataByNit,
+  queryNit,
+} from "@/app/shared/services/rues/ruesService";
 import { GoogleMapsEmbed } from "@next/third-parties/google";
 import {
   Box,
@@ -22,8 +28,10 @@ import {
   Flex,
   Grid,
   Heading,
+  Link,
   Section,
   Separator,
+  Spinner,
   Text,
 } from "@radix-ui/themes";
 import type { Metadata } from "next";
@@ -99,6 +107,10 @@ export default async function page({ params }: PageProps) {
       label: "Estado",
       value: data.status.split(" ").length > 1 ? data.status : null,
     },
+    {
+      label: "Sigla",
+      value: data.shortName,
+    },
     { label: "Tipo de sociedad", value: data.type },
     { label: "Organización jurídica", value: data.legalEntityType },
     { label: "Categoría de la matrícula", value: data.category },
@@ -136,15 +148,33 @@ export default async function page({ params }: PageProps) {
     { label: "Zona comercial", value: data.area },
     {
       label: "Teléfono",
-      value: data.phoneNumbers ? (
-        <PhoneNumbers phoneNumbers={data.phoneNumbers} />
+      value:
+        data.phoneNumbers && data.phoneNumbers.length > 0 ? (
+          <PhoneNumbers phoneNumbers={data.phoneNumbers} />
+        ) : null,
+    },
+    {
+      label: "Corre electrónico",
+      value: data.email ? (
+        <Box>
+          <ToggleContent label="Ver correo electrónico">
+            <Link href={`mailto:${data.email}`}>{data.email}</Link>
+          </ToggleContent>
+        </Box>
       ) : null,
     },
     {
+      label: "Cantidad de establecimientos",
+      value: data.totalBusinessEstablishments,
+    },
+    { label: "Número de empleados", value: data.totalEmployees },
+    {
+      label: "Registro proponente",
+      value: data.bidderId,
+    },
+    {
       label: "Objecto social",
-      value: data.scope ? (
-        <Text dangerouslySetInnerHTML={{ __html: data.scope }} />
-      ) : null,
+      value: data.scope ? <ReadMore text={data.scope} /> : null,
     },
     {
       label: "Actividad económica",
@@ -157,10 +187,26 @@ export default async function page({ params }: PageProps) {
       ) : null,
     },
     {
-      label: "Cantidad de establecimientos",
-      value: data.totalBusinessEstablishments,
+      label: "Representante legal",
+      value: (
+        <Flex direction="column" gap="2">
+          {data.legalRepresentatives && data.legalRepresentatives.length > 0 ? (
+            <LegalRepresentatives
+              legalRepresentatives={data.legalRepresentatives}
+            />
+          ) : null}
+          <details>
+            <summary>Facultades del representante legal</summary>
+            <Suspense fallback={<Spinner />}>
+              <LegalRepresentativePowers
+                chamberCode={data.chamber.code}
+                registrationId={data.registrationNumber}
+              />
+            </Suspense>
+          </details>
+        </Flex>
+      ),
     },
-    { label: "Número de empleados", value: data.totalEmployees },
   ];
 
   const establishments = data.establishments?.map((establishment) => ({
@@ -197,9 +243,11 @@ export default async function page({ params }: PageProps) {
       },
       {
         label: "Teléfono",
-        value: establishment.phoneNumbers ? (
-          <PhoneNumbers phoneNumbers={establishment.phoneNumbers} />
-        ) : null,
+        value:
+          establishment.phoneNumbers &&
+          establishment.phoneNumbers.length > 0 ? (
+            <PhoneNumbers phoneNumbers={establishment.phoneNumbers} />
+          ) : null,
       },
       {
         label: "Dirección comercial",
@@ -247,7 +295,7 @@ export default async function page({ params }: PageProps) {
           <Separator mb={{ initial: "4", sm: "4" }} size="4" />
         </header>
       </Box>
-      <PageContainer>
+      <PageContainer mt={{ initial: "6", sm: "8" }}>
         <Text>{companyDescription(data)}</Text>
         <Grid columns={{ initial: "1", sm: "2" }} gapX="8" width="auto">
           <Section size={{ initial: "1", sm: "2" }} id="detalles-de-la-empresa">
@@ -391,11 +439,11 @@ function companyDescription(company: CompanyDto) {
   let description = `${company.name} NIT ${company.fullNit}`;
 
   if (company.size) {
-    const companySize = company.size.toLocaleLowerCase();
-    if (company.size.toLowerCase().includes("empresa")) {
+    const companySize = company.size.toLocaleUpperCase();
+    if (companySize.includes("EMPRESA")) {
       description += ` es una ${companySize}`;
     } else {
-      description += ` es una ${companySize} empresa`;
+      description += ` es una ${companySize} EMPRESA`;
     }
   } else {
     description += " es una empresa";
@@ -413,14 +461,35 @@ function companyDescription(company: CompanyDto) {
     description += `. Su dirección comercial es ${company.address}`;
   }
 
-  if (company.phoneNumbers) {
+  if (company.phoneNumbers?.[0]) {
     description += ` y su teléfono de contacto es ${company.phoneNumbers[0]}`;
   }
+
   description += `. Fundada hace ${company.yearsDoingBusinesses}`;
+
+  if (company.chamber?.name) {
+    description += ` y registrada en la cámara de comercio de ${company.chamber.name}`;
+  }
 
   if (company.economicActivities && company.economicActivities.length > 0) {
     const mainEconomicActivity = company.economicActivities[0];
-    description += `, su principal actividad económica corresponde al código CIIU ${mainEconomicActivity.code}: ${mainEconomicActivity.description}`;
+    description += `. Su principal actividad económica corresponde al código CIIU ${mainEconomicActivity.code}: ${mainEconomicActivity.description}`;
+  }
+
+  if (company.totalEmployees || company.totalBusinessEstablishments) {
+    description += ". Cuenta con";
+    const totals: string[] = [];
+    if (company.totalEmployees) {
+      totals.push(
+        ` ${company.totalEmployees} empleado${company.totalEmployees === 1 ? "" : "s"}`,
+      );
+    }
+    if (company.totalBusinessEstablishments) {
+      totals.push(
+        `${company.totalBusinessEstablishments} establecimiento${company.totalBusinessEstablishments === 1 ? "" : "s"} comercial${company.totalBusinessEstablishments === 1 ? "" : "es"}`,
+      );
+    }
+    description += totals.join(" y ");
   }
 
   return `${description}.`;

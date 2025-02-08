@@ -5,7 +5,7 @@ import { formatNit } from "@/app/shared/lib/formatNit";
 import { parseEconomicActivities } from "@/app/shared/lib/parseEconomicActivities";
 import { slugifyCompanyName } from "@/app/shared/lib/slugifyComponentName";
 import { yearsDoingBusinesses } from "@/app/shared/lib/yearsDoingBusinesses";
-import type { ConsolidatedCompanyInfo as ConsolidatedCompany } from "@/app/shared/services/rues/api";
+import type { ConsolidatedCompanyInfo as ConsolidatedCompany } from "@/app/shared/services/rues/ruesService";
 
 export function mapConsolidatedCompanyToCompanyDto({
   rues,

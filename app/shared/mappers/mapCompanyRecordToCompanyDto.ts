@@ -8,10 +8,12 @@ import { parseEconomicActivities } from "@/app/shared/lib/parseEconomicActivitie
 import { slugifyCompanyName } from "@/app/shared/lib/slugifyComponentName";
 import { yearsDoingBusinesses } from "@/app/shared/lib/yearsDoingBusinesses";
 import type { CompanyRecord } from "@mauriciorobayo/rues-api";
+import { getPhoneNumbers } from "@/app/shared/lib/getPhoneNumbers";
 export function mapCompanyRecordToCompanyDto(data: CompanyRecord): CompanyDto {
   return {
     retrievedOn: Date.now(),
     name: data.razon_social,
+    shortName: data.sigla,
     slug: `${slugifyCompanyName(data.razon_social)}-${data.numero_identificacion}`,
     nit: Number(data.numero_identificacion),
     fullNit: formatNit(Number(data.numero_identificacion)),
@@ -25,14 +27,14 @@ export function mapCompanyRecordToCompanyDto(data: CompanyRecord): CompanyDto {
     category: data.categoria_matricula,
     registrationDate: formatDetailsDate(data.fecha_matricula),
     yearsDoingBusinesses: yearsDoingBusinesses(data.fecha_matricula),
+    bidderId: data.inscripcion_proponente,
     lastRenewalYear: Number(data.ultimo_ano_renovado),
     renewalDate: formatDetailsDate(data.fecha_renovacion),
     cancellationDate: formatDetailsDate(data.fecha_cancelacion),
     size: COMPANY_SIZE[data.codigo_tamano_empresa] ?? null,
     address: data.direccion_comercial,
-    phoneNumbers: [data.telefono_comercial_1, data.telefono_comercial_2].filter(
-      (phoneNumber) => phoneNumber !== undefined,
-    ),
+    phoneNumbers: getPhoneNumbers(data),
+    email: data.correo_electronico_comercial,
     area: data.zona_comercial,
     state: data.dpto_comercial,
     city: data.municipio_comercial,
@@ -60,11 +62,34 @@ export function mapCompanyRecordToCompanyDto(data: CompanyRecord): CompanyDto {
       data.establecimientos
         ?.map((establishment) => {
           // https://github.com/MauricioRobayo/rues-app/issues/30
-          if (!("name" in establishment)) {
+          if (!("razon_social" in establishment)) {
             return null;
           }
           return mapStoreFrontToEstablishmentDto(establishment);
         })
         .filter((establishment) => establishment !== null) ?? [],
+    legalRepresentatives: getLegalRepresentative(data.vinculos),
   };
+}
+
+function getLegalRepresentative(data: CompanyRecord["vinculos"]) {
+  const typeMapping: Record<string, "principal" | "suplente"> = {
+    "01": "principal",
+    "02": "suplente",
+  };
+  return (data ?? [])
+    .map((item) => {
+      const type = typeMapping[item.codigo_tipo_vinculo];
+      if (!type) {
+        return null;
+      }
+      return {
+        type,
+        name: item.nombre,
+      } as const;
+    })
+    .filter((item) => item !== null)
+    .toSorted((a, b) =>
+      a.type === "principal" && b.type !== "principal" ? -1 : 1,
+    );
 }

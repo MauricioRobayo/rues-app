@@ -11,8 +11,8 @@ export default function PhoneNumbers({
   return (
     <Flex direction="column" gap="2" asChild>
       <ul>
-        {phoneNumbers?.map((phoneNumber) => (
-          <li key={phoneNumber}>
+        {phoneNumbers?.map((phoneNumber, index) => (
+          <li key={index}>
             <Link href={`tel:${phoneNumber}`}>{phoneNumber}</Link>
           </li>
         ))}

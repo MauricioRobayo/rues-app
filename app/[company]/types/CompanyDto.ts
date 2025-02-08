@@ -3,12 +3,14 @@ import type { BusinessEstablishmentDto } from "@/app/[company]/types/BusinessEst
 export interface CompanyDto {
   address: string | null;
   area?: string;
+  bidderId?: string;
   broadIndustry?: string;
   cancellationDate: string | null;
   category?: string;
   chamber: { name: string; code: number };
   city?: string;
   economicActivities: { label: string; code: string; description: string }[];
+  email?: string;
   establishments: BusinessEstablishmentDto[];
   fullNit: string;
   highestRevenueEconomicActivityCode?: string | null;
@@ -16,6 +18,7 @@ export interface CompanyDto {
   isActive: boolean;
   lastRenewalYear: number | null;
   legalEntityType: string;
+  legalRepresentatives?: { type: "principal" | "suplente"; name: string }[];
   name: string;
   nit: number;
   phoneNumbers?: string[];
