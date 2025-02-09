@@ -6,11 +6,15 @@ import { SymbolIcon } from "@radix-ui/react-icons";
 import { Flex, IconButton, Text } from "@radix-ui/themes";
 import { formatDistanceToNow } from "date-fns";
 import { es } from "date-fns/locale";
+import { useSearchParams } from "next/navigation";
 
 export function RetrievedOn({ retrievedOn }: { retrievedOn: number }) {
   const isClient = useIsClient();
-  const { isRetrying, onClickHandler } = useRevalidatePath();
-  const canRefresh = Date.now() - retrievedOn > 7 * 24 * 60 * 60;
+  const searchParams = useSearchParams();
+  const { isPending, onClickHandler } = useRevalidatePath();
+  const enableRevalidate = searchParams.get("enableRevalidate");
+  const shouldShowRevalidateButton =
+    enableRevalidate || Date.now() - retrievedOn > 7 * 24 * 60 * 60;
   const distanceToNow = formatDistanceToNow(retrievedOn, {
     locale: es,
     addSuffix: true,
@@ -19,15 +23,17 @@ export function RetrievedOn({ retrievedOn }: { retrievedOn: number }) {
     return null;
   }
   return (
-    <Flex>
+    <Flex direction="row" gap="2" align="center" justify="start">
       <Text size="1" color="gray">
-        Actualizado {distanceToNow}
+        {isPending ? "Actualizando&hellip;" : `Actualizado ${distanceToNow}`}
       </Text>
-      {canRefresh ? (
+      {shouldShowRevalidateButton ? (
         <IconButton
-          aria-label="Actualizar information"
-          loading={isRetrying}
+          aria-label="Actualizar"
+          loading={isPending}
           onClick={onClickHandler}
+          variant="ghost"
+          size="1"
         >
           <SymbolIcon />
         </IconButton>
