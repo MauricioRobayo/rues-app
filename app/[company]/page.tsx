@@ -268,86 +268,95 @@ export default async function page({ params }: PageProps) {
   }));
 
   return (
-    <article itemScope itemType="https://schema.org/Organization">
-      <Box asChild style={{ position: "sticky", top: 0, background: "white" }}>
-        <header>
-          <PageContainer py={{ initial: "6", sm: "8" }}>
-            <Card size="4" variant="ghost">
-              <Flex direction="column" gap="1">
-                <Heading itemProp="name" color="blue">
-                  {data.name}
-                </Heading>
-                <Flex
-                  align={{ initial: "start", sm: "center" }}
-                  gap="2"
-                  direction={{ initial: "column", sm: "row" }}
-                >
-                  <Flex justify="center" align="center" gap="2">
-                    <Heading as="h2" size="4" weight="regular">
-                      NIT: <span itemProp="taxID">{data.fullNit}</span>
-                    </Heading>
-                    <CopyButton value={data.nit} tooltip="Copiar NIT" />
+    <Box mb="2" asChild>
+      <article itemScope itemType="https://schema.org/Organization">
+        <Box
+          asChild
+          style={{ position: "sticky", top: 0, background: "white" }}
+        >
+          <header>
+            <PageContainer py={{ initial: "6", sm: "8" }}>
+              <Card size="4" variant="ghost">
+                <Flex direction="column" gap="1">
+                  <Heading itemProp="name" color="blue">
+                    {data.name}
+                  </Heading>
+                  <Flex
+                    align={{ initial: "start", sm: "center" }}
+                    gap="2"
+                    direction={{ initial: "column", sm: "row" }}
+                  >
+                    <Flex justify="center" align="center" gap="2">
+                      <Heading as="h2" size="4" weight="regular">
+                        NIT: <span itemProp="taxID">{data.fullNit}</span>
+                      </Heading>
+                      <CopyButton value={data.nit} tooltip="Copiar NIT" />
+                    </Flex>
+                    <CompanyStatusBadge
+                      isActive={data.isActive}
+                      variant="long"
+                    />
                   </Flex>
-                  <CompanyStatusBadge isActive={data.isActive} variant="long" />
                 </Flex>
-              </Flex>
-            </Card>
-          </PageContainer>
-          <Separator mb={{ initial: "4", sm: "4" }} size="4" />
-        </header>
-      </Box>
-      <PageContainer mt={{ initial: "6", sm: "8" }}>
-        <Text>{companyDescription(data)}</Text>
-        <Grid columns={{ initial: "1", sm: "2" }} gapX="8" width="auto">
-          <Section size={{ initial: "1", sm: "2" }} id="detalles-de-la-empresa">
-            <Heading as="h3" size="4" mb="2">
-              Detalles de la Empresa
-            </Heading>
-            <CompanyDetails details={details} />
-          </Section>
-          <Box>
-            {data.establishments.length > 0 && (
-              <Section size="2" id="establecimientos-comerciales">
-                <Heading as="h3" size="4" mb="4">
-                  Establecimientos Comerciales
-                </Heading>
-                <Flex asChild direction="column" gap="2">
-                  <ul>
-                    {establishments.map((establishment) => {
-                      return (
-                        <li key={establishment.id}>
-                          <details>
-                            <summary>{establishment.name}</summary>
-                            <Box my="4" pl="4">
-                              <CompanyDetails details={establishment.details} />
-                            </Box>
-                          </details>
-                        </li>
-                      );
-                    })}
-                  </ul>
-                </Flex>
-              </Section>
-            )}
-            <Section size="2" id="camara-de-comercio">
+              </Card>
+            </PageContainer>
+            <Separator mb={{ initial: "4", sm: "4" }} size="4" />
+          </header>
+        </Box>
+        <PageContainer mt={{ initial: "6", sm: "8" }}>
+          <Text>{companyDescription(data)}</Text>
+          <Grid columns={{ initial: "1", sm: "2" }} gapX="8" width="auto">
+            <Section
+              size={{ initial: "1", sm: "2" }}
+              id="detalles-de-la-empresa"
+            >
               <Heading as="h3" size="4" mb="2">
-                Cámara de Comercio
+                Detalles de la Empresa
               </Heading>
-              <Suspense fallback={<ChamberSkeleton />}>
-                <Chamber code={data.chamber.code} />
-              </Suspense>
+              <CompanyDetails details={details} />
             </Section>
-          </Box>
-        </Grid>
-        <RetrievedOn retrievedOn={data.retrievedOn} />
-      </PageContainer>
-    </article>
+            <Box>
+              {data.establishments.length > 0 && (
+                <Section size="2" id="establecimientos-comerciales">
+                  <Heading as="h3" size="4" mb="4">
+                    Establecimientos Comerciales
+                  </Heading>
+                  <Flex asChild direction="column" gap="2">
+                    <ul>
+                      {establishments.map((establishment) => {
+                        return (
+                          <li key={establishment.id}>
+                            <details>
+                              <summary>{establishment.name}</summary>
+                              <Box my="4" pl="4">
+                                <CompanyDetails
+                                  details={establishment.details}
+                                />
+                              </Box>
+                            </details>
+                          </li>
+                        );
+                      })}
+                    </ul>
+                  </Flex>
+                </Section>
+              )}
+              <Section size="2" id="camara-de-comercio">
+                <Heading as="h3" size="4" mb="2">
+                  Cámara de Comercio
+                </Heading>
+                <Suspense fallback={<ChamberSkeleton />}>
+                  <Chamber code={data.chamber.code} />
+                </Suspense>
+              </Section>
+            </Box>
+          </Grid>
+          <RetrievedOn retrievedOn={data.retrievedOn} />
+        </PageContainer>
+      </article>
+    </Box>
   );
 }
-
-const getCompanyDataCached = unstable_cache(cache(getCompanyData), undefined, {
-  revalidate: false,
-});
 
 // This function is unintentionally not cached so we can handle logic based
 // on the segmentPath which can be different given the same nit:
@@ -384,6 +393,10 @@ async function getPageData(company: string) {
 
   return response.data;
 }
+
+const getCompanyDataCached = unstable_cache(cache(getCompanyData), undefined, {
+  revalidate: false,
+});
 
 async function getCompanyData(
   nit: number,

@@ -20,7 +20,7 @@ export async function LegalRepresentativePowers({
 
   return (
     <Box p="2" className="rounded bg-[var(--gray-3)]">
-      <Text size="2" dangerouslySetInnerHTML={{ __html: powers }}></Text>
+      <Text size="2" asChild dangerouslySetInnerHTML={{ __html: powers }} />j
     </Box>
   );
 }
