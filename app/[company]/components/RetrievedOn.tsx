@@ -14,7 +14,7 @@ export function RetrievedOn({ retrievedOn }: { retrievedOn: number }) {
   const { isPending, onClickHandler } = useRevalidatePath();
   const enableRevalidate = searchParams.get("enableRevalidate");
   const shouldShowRevalidateButton =
-    enableRevalidate || Date.now() - retrievedOn > 7 * 24 * 60 * 60 * 1000;
+    enableRevalidate || Date.now() - retrievedOn > 15 * 24 * 60 * 60 * 1000;
   const distanceToNow = formatDistanceToNow(retrievedOn, {
     locale: es,
     addSuffix: true,
