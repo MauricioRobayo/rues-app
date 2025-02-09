@@ -1,6 +1,6 @@
 "use server";
 
-import { RECAPTCHA_SEARCH_ACTION } from "@/app/shared/lib/constants";
+import { Action } from "@/app/shared/lib/getRecapchaToken";
 import { verifyRecaptcha } from "@/app/shared/lib/verifyRecaptcha";
 import { mapConsolidatedCompanyToCompanyDto } from "@/app/shared/mappers/mapConsolidatedCompanyToCompanyDto";
 import { advancedSearch } from "@/app/shared/services/rues/ruesService";
@@ -19,7 +19,7 @@ export async function searchByCompanyName({
   if (
     !(await verifyRecaptcha({
       token: recaptchaToken,
-      action: RECAPTCHA_SEARCH_ACTION,
+      action: Action.SEARCH,
     }))
   ) {
     return null;

@@ -1,0 +1,11 @@
+export const Action = {
+  SEARCH: "SEARCH",
+  REVALIDATE_COMPANY: "REVALIDATE_COMPANY",
+} as const;
+
+export function getRecaptchaToken(action: keyof typeof Action) {
+  return window.grecaptcha.enterprise.execute(
+    process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY,
+    { action },
+  );
+}

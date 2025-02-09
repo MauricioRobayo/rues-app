@@ -1,6 +1,6 @@
 "use server";
 
-import { RECAPTCHA_REVALIDATE_COMPANY_ACTION } from "@/app/shared/lib/constants";
+import { Action } from "@/app/shared/lib/getRecapchaToken";
 import { verifyRecaptcha } from "@/app/shared/lib/verifyRecaptcha";
 import { revalidatePath } from "next/cache";
 
@@ -14,7 +14,7 @@ export async function revalidate({
   if (
     !(await verifyRecaptcha({
       token: recaptchaToken,
-      action: RECAPTCHA_REVALIDATE_COMPANY_ACTION,
+      action: Action.REVALIDATE_COMPANY,
     }))
   ) {
     return null;

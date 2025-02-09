@@ -4,7 +4,7 @@ import { searchByCompanyName } from "@/app/(search)/actions";
 import { SearchResults } from "@/app/(search)/components/SearchResults";
 import { useNormalizedCompanyName } from "@/app/(search)/hooks/useNormalizedCompanyName";
 import { PageContainer } from "@/app/shared/components/PageContainer";
-import { RECAPTCHA_SEARCH_ACTION } from "@/app/shared/lib/constants";
+import { Action, getRecaptchaToken } from "@/app/shared/lib/getRecapchaToken";
 import { MagnifyingGlassIcon } from "@radix-ui/react-icons";
 import {
   Box,
@@ -28,10 +28,7 @@ export function Search() {
       if (!companyName) {
         return;
       }
-      const recaptchaToken = await window.grecaptcha.enterprise.execute(
-        process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY,
-        { action: RECAPTCHA_SEARCH_ACTION },
-      );
+      const recaptchaToken = await getRecaptchaToken(Action.SEARCH);
       const company = await searchByCompanyName({
         companyName,
         recaptchaToken,
