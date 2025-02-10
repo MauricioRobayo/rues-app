@@ -19,7 +19,7 @@ import {
 import { useQuery } from "@tanstack/react-query";
 import Form from "next/form";
 
-export function Search() {
+export function SearchName() {
   const companyName = useNormalizedCompanyName();
   const { isLoading, data, isError } = useQuery({
     queryKey: [companyName],
