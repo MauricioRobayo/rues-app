@@ -381,7 +381,7 @@ async function getPageData(company: string) {
     return null;
   }
 
-  if (!response.data) {
+  if (!response.data?.name) {
     notFound();
   }
 
@@ -407,7 +407,7 @@ async function getCompanyData(
   try {
     const queryResponse = await queryNit(nit);
 
-    if (queryResponse?.data?.name) {
+    if (queryResponse.data) {
       return {
         status: "success",
         data: queryResponse.data,
