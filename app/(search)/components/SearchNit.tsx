@@ -126,7 +126,8 @@ export function SearchNit() {
                 <Link href={`/${value}`}>
                   <Text weight="bold">{fullNit}</Text>
                 </Link>{" "}
-                es válido y la información empresarial puede ser consultada en:
+                es válido y la información empresarial correspondiente puede ser
+                consultada en:
               </Text>
               <Link href={`/${value}`} underline="always">
                 <Text>{BASE_URL}/</Text>
@@ -157,7 +158,7 @@ export function SearchNit() {
           <Text weight="bold">
             <Code>899999068</Code>
           </Text>{" "}
-          es el NIT que desea consultar.
+          es el NIT de la empresa que desea consultar.
         </Callout.Text>
       </Callout.Root>
     </Flex>
