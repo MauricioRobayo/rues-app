@@ -85,7 +85,7 @@ export function SearchNit() {
       >
         <Form action="/">
           <Flex gap="1" align="center">
-            <Box width={{ initial: "100%", sm: "12rem" }}>
+            <Box width={{ initial: "100%", sm: "14rem" }}>
               <TextField.Root
                 required
                 id="nit"
