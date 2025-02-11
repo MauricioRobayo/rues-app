@@ -407,7 +407,7 @@ async function getCompanyData(
   try {
     const queryResponse = await queryNit(nit);
 
-    if (queryResponse?.data) {
+    if (queryResponse?.data?.name) {
       return {
         status: "success",
         data: queryResponse.data,
