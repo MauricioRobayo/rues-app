@@ -19,7 +19,7 @@ export function mapConsolidatedCompanyToCompanyDto({
     name: rues.razon_social,
     slug: `${slugifyCompanyName(rues.razon_social)}-${rues.nit}`,
     nit: Number(rues.nit),
-    fullNit: formatNit(Number(rues.nit)),
+    fullNit: formatNit(rues.nit),
     verificationDigit: Number(rues.dv),
     chamber: { name: rues.nom_camara, code: Number(rues.cod_camara) },
     registrationNumber: rues.matricula,

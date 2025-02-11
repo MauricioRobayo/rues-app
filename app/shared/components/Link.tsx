@@ -7,7 +7,7 @@ import type { ReactNode } from "react";
 
 interface LinkProps extends NextLinkProps {
   children: ReactNode;
-  underline: RadixLinkProps["underline"];
+  underline?: RadixLinkProps["underline"];
 }
 export function Link({ underline, ...props }: LinkProps) {
   return (

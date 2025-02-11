@@ -16,7 +16,7 @@ export function mapCompanyRecordToCompanyDto(data: CompanyRecord): CompanyDto {
     shortName: data.sigla,
     slug: `${slugifyCompanyName(data.razon_social)}-${data.numero_identificacion}`,
     nit: Number(data.numero_identificacion),
-    fullNit: formatNit(Number(data.numero_identificacion)),
+    fullNit: formatNit(data.numero_identificacion),
     chamber: { name: data.camara, code: Number(data.codigo_camara) },
     verificationDigit: Number(data.digito_verificacion),
     registrationNumber: data.matricula,

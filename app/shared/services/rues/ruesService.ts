@@ -25,7 +25,7 @@ export interface ConsolidatedCompanyInfo {
 export async function queryNit(nit: number) {
   let token = await tokensService.getToken();
   try {
-    const response = pRetry(
+    const response = await pRetry(
       async () => {
         let response = await RUES.queryNit({ nit, token });
 
@@ -179,11 +179,15 @@ export async function getRuesDataByNit({
   return mapConsolidatedCompanyToCompanyDto(result);
 }
 
-function getCompanyInfo(nit: number) {
+async function getCompanyInfo(nit: number) {
   try {
-    return pRetry(() => companiesRepository.getCompanyInfo(nit), {
-      retries: 3,
-    });
+    const response = await pRetry(
+      () => companiesRepository.getCompanyInfo(nit),
+      {
+        retries: 3,
+      },
+    );
+    return response;
   } catch (err) {
     console.error("Failed to get company info", err);
     return null;

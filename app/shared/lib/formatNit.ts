@@ -1,3 +1,4 @@
+import { validateNit } from "@/app/shared/lib/validateNit";
 import { getVerificationDigit } from "nit-verifier";
 
 const numberFormatter = new Intl.NumberFormat("es-CO", {
@@ -5,7 +6,7 @@ const numberFormatter = new Intl.NumberFormat("es-CO", {
 });
 
 export function formatNit(
-  nit: number,
+  nit: number | string,
   {
     showDecimalSeparator = true,
     showVerificationDigit = true,
@@ -14,6 +15,9 @@ export function formatNit(
     showVerificationDigit?: boolean;
   } = {},
 ) {
+  if (!validateNit(nit)) {
+    return "";
+  }
   let formattedNit = showDecimalSeparator
     ? numberFormatter.format(Number(nit))
     : String(nit);
