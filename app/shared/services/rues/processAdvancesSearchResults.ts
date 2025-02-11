@@ -1,5 +1,5 @@
 import { VALID_RUES_CATEGORIES } from "@/app/shared/lib/constants";
-import { isValidNit } from "@/app/shared/lib/isValidNit";
+import { validateNit } from "@/app/shared/lib/validateNit";
 import type { BusinessRecord } from "@mauriciorobayo/rues-api";
 
 export function dedupeResults<
@@ -27,7 +27,7 @@ export function processAdvancedSearchResults(results: BusinessRecord[]) {
   return dedupeResults(
     (results ?? []).filter(
       (record) =>
-        isValidNit(Number(record.nit)) &&
+        validateNit(Number(record.nit)) &&
         VALID_RUES_CATEGORIES.includes(record.categoria),
     ),
   );

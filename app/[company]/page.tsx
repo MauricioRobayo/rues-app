@@ -14,7 +14,7 @@ import { companiesRepository } from "@/app/repositories/companies";
 import { CompanyStatusBadge } from "@/app/shared/components/CompanyStatusBadge";
 import { PageContainer } from "@/app/shared/components/PageContainer";
 import { BASE_URL } from "@/app/shared/lib/constants";
-import { isValidNit } from "@/app/shared/lib/isValidNit";
+import { validateNit } from "@/app/shared/lib/validateNit";
 import { parseCompanyPathSegment } from "@/app/shared/lib/parseCompanyPathSegment";
 import { slugifyCompanyName } from "@/app/shared/lib/slugifyComponentName";
 import {
@@ -369,7 +369,7 @@ export default async function page({ params }: PageProps) {
 async function getPageData(company: string) {
   const { nit, slug } = parseCompanyPathSegment(company);
 
-  if (!isValidNit(nit)) {
+  if (!validateNit(nit)) {
     notFound();
   }
 
