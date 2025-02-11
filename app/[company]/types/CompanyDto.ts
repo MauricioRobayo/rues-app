@@ -1,4 +1,6 @@
 import type { BusinessEstablishmentDto } from "@/app/[company]/types/BusinessEstablishmentDto";
+import type { CapitalInformationDto } from "@/app/[company]/types/CapitalDto";
+import type { FinancialInformationDto } from "@/app/[company]/types/FinancialInformationDto";
 
 export interface CompanyDto {
   retrievedOn: number;
@@ -38,4 +40,6 @@ export interface CompanyDto {
   updatedDate?: string | null;
   verificationDigit: number;
   yearsDoingBusinesses: string | null;
+  financialInformation?: FinancialInformationDto[];
+  capitalInformation?: CapitalInformationDto[];
 }

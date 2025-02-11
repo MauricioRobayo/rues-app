@@ -40,6 +40,8 @@ import { unstable_cache } from "next/cache";
 import { notFound, permanentRedirect } from "next/navigation";
 import { after } from "next/server";
 import { cache, Suspense } from "react";
+import { currencyFormatter } from "@/app/shared/lib/formatters";
+import { Details } from "@/app/[company]/components/Details";
 
 interface PageProps {
   params: Promise<{ company: string }>;
@@ -196,15 +198,14 @@ export default async function page({ params }: PageProps) {
               legalRepresentatives={data.legalRepresentatives}
             />
           ) : null}
-          <details>
-            <summary>Facultades del representante legal</summary>
+          <Details summary="Facultades del representante legal">
             <Suspense fallback={<Spinner />}>
               <LegalRepresentativePowers
                 chamberCode={data.chamber.code}
                 registrationId={data.registrationNumber}
               />
             </Suspense>
-          </details>
+          </Details>
         </Flex>
       ),
     },
@@ -267,6 +268,89 @@ export default async function page({ params }: PageProps) {
     ],
   }));
 
+  const financialInformation = data.financialInformation
+    ?.toSorted((a, b) => b.financialYear - a.financialYear)
+    .map((info) => ({
+      year: info.financialYear,
+      details: [
+        { label: "Activo corriente", value: info.currentAssets },
+        { label: "Activo no corriente", value: info.nonCurrentAssets },
+        { label: "Activo total", value: info.totalAssets },
+        { label: "Pasivo corriente", value: info.currentLiabilities },
+        { label: "Pasivo no corriente", value: info.nonCurrentLiabilities },
+        { label: "Pasivo total", value: info.totalLiabilities },
+        { label: "Patrimonio neto", value: info.netEquity },
+        {
+          label: "Ingresos de actividad ordinaria",
+          value: info.ordinaryActivityIncome,
+        },
+        { label: "Otros ingresos", value: info.otherIncome },
+        { label: "Costo de ventas", value: info.costOfSales },
+        { label: "Gastos operacionales", value: info.operatingExpenses },
+        { label: "Otros gastos", value: info.otherExpenses },
+        { label: "Gastos de impuestos", value: info.taxExpenses },
+        {
+          label: "Utilidad/Pérdida operacional",
+          value: info.operatingProfitOrLoss,
+        },
+        { label: "Resultado del período", value: info.periodResult },
+        {
+          label: "Capital social extranjero privado",
+          value: info.privateForeignEquity,
+        },
+        {
+          label: "Capital social extranjero público",
+          value: info.publicForeignEquity,
+        },
+        {
+          label: "Capital social nacional privado",
+          value: info.privateNationalEquity,
+        },
+        {
+          label: "Capital social nacional público",
+          value: info.publicNationalEquity,
+        },
+      ].map(({ label, value }) => ({
+        label,
+        value: value ? currencyFormatter.format(value) : value,
+      })),
+    }))
+    .at(0);
+
+  const capitalInformation = data.capitalInformation
+    ?.toSorted((a, b) => b.capitalModificationDate - a.capitalModificationDate)
+    .map((info) => [
+      {
+        label: "Fecha de modificación del capital",
+        value: info.capitalModificationDate,
+      },
+      {
+        label: "Capital social",
+        value: info.shareCapital
+          ? currencyFormatter.format(info.shareCapital)
+          : info.shareCapital,
+      },
+      {
+        label: "Capital autorizado",
+        value: info.authorizedCapital
+          ? currencyFormatter.format(info.authorizedCapital)
+          : info.authorizedCapital,
+      },
+      {
+        label: "Capital suscrito",
+        value: info.subscribedCapital
+          ? currencyFormatter.format(info.subscribedCapital)
+          : info.subscribedCapital,
+      },
+      {
+        label: "Capital pagado",
+        value: info.paidCapital
+          ? currencyFormatter.format(info.paidCapital)
+          : info.paidCapital,
+      },
+    ])
+    .at(0);
+
   return (
     <Box mb="2" asChild>
       <article itemScope itemType="https://schema.org/Organization">
@@ -305,7 +389,12 @@ export default async function page({ params }: PageProps) {
         </Box>
         <PageContainer mt={{ initial: "6", sm: "8" }}>
           <Text>{companyDescription(data)}</Text>
-          <Grid columns={{ initial: "1", sm: "2" }} gapX="8" width="auto">
+          <Grid
+            columns={{ initial: "1", sm: "2" }}
+            gapX="8"
+            width="auto"
+            flow="row-dense"
+          >
             <Section
               size={{ initial: "1", sm: "2" }}
               id="detalles-de-la-empresa"
@@ -316,6 +405,26 @@ export default async function page({ params }: PageProps) {
               <CompanyDetails details={details} />
             </Section>
             <Box>
+              {financialInformation && (
+                <Section size="2" id="informacion-financiera">
+                  <Heading as="h3" size="4" mb="2">
+                    Información financiera {financialInformation.year}
+                  </Heading>
+                  <Details summary="Ver información financiera">
+                    <CompanyDetails details={financialInformation.details} />
+                  </Details>
+                </Section>
+              )}
+              {capitalInformation && (
+                <Section size="2" id="informacion-de-capitales">
+                  <Heading as="h3" size="4" mb="2">
+                    Información de Capitales
+                  </Heading>
+                  <Details summary="Ver información de capitales">
+                    <CompanyDetails details={capitalInformation} />
+                  </Details>
+                </Section>
+              )}
               {data.establishments.length > 0 && (
                 <Section size="2" id="establecimientos-comerciales">
                   <Heading as="h3" size="4" mb="4">

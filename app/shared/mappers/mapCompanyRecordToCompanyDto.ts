@@ -9,6 +9,8 @@ import { slugifyCompanyName } from "@/app/shared/lib/slugifyComponentName";
 import { yearsDoingBusinesses } from "@/app/shared/lib/yearsDoingBusinesses";
 import type { CompanyRecord } from "@mauriciorobayo/rues-api";
 import { getPhoneNumbers } from "@/app/shared/lib/getPhoneNumbers";
+import type { FinancialInformationDto } from "@/app/[company]/types/FinancialInformationDto";
+import type { CapitalInformationDto } from "@/app/[company]/types/CapitalDto";
 export function mapCompanyRecordToCompanyDto(data: CompanyRecord): CompanyDto {
   return {
     retrievedOn: Date.now(),
@@ -69,6 +71,8 @@ export function mapCompanyRecordToCompanyDto(data: CompanyRecord): CompanyDto {
         })
         .filter((establishment) => establishment !== null) ?? [],
     legalRepresentatives: getLegalRepresentative(data.vinculos),
+    financialInformation: getFinancialInformation(data.informacionFinanciera),
+    capitalInformation: getCapitalInformation(data.informacionCapitales),
   };
 }
 
@@ -92,4 +96,55 @@ function getLegalRepresentative(data: CompanyRecord["vinculos"]) {
     .toSorted((a, b) =>
       a.type === "principal" && b.type !== "principal" ? -1 : 1,
     );
+}
+
+function getFinancialInformation(
+  data: CompanyRecord["informacionFinanciera"],
+): FinancialInformationDto[] {
+  return data.map((info) => ({
+    financialYear: Number(info.ano_informacion_financiera ?? ""),
+    currentAssets: Number(info.activo_corriente ?? ""),
+    nonCurrentAssets: info.activo_no_corriente
+      ? Number(info.activo_no_corriente)
+      : undefined,
+    totalAssets: Number(info.activo_total ?? ""),
+    currentLiabilities: Number(info.pasivo_corriente ?? ""),
+    nonCurrentLiabilities: info.pasivo_no_corriente
+      ? Number(info.pasivo_no_corriente)
+      : undefined,
+    totalLiabilities: Number(info.pasivo_total ?? ""),
+    netEquity: Number(info.patrimonio_neto ?? ""),
+    liabilitiesAndEquity: info.pasivo_mas_patrimonio
+      ? Number(info.pasivo_mas_patrimonio)
+      : undefined,
+    socialBalance: info.balance_social
+      ? Number(info.balance_social)
+      : undefined,
+    ordinaryActivityIncome: Number(info.ingresos_actividad_ordinaria ?? ""),
+    otherIncome: Number(info.otros_ingresos ?? ""),
+    costOfSales: Number(info.costo_ventas ?? ""),
+    operatingExpenses: Number(info.gastos_operacionales ?? ""),
+    otherExpenses: Number(info.otros_gastos ?? ""),
+    taxExpenses: info.gastos_impuestos
+      ? Number(info.gastos_impuestos)
+      : undefined,
+    operatingProfitOrLoss: Number(info.utilidad_perdida_operacional ?? ""),
+    periodResult: Number(info.resultado_del_periodo ?? ""),
+    privateForeignEquity: Number(info.capital_social_extranjero_privado ?? ""),
+    publicForeignEquity: Number(info.capital_social_extranjero_publico ?? ""),
+    privateNationalEquity: Number(info.capital_social_nacional_privado ?? ""),
+    publicNationalEquity: Number(info.capital_social_nacional_publico ?? ""),
+  }));
+}
+
+function getCapitalInformation(
+  data: CompanyRecord["informacionCapitales"],
+): CapitalInformationDto[] {
+  return data.map((info) => ({
+    capitalModificationDate: Number(info.fecha_modificacion_capital ?? ""),
+    shareCapital: Number(info.capital_social ?? ""),
+    authorizedCapital: Number(info.capital_autorizado ?? ""),
+    subscribedCapital: Number(info.capital_suscrito ?? ""),
+    paidCapital: Number(info.capital_pagado ?? ""),
+  }));
 }
