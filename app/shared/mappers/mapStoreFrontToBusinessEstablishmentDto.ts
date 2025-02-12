@@ -1,9 +1,10 @@
 import { BusinessEstablishmentDto } from "@/app/[company]/types/BusinessEstablishmentDto";
+import type { TourismRegistryDto } from "@/app/[company]/types/TourismRegistryDto";
 import { formatDetailsDate } from "@/app/shared/lib/formatDetailsDate";
 import { getPhoneNumbers } from "@/app/shared/lib/getPhoneNumbers";
 import { parseEconomicActivities } from "@/app/shared/lib/parseEconomicActivities";
 import { yearsDoingBusinesses } from "@/app/shared/lib/yearsDoingBusinesses";
-import type { StoreFront } from "@mauriciorobayo/rues-api";
+import type { StoreFront, TourismRegistry } from "@mauriciorobayo/rues-api";
 
 export function mapStoreFrontToEstablishmentDto(
   data: StoreFront,
@@ -15,7 +16,9 @@ export function mapStoreFrontToEstablishmentDto(
     yearsDoingBusinesses: yearsDoingBusinesses(data.fecha_matricula),
     cancellationDate: formatDetailsDate(data.fecha_cancelacion),
     lastRenewalYear: Number(data.ultimo_ano_renovado),
-    renewalDate: formatDetailsDate(data.fecha_renovacion),
+    renewalDate: data.fecha_renovacion
+      ? formatDetailsDate(data.fecha_renovacion)
+      : null,
     phoneNumbers: getPhoneNumbers(data),
     address: data.direccion_comercial,
     economicActivityDescription: data.desc_Act_Econ,
@@ -29,5 +32,37 @@ export function mapStoreFrontToEstablishmentDto(
       descCiiu3: data.desc_ciiu3,
       descCiiu4: data.desc_ciiu4,
     }),
+    tourismRegistries: data?.rnt?.map(mapTourismRegistryToTourismRegistryDto),
+  };
+}
+
+export function mapTourismRegistryToTourismRegistryDto(
+  data: TourismRegistry,
+): TourismRegistryDto {
+  return {
+    id: data.RNT,
+    name: data.RNT_razon_social,
+    status: data.RNT_estado,
+    lastUpdatedYear: data.RNT_ultimo_ano_actualizado,
+    category: data.RNT_categoria,
+    subCategory: data.RNT_subCategoria,
+    municipality: data.RNT_municipio,
+    department: data.RNT_departamento,
+    commercialAddress: data.RNT_direccion_comercial,
+    landlinePhone: data.RNT_telefono_fijo,
+    mobilePhone: data.RNT_telefono_celular,
+    notificationMunicipality: data.RNT_municipio_notificacion,
+    notificationDepartment: data.RNT_dpto_notificacion,
+    notificationAddress: data.RNT_direccion_notificacion,
+    notificationPhone: data.RNT_telefono_notificaciones,
+    email: data.RNT_correo_electronico,
+    employees: data.RNT_empleados,
+    providerCompanyName: data.RNT_razon_social_prestador,
+    providerNIT: data.RNT_nit_prestador,
+    providerDV: data.RNT_dv_prestador,
+    legalRepresentative: data.RNT_representante_legal,
+    legalRepresentativeId: data.RNT_identificacion_representante_legal,
+    providerPhone: data.RNT_telefono_prestador,
+    providerEmail: data.RNT_correo_electronico_prestador,
   };
 }

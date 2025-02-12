@@ -1,16 +1,16 @@
-import { mapStoreFrontToEstablishmentDto } from "@/app/shared/mappers/mapStoreFrontToBusinessEstablishmentDto";
+import type { CapitalInformationDto } from "@/app/[company]/types/CapitalDto";
 import type { CompanyDto } from "@/app/[company]/types/CompanyDto";
+import type { FinancialInformationDto } from "@/app/[company]/types/FinancialInformationDto";
 import { COMPANY_SIZE } from "@/app/shared/lib/constants";
 import { decodeBase64 } from "@/app/shared/lib/decodeBase64";
 import { formatDetailsDate } from "@/app/shared/lib/formatDetailsDate";
 import { formatNit } from "@/app/shared/lib/formatNit";
+import { getPhoneNumbers } from "@/app/shared/lib/getPhoneNumbers";
 import { parseEconomicActivities } from "@/app/shared/lib/parseEconomicActivities";
 import { slugifyCompanyName } from "@/app/shared/lib/slugifyComponentName";
 import { yearsDoingBusinesses } from "@/app/shared/lib/yearsDoingBusinesses";
+import { mapStoreFrontToEstablishmentDto } from "@/app/shared/mappers/mapStoreFrontToBusinessEstablishmentDto";
 import type { CompanyRecord } from "@mauriciorobayo/rues-api";
-import { getPhoneNumbers } from "@/app/shared/lib/getPhoneNumbers";
-import type { FinancialInformationDto } from "@/app/[company]/types/FinancialInformationDto";
-import type { CapitalInformationDto } from "@/app/[company]/types/CapitalDto";
 export function mapCompanyRecordToCompanyDto(data: CompanyRecord): CompanyDto {
   return {
     retrievedOn: Date.now(),
@@ -60,16 +60,9 @@ export function mapCompanyRecordToCompanyDto(data: CompanyRecord): CompanyDto {
     totalEmployees: data.numero_empleados
       ? Number(data.numero_empleados)
       : null,
-    establishments:
-      data.establecimientos
-        ?.map((establishment) => {
-          // https://github.com/MauricioRobayo/rues-app/issues/30
-          if (!("razon_social" in establishment)) {
-            return null;
-          }
-          return mapStoreFrontToEstablishmentDto(establishment);
-        })
-        .filter((establishment) => establishment !== null) ?? [],
+    establishments: (data.establecimientos ?? [])
+      .map(mapStoreFrontToEstablishmentDto)
+      .filter((establishment) => establishment !== undefined),
     legalRepresentatives: getLegalRepresentative(data.vinculos),
     financialInformation: getFinancialInformation(data.informacionFinanciera),
     capitalInformation: getCapitalInformation(data.informacionCapitales),

@@ -1,10 +1,12 @@
+import type { TourismRegistryDto } from "@/app/[company]/types/TourismRegistryDto";
+
 export interface BusinessEstablishmentDto {
-  name: string;
+  name?: string;
   shortName?: string;
   type?: string;
   legalEntity?: string;
   category?: string;
-  registrationNumber: string;
+  registrationNumber?: string;
   registrationDate: string | null;
   yearsDoingBusinesses: string | null;
   cancellationDate?: string | null;
@@ -15,4 +17,5 @@ export interface BusinessEstablishmentDto {
   address?: string;
   economicActivityDescription?: string;
   economicActivities?: { label: string; code: string; description: string }[];
+  tourismRegistries?: TourismRegistryDto[];
 }

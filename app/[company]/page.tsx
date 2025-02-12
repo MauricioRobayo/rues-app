@@ -1,6 +1,7 @@
 import { Chamber, ChamberSkeleton } from "@/app/[company]/components/Chamber";
 import { CompanyDetails } from "@/app/[company]/components/CompanyDetails";
 import { CopyButton } from "@/app/[company]/components/CopyButton";
+import { Details } from "@/app/[company]/components/Details";
 import { EconomicActivities } from "@/app/[company]/components/EconomicActivities";
 import { ErrorRecovery } from "@/app/[company]/components/ErrorRecovery";
 import { LegalRepresentativePowers } from "@/app/[company]/components/LegalRepresentativePowers";
@@ -14,9 +15,10 @@ import { companiesRepository } from "@/app/repositories/companies";
 import { CompanyStatusBadge } from "@/app/shared/components/CompanyStatusBadge";
 import { PageContainer } from "@/app/shared/components/PageContainer";
 import { BASE_URL } from "@/app/shared/lib/constants";
-import { validateNit } from "@/app/shared/lib/validateNit";
+import { currencyFormatter } from "@/app/shared/lib/formatters";
 import { parseCompanyPathSegment } from "@/app/shared/lib/parseCompanyPathSegment";
 import { slugifyCompanyName } from "@/app/shared/lib/slugifyComponentName";
+import { validateNit } from "@/app/shared/lib/validateNit";
 import {
   getRuesDataByNit,
   queryNit,
@@ -40,8 +42,6 @@ import { unstable_cache } from "next/cache";
 import { notFound, permanentRedirect } from "next/navigation";
 import { after } from "next/server";
 import { cache, Suspense } from "react";
-import { currencyFormatter } from "@/app/shared/lib/formatters";
-import { Details } from "@/app/[company]/components/Details";
 
 interface PageProps {
   params: Promise<{ company: string }>;
@@ -214,6 +214,94 @@ export default async function page({ params }: PageProps) {
   const establishments = data.establishments?.map((establishment) => ({
     id: establishment.registrationNumber,
     name: establishment.name,
+    tourismRegistries: (establishment.tourismRegistries ?? []).map(
+      (registry) => ({
+        id: registry.id,
+        details: [
+          { label: "RNT", value: <Code variant="ghost">{registry.id}</Code> },
+          { label: "Nombre", value: registry.name },
+          { label: "Estado", value: registry.status },
+          { label: "Último año actualizado", value: registry.lastUpdatedYear },
+          { label: "Categoría", value: registry.category },
+          { label: "Subcategoría", value: registry.subCategory },
+          { label: "Municipio", value: registry.municipality },
+          { label: "Departamento", value: registry.department },
+          { label: "Dirección comercial", value: registry.commercialAddress },
+          { label: "Teléfono fijo", value: registry.landlinePhone },
+          { label: "Teléfono celular", value: registry.mobilePhone },
+          {
+            label: "Municipio de notificación",
+            value: registry.notificationMunicipality,
+          },
+          {
+            label: "Departamento de notificación",
+            value: registry.notificationDepartment,
+          },
+          {
+            label: "Dirección de notificación",
+            value: registry.notificationAddress,
+          },
+          {
+            label: "Teléfono de notificación",
+            value: registry.notificationPhone ? (
+              <Link href={`tel:${registry.notificationPhone}`}>
+                {registry.notificationPhone}
+              </Link>
+            ) : null,
+          },
+          {
+            label: "Correo electrónico",
+            value: registry.email ? (
+              <Box>
+                <ToggleContent label="Ver correo electrónico">
+                  <Link href={`mailto:${registry.email}`}>
+                    {registry.email}
+                  </Link>
+                </ToggleContent>
+              </Box>
+            ) : null,
+          },
+          { label: "Número de empleados", value: registry.employees },
+          {
+            label: "Nombre del prestador",
+            value: registry.providerCompanyName,
+          },
+          {
+            label: "NIT del prestador",
+            value: <Code variant="ghost">{registry.providerNIT}</Code>,
+          },
+          {
+            label: "DV del prestador",
+            value: <Code variant="ghost">registry.providerDV</Code>,
+          },
+          { label: "Representante legal", value: registry.legalRepresentative },
+          {
+            label: "Identificación del representante legal",
+            value: registry.legalRepresentativeId,
+          },
+          {
+            label: "Teléfono del prestador",
+            value: registry.providerPhone ? (
+              <Link href={`tel:${registry.providerPhone}`}>
+                {registry.providerPhone}
+              </Link>
+            ) : null,
+          },
+          {
+            label: "Correo electrónico del prestador",
+            value: registry.email ? (
+              <Box>
+                <ToggleContent label="Ver correo electrónico">
+                  <Link href={`mailto:${registry.email}`}>
+                    {registry.email}
+                  </Link>
+                </ToggleContent>
+              </Box>
+            ) : null,
+          },
+        ],
+      }),
+    ),
     details: [
       {
         label: "Razón social",
@@ -261,9 +349,11 @@ export default async function page({ params }: PageProps) {
       },
       {
         label: "Actividad económica",
-        value: establishment.economicActivities ? (
-          <EconomicActivities activities={establishment.economicActivities} />
-        ) : null,
+        value:
+          establishment.economicActivities &&
+          establishment.economicActivities.length > 0 ? (
+            <EconomicActivities activities={establishment.economicActivities} />
+          ) : null,
       },
     ],
   }));
@@ -425,7 +515,7 @@ export default async function page({ params }: PageProps) {
                   </Details>
                 </Section>
               )}
-              {data.establishments.length > 0 && (
+              {establishments.length > 0 && (
                 <Section size="2" id="establecimientos-comerciales">
                   <Heading as="h3" size="4" mb="4">
                     Establecimientos Comerciales
@@ -434,14 +524,38 @@ export default async function page({ params }: PageProps) {
                     <ul>
                       {establishments.map((establishment) => {
                         return (
-                          <li key={establishment.id}>
+                          <li
+                            key={
+                              establishment.id ??
+                              establishment.tourismRegistries.at(0)?.id
+                            }
+                          >
                             <details>
-                              <summary>{establishment.name}</summary>
-                              <Box my="4" pl="4">
+                              <summary>
+                                {establishment.name ??
+                                  `RNT ${establishment.tourismRegistries.at(0)?.id}`}
+                              </summary>
+                              <Flex my="4" pl="4" direction="column" gap="4">
                                 <CompanyDetails
                                   details={establishment.details}
                                 />
-                              </Box>
+                                {(establishment.tourismRegistries ?? []).map(
+                                  (registry) => (
+                                    <Flex
+                                      key={registry.id}
+                                      direction="column"
+                                      gap="4"
+                                    >
+                                      <Heading as="h4" size="4">
+                                        Registro Nacional de Turismo
+                                      </Heading>
+                                      <CompanyDetails
+                                        details={registry.details}
+                                      />
+                                    </Flex>
+                                  ),
+                                )}
+                              </Flex>
                             </details>
                           </li>
                         );
