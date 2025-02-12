@@ -99,9 +99,9 @@ function getLegalRepresentative(data: CompanyRecord["vinculos"]) {
 }
 
 function getFinancialInformation(
-  data: CompanyRecord["informacionFinanciera"],
+  data?: CompanyRecord["informacionFinanciera"],
 ): FinancialInformationDto[] {
-  return data.map((info) => ({
+  return (data ?? []).map((info) => ({
     financialYear: Number(info.ano_informacion_financiera ?? ""),
     currentAssets: Number(info.activo_corriente ?? ""),
     nonCurrentAssets: info.activo_no_corriente
@@ -140,7 +140,7 @@ function getFinancialInformation(
 function getCapitalInformation(
   data: CompanyRecord["informacionCapitales"],
 ): CapitalInformationDto[] {
-  return data.map((info) => ({
+  return (data ?? []).map((info) => ({
     capitalModificationDate: Number(info.fecha_modificacion_capital ?? ""),
     shareCapital: Number(info.capital_social ?? ""),
     authorizedCapital: Number(info.capital_autorizado ?? ""),
