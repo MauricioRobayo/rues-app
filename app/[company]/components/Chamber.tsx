@@ -1,15 +1,44 @@
 import { CompanyDetails } from "@/app/[company]/components/CompanyDetails";
 import { getChamber } from "@/app/[company]/services/chambers";
-import { Text, Flex, Skeleton } from "@radix-ui/themes";
+import { Text, Flex, Skeleton, Link } from "@radix-ui/themes";
 import { unstable_cache } from "next/cache";
 import { cache } from "react";
 
 export async function Chamber({ code }: { code: number }) {
   const chamber = await getChamberCached(code);
+
+  if (!chamber?.name) {
+    return null;
+  }
+
+  const details = [
+    {
+      label: "Nombre",
+      value: chamber.url ? (
+        <Link href={chamber.url}>{chamber.name}</Link>
+      ) : (
+        chamber.name
+      ),
+    },
+    { label: "Dirección", value: chamber.address },
+    { label: "Ciudad", value: chamber.city },
+    { label: "Departamento", value: chamber.state },
+    { label: "Teléfono", value: chamber.phoneNumber },
+    { label: "Correo electrónico", value: chamber.email },
+    {
+      label: "Certificado Cámara de Comercio",
+      value: chamber.certificateUrl && (
+        <Link href={chamber.certificateUrl}>
+          Solicitar certificado en línea
+        </Link>
+      ),
+    },
+  ];
+
   if (!chamber) {
     return <div>Algo salió mal.</div>;
   }
-  return <CompanyDetails details={chamber} />;
+  return <CompanyDetails details={details} />;
 }
 
 export function ChamberSkeleton() {

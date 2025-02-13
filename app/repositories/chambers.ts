@@ -3,15 +3,15 @@ import { chambers } from "@/app/db/schema";
 import { eq, getTableColumns } from "drizzle-orm";
 
 export const chambersRepository = {
-  findChamberByCode(code: number) {
+  findChamberByCode(
+    code: number,
+    columns?: (keyof typeof chambers.$inferSelect)[],
+  ) {
     return db.query.chambers.findFirst({
       where: eq(chambers.code, code),
-      columns: {
-        name: true,
-        address: true,
-        city: true,
-        state: true,
-      },
+      columns: columns
+        ? Object.fromEntries(columns.map((column) => [column, true]))
+        : undefined,
     });
   },
   update(code: number, data: Partial<typeof chambers.$inferInsert>) {
