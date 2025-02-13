@@ -1,23 +1,25 @@
-import { companiesRepository } from "@/app/repositories/companies";
+import { chambersRepository } from "@/app/repositories/chambers";
 import pRetry from "p-retry";
 
 export async function getChamber(code: number) {
   try {
     const chamber = await pRetry(
-      () => companiesRepository.findChamberByCode(code),
+      () =>
+        chambersRepository.findChamberByCode(code, [
+          "name",
+          "address",
+          "city",
+          "state",
+          "certificateUrl",
+          "url",
+          "email",
+          "phoneNumber",
+        ]),
       {
         retries: 3,
       },
     );
-    if (!chamber) {
-      return null;
-    }
-    return [
-      { label: "Nombre", value: chamber.name },
-      { label: "Dirección", value: chamber.address },
-      { label: "Ciudad", value: chamber.city },
-      { label: "Departamento", value: chamber.state },
-    ];
+    return chamber ?? null;
   } catch (err) {
     console.error("Failed to retrieve chamber:", code, err);
     return null;

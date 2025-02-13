@@ -101,6 +101,7 @@ const getAllCompanies = unstable_cache((sitemapId) =>
       companiesRepository.getAll({
         offset: sitemapId * MAX_URLS_PER_SITEMAP,
         limit: MAX_URLS_PER_SITEMAP,
+        fields: ["nit", "name", "timestamp"],
       }),
     {
       retries: 5,

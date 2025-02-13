@@ -1,6 +1,6 @@
 import { db } from "@/app/db";
-import { companies, chambers } from "@/app/db/schema";
-import { asc, count, eq, sql } from "drizzle-orm";
+import { companies } from "@/app/db/schema";
+import { asc, count, eq, getTableColumns, sql } from "drizzle-orm";
 
 export const companiesRepository = {
   upsertName(data: { nit: number; name: string }) {
@@ -56,26 +56,31 @@ export const companiesRepository = {
     const total = await db.select({ count: count() }).from(companies);
     return total.at(0)?.count;
   },
-  getAll({ limit, offset }: { limit: number; offset: number }) {
+  getAll<T extends (keyof typeof companies.$inferSelect)[]>({
+    limit,
+    offset,
+    fields,
+  }: {
+    limit: number;
+    offset: number;
+    fields?: T;
+  }) {
+    const allColumns = getTableColumns(companies);
+    const columns = fields
+      ? Object.fromEntries(
+          Object.entries(allColumns).filter((entry) =>
+            fields.includes(entry[0] as keyof typeof companies.$inferSelect),
+          ),
+        )
+      : allColumns;
     return db
-      .select({
-        nit: companies.nit,
-        name: companies.name,
-        timestamp: companies.timestamp,
-      })
+      .select(columns)
       .from(companies)
       .limit(limit)
-      .offset(offset);
-  },
-  findChamberByCode(code: number) {
-    return db.query.chambers.findFirst({
-      where: eq(chambers.code, code),
-      columns: {
-        name: true,
-        address: true,
-        city: true,
-        state: true,
-      },
-    });
+      .offset(offset) as Promise<
+      {
+        [K in T[number]]: (typeof companies.$inferSelect)[K];
+      }[]
+    >;
   },
 };

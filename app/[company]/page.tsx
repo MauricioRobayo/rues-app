@@ -495,6 +495,14 @@ export default async function page({ params }: PageProps) {
               <CompanyDetails details={details} />
             </Section>
             <Box>
+              <Section size="2" id="camara-de-comercio">
+                <Heading as="h3" size="4" mb="2">
+                  Cámara de Comercio
+                </Heading>
+                <Suspense fallback={<ChamberSkeleton />}>
+                  <Chamber code={data.chamber.code} />
+                </Suspense>
+              </Section>
               {financialInformation && (
                 <Section size="2" id="informacion-financiera">
                   <Heading as="h3" size="4" mb="2">
@@ -564,14 +572,6 @@ export default async function page({ params }: PageProps) {
                   </Flex>
                 </Section>
               )}
-              <Section size="2" id="camara-de-comercio">
-                <Heading as="h3" size="4" mb="2">
-                  Cámara de Comercio
-                </Heading>
-                <Suspense fallback={<ChamberSkeleton />}>
-                  <Chamber code={data.chamber.code} />
-                </Suspense>
-              </Section>
             </Box>
           </Grid>
           <RetrievedOn retrievedOn={data.retrievedOn} />
