@@ -35,38 +35,43 @@ async function main() {
       phoneNumber?: string;
     } = moreData;
 
-    const response = await advancedSearch({
-      query: {
-        razon: "de",
-        cod_camara: String(code).padStart(2, "0"),
-      },
-      token,
-    });
+    const url = await verifyDefaultUrl(code);
+    if (!!serviciosVirtuales[code]) {
+      data.certificateUrl = serviciosVirtuales[code];
+    } else if (url) {
+      data.certificateUrl = url;
+    }
 
-    const company =
-      response.status === "success"
-        ? response.data.registros?.at(0)
-        : (console.log("failed on ", code, response.statusCode, response.error),
-          null);
+    if (data.certificateUrl) {
+      const response = await advancedSearch({
+        query: {
+          razon: "de",
+          cod_camara: String(code).padStart(2, "0"),
+        },
+        token,
+      });
 
-    const file = company?.id_rm
-      ? await getFile(company.id_rm)
-      : (console.log("no id_rm on", company), null);
+      const company =
+        response.status === "success"
+          ? response.data.registros?.at(0)
+          : (console.log(
+              "failed on ",
+              code,
+              response.statusCode,
+              response.error,
+            ),
+            null);
 
-    const certificateUrl =
-      file?.status === "success"
-        ? file.data.registros.url_venta_certificados
-        : (console.log("failed to get file", code), null);
+      const file = company?.id_rm
+        ? await getFile(company.id_rm)
+        : (console.log("no id_rm on", company), null);
 
-    if (!certificateUrl || defaultCertificateUrl.startsWith(certificateUrl)) {
-      const url = await verifyDefaultUrl(code);
-      if (!!serviciosVirtuales[code]) {
-        data.certificateUrl = serviciosVirtuales[code];
-      } else if (url) {
-        data.certificateUrl = url;
-      }
-    } else {
-      data.certificateUrl = certificateUrl;
+      const certificateUrl =
+        file?.status === "success"
+          ? file.data.registros.url_venta_certificados
+          : (console.log("failed to get file", code), null);
+
+      data.certificateUrl = certificateUrl ?? undefined;
     }
 
     console.log(code, data);
