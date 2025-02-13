@@ -54,7 +54,7 @@ async function main() {
       const company =
         response.status === "success"
           ? response.data.registros?.at(0)
-          : (console.log(
+          : (console.warn(
               "failed on ",
               code,
               response.statusCode,
@@ -64,12 +64,12 @@ async function main() {
 
       const file = company?.id_rm
         ? await getFile(company.id_rm)
-        : (console.log("no id_rm on", company), null);
+        : (console.warn("no id_rm on", company), null);
 
       const certificateUrl =
         file?.status === "success"
           ? file.data.registros.url_venta_certificados
-          : (console.log("failed to get file", code), null);
+          : (console.warn("failed to get file", code), null);
 
       data.certificateUrl = certificateUrl ?? undefined;
     }
