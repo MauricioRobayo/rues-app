@@ -15,6 +15,13 @@
       "when": 1738037114682,
       "tag": "0001_hot_machine_man",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1739416508472,
+      "tag": "0002_glossy_ultron",
+      "breakpoints": true
     }
   ]
 }

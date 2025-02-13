@@ -27,6 +27,10 @@ export const chambers = sqliteTable("chambers", {
   city: text().notNull(),
   address: text().notNull(),
   state: text().notNull(),
+  email: text(),
+  phoneNumber: text(),
+  certificateUrl: text(),
+  url: text(),
 });
 export const ruesSync = sqliteTable("rues_sync", {
   id: int().primaryKey({ autoIncrement: true }),
