@@ -1,10 +1,10 @@
-import { companiesRepository } from "@/app/repositories/companies";
+import { chambersRepository } from "@/app/repositories/chambers";
 import pRetry from "p-retry";
 
 export async function getChamber(code: number) {
   try {
     const chamber = await pRetry(
-      () => companiesRepository.findChamberByCode(code),
+      () => chambersRepository.findChamberByCode(code),
       {
         retries: 3,
       },
