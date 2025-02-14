@@ -3,7 +3,7 @@
 import { Action } from "@/app/lib/getRecapchaToken";
 import { verifyRecaptcha } from "@/app/lib/verifyRecaptcha";
 import { mapConsolidatedCompanyToCompanyDto } from "@/app/mappers/mapConsolidatedCompanyToCompanyDto";
-import { advancedSearch } from "@/app/services/rues/ruesService";
+import { advancedSearch } from "@/app/services/rues/service";
 import { unstable_cache } from "next/cache";
 
 export async function searchByCompanyName({

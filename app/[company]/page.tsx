@@ -10,15 +10,15 @@ import PhoneNumbers from "@/app/[company]/components/PhoneNumbers";
 import { ReadMore } from "@/app/[company]/components/ReadMore";
 import { RetrievedOn } from "@/app/[company]/components/RetrievedOn";
 import { ToggleContent } from "@/app/[company]/components/ToogleContent";
-import { companiesRepository } from "@/app/repositories/companies";
+import { companiesRepository } from "@/app/services/companies/repository";
 import { CompanyStatusBadge } from "@/app/components/CompanyStatusBadge";
 import { PageContainer } from "@/app/components/PageContainer";
-import { BASE_URL } from "@/app/lib/constants";
+import { BASE_URL, COMPANY_REVALIDATION_TIME } from "@/app/lib/constants";
 import { currencyFormatter } from "@/app/lib/formatters";
 import { parseCompanyPathSegment } from "@/app/lib/parseCompanyPathSegment";
 import { slugifyCompanyName } from "@/app/lib/slugifyComponentName";
 import { validateNit } from "@/app/lib/validateNit";
-import { getRuesDataByNit, queryNit } from "@/app/services/rues/ruesService";
+import { getRuesDataByNit, queryNit } from "@/app/services/rues/service";
 import { GoogleMapsEmbed } from "@next/third-parties/google";
 import {
   Box,
@@ -615,7 +615,7 @@ async function getPageData(company: string) {
 }
 
 const getCompanyDataCached = unstable_cache(cache(getCompanyData), undefined, {
-  revalidate: false,
+  revalidate: COMPANY_REVALIDATION_TIME,
 });
 
 async function getCompanyData(

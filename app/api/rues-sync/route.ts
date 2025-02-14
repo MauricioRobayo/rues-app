@@ -1,4 +1,4 @@
-import { ruesSyncRepository } from "@/app/repositories/rues-sync";
+import { ruesSyncRepository } from "@/app/services/rues/repository";
 import { handler } from "@/app/api/rues-sync/handler";
 import { after } from "next/server";
 

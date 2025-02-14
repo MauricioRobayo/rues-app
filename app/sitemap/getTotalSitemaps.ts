@@ -1,4 +1,4 @@
-import { companiesRepository } from "@/app/repositories/companies";
+import { companiesRepository } from "@/app/services/companies/repository";
 import { MAX_URLS_PER_SITEMAP } from "@/app/lib/constants";
 
 export const getTotalSitemaps = async () => {

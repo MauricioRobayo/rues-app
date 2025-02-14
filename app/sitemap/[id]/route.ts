@@ -1,4 +1,4 @@
-import { companiesRepository } from "@/app/repositories/companies";
+import { companiesRepository } from "@/app/services/companies/repository";
 import { BASE_URL, MAX_URLS_PER_SITEMAP } from "@/app/lib/constants";
 import { slugifyCompanyName } from "@/app/lib/slugifyComponentName";
 import { getTotalSitemaps } from "@/app/sitemap/getTotalSitemaps";

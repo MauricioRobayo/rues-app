@@ -1,4 +1,5 @@
-import { getPowers } from "@/app/services/rues/ruesService";
+import { COMPANY_REVALIDATION_TIME } from "@/app/lib/constants";
+import { getPowers } from "@/app/services/rues/service";
 import { Box, Text } from "@radix-ui/themes";
 import { unstable_cache } from "next/cache";
 
@@ -31,5 +32,5 @@ export async function LegalRepresentativePowers({
 }
 
 const getPowersCached = unstable_cache(getPowers, undefined, {
-  revalidate: 7 * 24 * 60 * 60,
+  revalidate: COMPANY_REVALIDATION_TIME,
 });

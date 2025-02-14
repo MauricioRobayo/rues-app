@@ -2,8 +2,8 @@ import dotenv from "dotenv";
 
 dotenv.config({ path: ".env.local" });
 
-import { chambersRepository } from "@/app/repositories/chambers";
-import { tokensService } from "@/app/services/tokens/tokensService";
+import { chambersRepository } from "@/app/services/chambers/repository";
+import { tokensService } from "@/app/services/tokens/service";
 import { advancedSearch, getFile } from "@mauriciorobayo/rues-api";
 import * as cheerio from "cheerio";
 
