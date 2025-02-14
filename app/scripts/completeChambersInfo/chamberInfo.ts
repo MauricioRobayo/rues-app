@@ -19,7 +19,6 @@ const serviciosVirtuales: Record<number, string> = {
 };
 
 async function main() {
-  const token = await tokensService.getToken();
   const chambers = await chambersRepository.getAll([
     "name",
     "code",
@@ -35,14 +34,15 @@ async function main() {
       phoneNumber?: string;
     } = moreData;
 
-    const url = await verifyDefaultUrl(code);
-    if (!!serviciosVirtuales[code]) {
+    if (serviciosVirtuales[code]) {
       data.certificateUrl = serviciosVirtuales[code];
-    } else if (url) {
-      data.certificateUrl = url;
+    } else {
+      const url = await verifyDefaultUrl(code);
+      data.certificateUrl = url ?? undefined;
     }
 
-    if (data.certificateUrl) {
+    if (!data.certificateUrl) {
+      const token = await tokensService.getToken();
       const response = await advancedSearch({
         query: {
           razon: "de",
