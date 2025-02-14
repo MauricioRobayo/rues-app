@@ -1,3 +1,4 @@
+import { BidderRecords } from "@/app/[company]/components/BidderRecords";
 import { Chamber, ChamberSkeleton } from "@/app/[company]/components/Chamber";
 import { CompanyDetails } from "@/app/[company]/components/CompanyDetails";
 import { CopyButton } from "@/app/[company]/components/CopyButton";
@@ -10,7 +11,6 @@ import PhoneNumbers from "@/app/[company]/components/PhoneNumbers";
 import { ReadMore } from "@/app/[company]/components/ReadMore";
 import { RetrievedOn } from "@/app/[company]/components/RetrievedOn";
 import { ToggleContent } from "@/app/[company]/components/ToogleContent";
-import { companiesRepository } from "@/app/services/companies/repository";
 import { CompanyStatusBadge } from "@/app/components/CompanyStatusBadge";
 import { PageContainer } from "@/app/components/PageContainer";
 import { BASE_URL, COMPANY_REVALIDATION_TIME } from "@/app/lib/constants";
@@ -18,7 +18,9 @@ import { currencyFormatter } from "@/app/lib/formatters";
 import { parseCompanyPathSegment } from "@/app/lib/parseCompanyPathSegment";
 import { slugifyCompanyName } from "@/app/lib/slugifyComponentName";
 import { validateNit } from "@/app/lib/validateNit";
+import { companiesRepository } from "@/app/services/companies/repository";
 import { getRuesDataByNit, queryNit } from "@/app/services/rues/service";
+import type { CompanyDto } from "@/app/types/CompanyDto";
 import { GoogleMapsEmbed } from "@next/third-parties/google";
 import {
   Box,
@@ -38,7 +40,6 @@ import { unstable_cache } from "next/cache";
 import { notFound, permanentRedirect } from "next/navigation";
 import { after } from "next/server";
 import { cache, Suspense } from "react";
-import type { CompanyDto } from "@/app/types/CompanyDto";
 
 interface PageProps {
   params: Promise<{ company: string }>;
@@ -86,7 +87,7 @@ export default async function page({ params }: PageProps) {
       value: (
         <Flex align="center" gap="2">
           <Code variant="ghost">{data.nit}</Code>
-          <CopyButton value={data.nit} tooltip="Copiar NIT" />
+          <CopyButton value={data.nit} />
         </Flex>
       ),
     },
@@ -170,7 +171,15 @@ export default async function page({ params }: PageProps) {
     { label: "Número de empleados", value: data.totalEmployees },
     {
       label: "Registro proponente",
-      value: data.bidderId,
+      value: data.bidderId ? (
+        <Flex direction="column" gap="2">
+          <Flex gap="2" align="center">
+            <Code variant="ghost">{data.bidderId.padStart(8, "0")}</Code>
+            <CopyButton value={data.bidderId.padStart(8, "0")} />
+          </Flex>
+          <BidderRecords bidderId={data.bidderId} />
+        </Flex>
+      ) : null,
     },
     {
       label: "Objecto social",
@@ -461,7 +470,7 @@ export default async function page({ params }: PageProps) {
                       <Heading as="h2" size="4" weight="regular">
                         NIT: <span itemProp="taxID">{data.fullNit}</span>
                       </Heading>
-                      <CopyButton value={data.nit} tooltip="Copiar NIT" />
+                      <CopyButton value={data.nit} />
                     </Flex>
                     <CompanyStatusBadge
                       isActive={data.isActive}

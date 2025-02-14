@@ -1,39 +1,26 @@
 "use client";
+import { useCopy } from "@/app/hooks/useCopy";
 import { CheckIcon, CopyIcon } from "@radix-ui/react-icons";
 import { AccessibleIcon, Flex, IconButton, Tooltip } from "@radix-ui/themes";
-import { useState, type ReactNode } from "react";
 
-export function CopyButton({
-  value,
-  tooltip,
-}: {
-  value: string | number;
-  tooltip: ReactNode;
-}) {
-  const [copied, setCopied] = useState(false);
-
-  const handleCopy = async () => {
-    try {
-      await navigator.clipboard.writeText(String(value));
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
-    } catch (error) {
-      console.error("Failed to copy:", error);
-    }
-  };
+export function CopyButton({ value }: { value: string | number }) {
+  const [isCopied, handleCopy] = useCopy(value);
 
   return (
     <Flex gap="2">
-      <Tooltip content={copied ? "¡Copiado!" : tooltip}>
+      <Tooltip
+        content={isCopied ? "¡Copiado!" : "Copiar"}
+        open={isCopied ? true : undefined}
+        onOpenChange={isCopied ? () => null : undefined}
+      >
         <IconButton
           size="1"
           aria-label="Copiar valor"
-          color="gray"
           variant="ghost"
           onClick={handleCopy}
-          disabled={copied}
+          disabled={isCopied}
         >
-          {copied ? (
+          {isCopied ? (
             <AccessibleIcon label="Valor copiado">
               <CheckIcon color="green" />
             </AccessibleIcon>
