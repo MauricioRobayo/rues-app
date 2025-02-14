@@ -9,7 +9,7 @@ const redis = new Redis({
 const tokenKey = "rues-token";
 
 export const tokensRepository = {
-  async getToken({ skipCache = false }: { skipCache?: boolean } = {}) {
+  async getRuesToken({ skipCache = false }: { skipCache?: boolean } = {}) {
     if (!skipCache) {
       const storedToken = await redis.get<string>(tokenKey);
       if (storedToken) {

@@ -4,12 +4,12 @@ import { cache } from "react";
 
 export const tokensService = {
   getToken: cache(() =>
-    pRetry(() => tokensRepository.getToken({ skipCache: false }), {
+    pRetry(() => tokensRepository.getRuesToken({ skipCache: false }), {
       retries: 3,
     }),
   ),
   getNewToken: cache(() =>
-    pRetry(() => tokensRepository.getToken({ skipCache: true }), {
+    pRetry(() => tokensRepository.getRuesToken({ skipCache: true }), {
       retries: 3,
     }),
   ),
