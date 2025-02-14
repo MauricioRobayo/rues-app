@@ -1,8 +1,8 @@
 "use client";
 
-import type { CompanyDto } from "@/app/[company]/types/CompanyDto";
-import { CompanyStatusBadge } from "@/app/shared/components/CompanyStatusBadge";
-import { Link } from "@/app/shared/components/Link";
+import { CompanyStatusBadge } from "@/app/components/CompanyStatusBadge";
+import { Link } from "@/app/components/Link";
+import type { CompanyDto } from "@/app/types/CompanyDto";
 import { Box, Card, Flex, Heading, Separator, Text } from "@radix-ui/themes";
 
 export function SearchResults({ results }: { results: CompanyDto[] }) {

@@ -1,5 +1,5 @@
 import { revalidate } from "@/app/[company]/actions";
-import { Action, getRecaptchaToken } from "@/app/shared/lib/getRecapchaToken";
+import { Action, getRecaptchaToken } from "@/app/lib/getRecapchaToken";
 import { useTransition } from "react";
 
 export function useRevalidatePath({ reset }: { reset?: () => void } = {}) {

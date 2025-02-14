@@ -1,4 +1,4 @@
-import { dedupeResults } from "@/app/shared/services/rues/processAdvancesSearchResults";
+import { dedupeResults } from "@/app/services/rues/processAdvancesSearchResults";
 import { expect, test } from "vitest";
 
 const otherFields = { ultimo_ano_renovado: "0" };

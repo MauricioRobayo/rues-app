@@ -1,7 +1,7 @@
 import { Search } from "@/app/(search)/components/Search";
 import { Text, Flex } from "@radix-ui/themes";
 import Providers from "@/app/(search)/providers";
-import { PageContainer } from "@/app/shared/components/PageContainer";
+import { PageContainer } from "@/app/components/PageContainer";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { Suspense } from "react";
 

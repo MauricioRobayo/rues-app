@@ -1,4 +1,4 @@
-import { BASE_URL } from "@/app/shared/lib/constants";
+import { BASE_URL } from "@/app/lib/constants";
 import { getTotalSitemaps } from "@/app/sitemap/getTotalSitemaps";
 import { unstable_cache } from "next/cache";
 import { NextResponse } from "next/server";

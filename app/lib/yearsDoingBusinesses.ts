@@ -1,4 +1,4 @@
-import { parseDetailsDate } from "@/app/shared/lib/parseDetailsDate";
+import { parseDetailsDate } from "@/app/lib/parseDetailsDate";
 import { formatDistanceToNowStrict } from "date-fns";
 import { es } from "date-fns/locale";
 

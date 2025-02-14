@@ -1,4 +1,4 @@
-import type { TourismRegistryDto } from "@/app/[company]/types/TourismRegistryDto";
+import type { TourismRegistryDto } from "@/app/types/TourismRegistryDto";
 
 export interface BusinessEstablishmentDto {
   name?: string;

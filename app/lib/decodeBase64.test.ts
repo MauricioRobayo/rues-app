@@ -1,4 +1,4 @@
-import { decodeBase64 } from "@/app/shared/lib/decodeBase64";
+import { decodeBase64 } from "@/app/lib/decodeBase64";
 import { expect, test } from "vitest";
 
 const tests = [

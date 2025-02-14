@@ -1,4 +1,4 @@
-import { getPowers } from "@/app/shared/services/rues/ruesService";
+import { getPowers } from "@/app/services/rues/ruesService";
 import { Box, Text } from "@radix-ui/themes";
 import { unstable_cache } from "next/cache";
 

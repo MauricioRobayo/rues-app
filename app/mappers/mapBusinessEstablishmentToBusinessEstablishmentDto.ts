@@ -1,6 +1,6 @@
-import type { BusinessEstablishmentDto } from "@/app/[company]/types/BusinessEstablishmentDto";
-import { formatDetailsDate } from "@/app/shared/lib/formatDetailsDate";
-import { yearsDoingBusinesses } from "@/app/shared/lib/yearsDoingBusinesses";
+import { formatDetailsDate } from "@/app/lib/formatDetailsDate";
+import { yearsDoingBusinesses } from "@/app/lib/yearsDoingBusinesses";
+import type { BusinessEstablishmentDto } from "@/app/types/BusinessEstablishmentDto";
 import type { BusinessEstablishment } from "@mauriciorobayo/rues-api";
 
 export function mapBusinessEstablishmentToBusinessEstablishmentDto(

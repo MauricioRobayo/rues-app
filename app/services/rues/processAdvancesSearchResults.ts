@@ -1,5 +1,5 @@
-import { VALID_RUES_CATEGORIES } from "@/app/shared/lib/constants";
-import { validateNit } from "@/app/shared/lib/validateNit";
+import { VALID_RUES_CATEGORIES } from "@/app/lib/constants";
+import { validateNit } from "@/app/lib/validateNit";
 import type { BusinessRecord } from "@mauriciorobayo/rues-api";
 
 export function dedupeResults<

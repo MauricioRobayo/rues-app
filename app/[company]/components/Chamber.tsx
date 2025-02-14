@@ -1,5 +1,5 @@
 import { CompanyDetails } from "@/app/[company]/components/CompanyDetails";
-import { getChamber } from "@/app/[company]/services/chambers";
+import { getChamber } from "@/app/services/chambers";
 import { Text, Flex, Skeleton, Link } from "@radix-ui/themes";
 import { unstable_cache } from "next/cache";
 import { cache } from "react";

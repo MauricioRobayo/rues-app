@@ -1,6 +1,6 @@
 import { companiesRepository } from "@/app/repositories/companies";
-import { BASE_URL, MAX_URLS_PER_SITEMAP } from "@/app/shared/lib/constants";
-import { slugifyCompanyName } from "@/app/shared/lib/slugifyComponentName";
+import { BASE_URL, MAX_URLS_PER_SITEMAP } from "@/app/lib/constants";
+import { slugifyCompanyName } from "@/app/lib/slugifyComponentName";
 import { getTotalSitemaps } from "@/app/sitemap/getTotalSitemaps";
 import { unstable_cache } from "next/cache";
 import { NextResponse } from "next/server";

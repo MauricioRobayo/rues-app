@@ -1,7 +1,7 @@
 "use server";
 
-import { Action } from "@/app/shared/lib/getRecapchaToken";
-import { verifyRecaptcha } from "@/app/shared/lib/verifyRecaptcha";
+import { Action } from "@/app/lib/getRecapchaToken";
+import { verifyRecaptcha } from "@/app/lib/verifyRecaptcha";
 import { revalidatePath } from "next/cache";
 
 export async function revalidate({
