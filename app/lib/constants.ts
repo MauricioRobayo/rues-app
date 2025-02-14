@@ -9,3 +9,4 @@ export const COMPANY_SIZE = {
   "03": "Mediana empresa",
   "04": "Gran empresa",
 } as const;
+export const COMPANY_REVALIDATION_TIME = 3 * 30 * 24 * 60 * 60;

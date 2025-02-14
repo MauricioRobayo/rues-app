@@ -6,7 +6,7 @@ const redis = new Redis({
   token: process.env.KV_REST_API_TOKEN,
 });
 
-const tokenKey = "token";
+const tokenKey = "rues-token";
 
 export const tokensRepository = {
   async getToken({ skipCache = false }: { skipCache?: boolean } = {}) {

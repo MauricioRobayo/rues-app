@@ -13,7 +13,7 @@ import { ToggleContent } from "@/app/[company]/components/ToogleContent";
 import { companiesRepository } from "@/app/repositories/companies";
 import { CompanyStatusBadge } from "@/app/components/CompanyStatusBadge";
 import { PageContainer } from "@/app/components/PageContainer";
-import { BASE_URL } from "@/app/lib/constants";
+import { BASE_URL, COMPANY_REVALIDATION_TIME } from "@/app/lib/constants";
 import { currencyFormatter } from "@/app/lib/formatters";
 import { parseCompanyPathSegment } from "@/app/lib/parseCompanyPathSegment";
 import { slugifyCompanyName } from "@/app/lib/slugifyComponentName";
@@ -615,7 +615,7 @@ async function getPageData(company: string) {
 }
 
 const getCompanyDataCached = unstable_cache(cache(getCompanyData), undefined, {
-  revalidate: false,
+  revalidate: COMPANY_REVALIDATION_TIME,
 });
 
 async function getCompanyData(
