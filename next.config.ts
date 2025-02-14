@@ -11,6 +11,20 @@ const nextConfig: NextConfig = {
       // hmrRefreshes: true,
     },
   },
+  async redirects() {
+    return [
+      {
+        source: "/sitemap-index.xml",
+        destination: "/sitemap",
+        permanent: true,
+      },
+      {
+        source: "/sitemap/:sitemapId(\\d+).xml",
+        destination: "/sitemap/:sitemapId",
+        permanent: true,
+      },
+    ];
+  },
 };
 
 export default nextConfig;
