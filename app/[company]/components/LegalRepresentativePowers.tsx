@@ -1,5 +1,5 @@
 import { COMPANY_REVALIDATION_TIME } from "@/app/lib/constants";
-import { getPowers } from "@/app/services/rues/ruesService";
+import { getPowers } from "@/app/services/rues/service";
 import { Box, Text } from "@radix-ui/themes";
 import { unstable_cache } from "next/cache";
 

@@ -1,7 +1,7 @@
 import { mapCompanyRecordToCompanyDto } from "@/app/mappers/mapCompanyRecordToCompanyDto";
 import { mapConsolidatedCompanyToCompanyDto } from "@/app/mappers/mapConsolidatedCompanyToCompanyDto";
 import { getSiisInfo, type SiisData } from "@/app/services/siis";
-import { companiesRepository } from "@/app/repositories/companies";
+import { companiesRepository } from "@/app/services/companies/repository";
 import { VALID_RUES_CATEGORIES } from "@/app/lib/constants";
 import { processAdvancedSearchResults } from "@/app/services/rues/processAdvancesSearchResults";
 import {
@@ -12,7 +12,7 @@ import {
 } from "@mauriciorobayo/rues-api";
 import * as RUES from "@mauriciorobayo/rues-api";
 import pRetry, { AbortError } from "p-retry";
-import { tokensService } from "@/app/services/tokens/tokensService";
+import { tokensService } from "@/app/services/tokens/service";
 
 export interface ConsolidatedCompanyInfo {
   details?: File;

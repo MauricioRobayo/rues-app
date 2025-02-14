@@ -4,8 +4,8 @@ import {
   getTotal,
   streamData,
 } from "@/app/api/rues-sync/services/rues";
-import { companiesRepository } from "@/app/repositories/companies";
-import { ruesSyncRepository } from "@/app/repositories/rues-sync";
+import { companiesRepository } from "@/app/services/companies/repository";
+import { ruesSyncRepository } from "@/app/services/rues/repository";
 
 export async function handler({
   debug = false,

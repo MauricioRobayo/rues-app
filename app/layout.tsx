@@ -1,5 +1,5 @@
-import { Logo } from "@/app/(search)/components/Logo";
-import { Nit } from "@/app/(search)/components/Nit";
+import { Logo } from "@/app/components/Logo";
+import { Nit } from "@/app/components/Nit";
 import { GoogleTagManager } from "@next/third-parties/google";
 import { Box, Flex, Text, Theme } from "@radix-ui/themes";
 import type { Metadata } from "next";
@@ -8,7 +8,7 @@ import "./globals.css";
 import { PageContainer } from "@/app/components/PageContainer";
 import { Link } from "@/app/components/Link";
 import NextTopLoader from "nextjs-toploader";
-import { Recaptcha } from "@/app/(search)/components/Recaptcha";
+import { Recaptcha } from "@/app/components/Recaptcha";
 
 export const metadata: Metadata = {
   title: "Registro NIT",

@@ -1,4 +1,4 @@
-import { tokensRepository } from "@/app/repositories/tokens";
+import { tokensRepository } from "@/app/services/tokens/repository";
 import pRetry from "p-retry";
 import { cache } from "react";
 

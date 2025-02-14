@@ -2,7 +2,7 @@
 
 import { searchByCompanyName } from "@/app/(search)/actions";
 import { SearchResults } from "@/app/(search)/components/SearchResults";
-import { useNormalizedCompanyName } from "@/app/(search)/hooks/useNormalizedCompanyName";
+import { useNormalizedCompanyName } from "@/app/hooks/useNormalizedCompanyName";
 import { Action, getRecaptchaToken } from "@/app/lib/getRecapchaToken";
 import { MagnifyingGlassIcon } from "@radix-ui/react-icons";
 import {
