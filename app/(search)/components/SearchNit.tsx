@@ -1,9 +1,9 @@
 "use client";
 
-import { Link } from "@/app/shared/components/Link";
-import { BASE_URL } from "@/app/shared/lib/constants";
-import { formatNit } from "@/app/shared/lib/formatNit";
-import { validateNit } from "@/app/shared/lib/validateNit";
+import { Link } from "@/app/components/Link";
+import { BASE_URL } from "@/app/lib/constants";
+import { formatNit } from "@/app/lib/formatNit";
+import { validateNit } from "@/app/lib/validateNit";
 import {
   CheckCircledIcon,
   CrossCircledIcon,

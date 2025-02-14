@@ -1,11 +1,11 @@
-import { mapBusinessEstablishmentToBusinessEstablishmentDto } from "@/app/shared/mappers/mapBusinessEstablishmentToBusinessEstablishmentDto";
-import type { CompanyDto } from "@/app/[company]/types/CompanyDto";
-import { formatDetailsDate } from "@/app/shared/lib/formatDetailsDate";
-import { formatNit } from "@/app/shared/lib/formatNit";
-import { parseEconomicActivities } from "@/app/shared/lib/parseEconomicActivities";
-import { slugifyCompanyName } from "@/app/shared/lib/slugifyComponentName";
-import { yearsDoingBusinesses } from "@/app/shared/lib/yearsDoingBusinesses";
-import type { ConsolidatedCompanyInfo as ConsolidatedCompany } from "@/app/shared/services/rues/ruesService";
+import { mapBusinessEstablishmentToBusinessEstablishmentDto } from "@/app/mappers/mapBusinessEstablishmentToBusinessEstablishmentDto";
+import { formatDetailsDate } from "@/app/lib/formatDetailsDate";
+import { formatNit } from "@/app/lib/formatNit";
+import { parseEconomicActivities } from "@/app/lib/parseEconomicActivities";
+import { slugifyCompanyName } from "@/app/lib/slugifyComponentName";
+import { yearsDoingBusinesses } from "@/app/lib/yearsDoingBusinesses";
+import type { ConsolidatedCompanyInfo as ConsolidatedCompany } from "@/app/services/rues/ruesService";
+import type { CompanyDto } from "@/app/types/CompanyDto";
 
 export function mapConsolidatedCompanyToCompanyDto({
   rues,

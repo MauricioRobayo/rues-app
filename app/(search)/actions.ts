@@ -1,9 +1,9 @@
 "use server";
 
-import { Action } from "@/app/shared/lib/getRecapchaToken";
-import { verifyRecaptcha } from "@/app/shared/lib/verifyRecaptcha";
-import { mapConsolidatedCompanyToCompanyDto } from "@/app/shared/mappers/mapConsolidatedCompanyToCompanyDto";
-import { advancedSearch } from "@/app/shared/services/rues/ruesService";
+import { Action } from "@/app/lib/getRecapchaToken";
+import { verifyRecaptcha } from "@/app/lib/verifyRecaptcha";
+import { mapConsolidatedCompanyToCompanyDto } from "@/app/mappers/mapConsolidatedCompanyToCompanyDto";
+import { advancedSearch } from "@/app/services/rues/ruesService";
 import { unstable_cache } from "next/cache";
 
 export async function searchByCompanyName({

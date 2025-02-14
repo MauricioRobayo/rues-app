@@ -1,7 +1,7 @@
 "use client";
 
-import { useIsClient } from "@/app/shared/hooks/useIsClient";
-import { useRevalidatePath } from "@/app/shared/hooks/useRevalidatePath";
+import { useIsClient } from "@/app/hooks/useIsClient";
+import { useRevalidatePath } from "@/app/hooks/useRevalidatePath";
 import { SymbolIcon } from "@radix-ui/react-icons";
 import { Flex, IconButton, Text } from "@radix-ui/themes";
 import { formatDistanceToNow } from "date-fns";

@@ -3,7 +3,7 @@ import dotenv from "dotenv";
 dotenv.config({ path: ".env.local" });
 
 import { chambersRepository } from "@/app/repositories/chambers";
-import { tokensService } from "@/app/shared/services/tokens/tokensService";
+import { tokensService } from "@/app/services/tokens/tokensService";
 import { advancedSearch, getFile } from "@mauriciorobayo/rues-api";
 import * as cheerio from "cheerio";
 

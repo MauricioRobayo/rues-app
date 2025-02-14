@@ -5,8 +5,8 @@ import { Box, Flex, Text, Theme } from "@radix-ui/themes";
 import type { Metadata } from "next";
 import { Email } from "react-obfuscate-email";
 import "./globals.css";
-import { PageContainer } from "@/app/shared/components/PageContainer";
-import { Link } from "@/app/shared/components/Link";
+import { PageContainer } from "@/app/components/PageContainer";
+import { Link } from "@/app/components/Link";
 import NextTopLoader from "nextjs-toploader";
 import { Recaptcha } from "@/app/(search)/components/Recaptcha";
 

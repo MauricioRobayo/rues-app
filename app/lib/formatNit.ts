@@ -1,5 +1,5 @@
-import { numberFormatter } from "@/app/shared/lib/formatters";
-import { validateNit } from "@/app/shared/lib/validateNit";
+import { numberFormatter } from "@/app/lib/formatters";
+import { validateNit } from "@/app/lib/validateNit";
 import { getVerificationDigit } from "nit-verifier";
 
 export function formatNit(

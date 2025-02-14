@@ -1,5 +1,5 @@
 import { companiesRepository } from "@/app/repositories/companies";
-import { MAX_URLS_PER_SITEMAP } from "@/app/shared/lib/constants";
+import { MAX_URLS_PER_SITEMAP } from "@/app/lib/constants";
 
 export const getTotalSitemaps = async () => {
   const total = await companiesRepository.count();

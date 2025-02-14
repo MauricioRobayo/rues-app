@@ -1,4 +1,4 @@
-import type { CompanyDto } from "@/app/[company]/types/CompanyDto";
+import type { CompanyDto } from "@/app/types/CompanyDto";
 
 export function companyDescription(company: CompanyDto) {
   let description = `${company.name} con NIT ${company.fullNit}`;

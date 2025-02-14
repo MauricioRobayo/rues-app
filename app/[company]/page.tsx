@@ -10,19 +10,15 @@ import PhoneNumbers from "@/app/[company]/components/PhoneNumbers";
 import { ReadMore } from "@/app/[company]/components/ReadMore";
 import { RetrievedOn } from "@/app/[company]/components/RetrievedOn";
 import { ToggleContent } from "@/app/[company]/components/ToogleContent";
-import type { CompanyDto } from "@/app/[company]/types/CompanyDto";
 import { companiesRepository } from "@/app/repositories/companies";
-import { CompanyStatusBadge } from "@/app/shared/components/CompanyStatusBadge";
-import { PageContainer } from "@/app/shared/components/PageContainer";
-import { BASE_URL } from "@/app/shared/lib/constants";
-import { currencyFormatter } from "@/app/shared/lib/formatters";
-import { parseCompanyPathSegment } from "@/app/shared/lib/parseCompanyPathSegment";
-import { slugifyCompanyName } from "@/app/shared/lib/slugifyComponentName";
-import { validateNit } from "@/app/shared/lib/validateNit";
-import {
-  getRuesDataByNit,
-  queryNit,
-} from "@/app/shared/services/rues/ruesService";
+import { CompanyStatusBadge } from "@/app/components/CompanyStatusBadge";
+import { PageContainer } from "@/app/components/PageContainer";
+import { BASE_URL } from "@/app/lib/constants";
+import { currencyFormatter } from "@/app/lib/formatters";
+import { parseCompanyPathSegment } from "@/app/lib/parseCompanyPathSegment";
+import { slugifyCompanyName } from "@/app/lib/slugifyComponentName";
+import { validateNit } from "@/app/lib/validateNit";
+import { getRuesDataByNit, queryNit } from "@/app/services/rues/ruesService";
 import { GoogleMapsEmbed } from "@next/third-parties/google";
 import {
   Box,
@@ -42,6 +38,7 @@ import { unstable_cache } from "next/cache";
 import { notFound, permanentRedirect } from "next/navigation";
 import { after } from "next/server";
 import { cache, Suspense } from "react";
+import type { CompanyDto } from "@/app/types/CompanyDto";
 
 interface PageProps {
   params: Promise<{ company: string }>;

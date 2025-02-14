@@ -1,7 +1,7 @@
 "use client";
 
-import { PageContainer } from "@/app/shared/components/PageContainer";
-import { useRevalidatePath } from "@/app/shared/hooks/useRevalidatePath";
+import { PageContainer } from "@/app/components/PageContainer";
+import { useRevalidatePath } from "@/app/hooks/useRevalidatePath";
 import { Box, Button, Flex, Heading } from "@radix-ui/themes";
 
 export function ErrorRecovery({ reset }: { reset?: () => void }) {

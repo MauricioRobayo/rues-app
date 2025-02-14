@@ -1,4 +1,4 @@
-import { parseDetailsDate } from "@/app/shared/lib/parseDetailsDate";
+import { parseDetailsDate } from "@/app/lib/parseDetailsDate";
 
 export const dateFormatter = new Intl.DateTimeFormat("es-CO", {
   dateStyle: "long",

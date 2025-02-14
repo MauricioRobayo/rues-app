@@ -1,9 +1,9 @@
-import { BusinessEstablishmentDto } from "@/app/[company]/types/BusinessEstablishmentDto";
-import type { TourismRegistryDto } from "@/app/[company]/types/TourismRegistryDto";
-import { formatDetailsDate } from "@/app/shared/lib/formatDetailsDate";
-import { getPhoneNumbers } from "@/app/shared/lib/getPhoneNumbers";
-import { parseEconomicActivities } from "@/app/shared/lib/parseEconomicActivities";
-import { yearsDoingBusinesses } from "@/app/shared/lib/yearsDoingBusinesses";
+import { formatDetailsDate } from "@/app/lib/formatDetailsDate";
+import { getPhoneNumbers } from "@/app/lib/getPhoneNumbers";
+import { parseEconomicActivities } from "@/app/lib/parseEconomicActivities";
+import { yearsDoingBusinesses } from "@/app/lib/yearsDoingBusinesses";
+import type { BusinessEstablishmentDto } from "@/app/types/BusinessEstablishmentDto";
+import type { TourismRegistryDto } from "@/app/types/TourismRegistryDto";
 import type { StoreFront, TourismRegistry } from "@mauriciorobayo/rues-api";
 
 export function mapStoreFrontToEstablishmentDto(

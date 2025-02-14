@@ -1,9 +1,9 @@
-import { mapCompanyRecordToCompanyDto } from "@/app/shared/mappers/mapCompanyRecordToCompanyDto";
-import { mapConsolidatedCompanyToCompanyDto } from "@/app/shared/mappers/mapConsolidatedCompanyToCompanyDto";
-import { getSiisInfo, type SiisData } from "@/app/[company]/services/siis";
+import { mapCompanyRecordToCompanyDto } from "@/app/mappers/mapCompanyRecordToCompanyDto";
+import { mapConsolidatedCompanyToCompanyDto } from "@/app/mappers/mapConsolidatedCompanyToCompanyDto";
+import { getSiisInfo, type SiisData } from "@/app/services/siis";
 import { companiesRepository } from "@/app/repositories/companies";
-import { VALID_RUES_CATEGORIES } from "@/app/shared/lib/constants";
-import { processAdvancedSearchResults } from "@/app/shared/services/rues/processAdvancesSearchResults";
+import { VALID_RUES_CATEGORIES } from "@/app/lib/constants";
+import { processAdvancedSearchResults } from "@/app/services/rues/processAdvancesSearchResults";
 import {
   getLegalRepresentativePowers,
   type BusinessEstablishmentsResponse,
@@ -12,7 +12,7 @@ import {
 } from "@mauriciorobayo/rues-api";
 import * as RUES from "@mauriciorobayo/rues-api";
 import pRetry, { AbortError } from "p-retry";
-import { tokensService } from "@/app/shared/services/tokens/tokensService";
+import { tokensService } from "@/app/services/tokens/tokensService";
 
 export interface ConsolidatedCompanyInfo {
   details?: File;
