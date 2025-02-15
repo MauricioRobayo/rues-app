@@ -1,13 +1,13 @@
 "use client";
 
 import { Box, Button } from "@radix-ui/themes";
-import { useReducer } from "react";
+import { useReducer, type ReactNode } from "react";
 
-export function ExpandableList<T>({
+export function ExpandableList({
   items,
   initialVisibleCount = 10,
 }: {
-  items: T[];
+  items: ReactNode[];
   initialVisibleCount?: number;
 }) {
   const [shouldShowAll, toggleShouldShowAll] = useReducer(
