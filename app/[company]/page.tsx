@@ -101,6 +101,7 @@ export default async function page({ params }: PageProps) {
       value: (
         <Flex align="center" gap="2">
           <Code variant="ghost">{data.registrationNumber}</Code>
+          <CopyButton value={data.registrationNumber} />
           <CompanyStatusBadge isActive={data.isActive} />
         </Flex>
       ),

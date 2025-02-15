@@ -9,16 +9,14 @@ export function CopyButton({ value }: { value: string | number }) {
   return (
     <Flex gap="2">
       <Tooltip
-        content={isCopied ? "¡Copiado!" : "Copiar"}
+        content={isCopied ? "Copiado" : "Copiar"}
         open={isCopied ? true : undefined}
-        onOpenChange={isCopied ? () => null : undefined}
       >
         <IconButton
           size="1"
           aria-label="Copiar valor"
           variant="ghost"
           onClick={handleCopy}
-          disabled={isCopied}
         >
           {isCopied ? (
             <AccessibleIcon label="Valor copiado">
