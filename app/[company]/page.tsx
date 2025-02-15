@@ -10,6 +10,7 @@ import { LegalRepresentatives } from "@/app/[company]/components/LegalRepresenta
 import PhoneNumbers from "@/app/[company]/components/PhoneNumbers";
 import { ReadMore } from "@/app/[company]/components/ReadMore";
 import { RetrievedOn } from "@/app/[company]/components/RetrievedOn";
+import { ExpandableList } from "@/app/[company]/components/ExpandableList";
 import { ToggleContent } from "@/app/[company]/components/ToogleContent";
 import { CompanyStatusBadge } from "@/app/components/CompanyStatusBadge";
 import { PageContainer } from "@/app/components/PageContainer";
@@ -100,6 +101,7 @@ export default async function page({ params }: PageProps) {
       value: (
         <Flex align="center" gap="2">
           <Code variant="ghost">{data.registrationNumber}</Code>
+          <CopyButton value={data.registrationNumber} />
           <CompanyStatusBadge isActive={data.isActive} />
         </Flex>
       ),
@@ -177,7 +179,9 @@ export default async function page({ params }: PageProps) {
             <Code variant="ghost">{data.bidderId.padStart(8, "0")}</Code>
             <CopyButton value={data.bidderId.padStart(8, "0")} />
           </Flex>
-          <BidderRecords bidderId={data.bidderId} />
+          <Suspense fallback={<Spinner />}>
+            <BidderRecords bidderId={data.bidderId} />
+          </Suspense>
         </Flex>
       ) : null,
     },
@@ -278,7 +282,9 @@ export default async function page({ params }: PageProps) {
           },
           {
             label: "DV del prestador",
-            value: <Code variant="ghost">registry.providerDV</Code>,
+            value: registry.providerDV && (
+              <Code variant="ghost">{registry.providerDV}</Code>
+            ),
           },
           { label: "Representante legal", value: registry.legalRepresentative },
           {
@@ -536,44 +542,47 @@ export default async function page({ params }: PageProps) {
                   </Heading>
                   <Flex asChild direction="column" gap="2">
                     <ul>
-                      {establishments.map((establishment) => {
-                        return (
-                          <li
-                            key={
-                              establishment.id ??
-                              establishment.tourismRegistries.at(0)?.id
-                            }
-                          >
-                            <details>
-                              <summary>
-                                {establishment.name ??
-                                  `RNT ${establishment.tourismRegistries.at(0)?.id}`}
-                              </summary>
-                              <Flex my="4" pl="4" direction="column" gap="4">
-                                <CompanyDetails
-                                  details={establishment.details}
-                                />
-                                {(establishment.tourismRegistries ?? []).map(
-                                  (registry) => (
-                                    <Flex
-                                      key={registry.id}
-                                      direction="column"
-                                      gap="4"
-                                    >
-                                      <Heading as="h4" size="4">
-                                        Registro Nacional de Turismo
-                                      </Heading>
-                                      <CompanyDetails
-                                        details={registry.details}
-                                      />
-                                    </Flex>
-                                  ),
-                                )}
-                              </Flex>
-                            </details>
-                          </li>
-                        );
-                      })}
+                      <ExpandableList
+                        initialVisibleCount={25}
+                        items={establishments.map((establishment) => {
+                          return (
+                            <li
+                              key={
+                                establishment.id ??
+                                establishment.tourismRegistries.at(0)?.id
+                              }
+                            >
+                              <details>
+                                <summary>
+                                  {establishment.name ??
+                                    `RNT ${establishment.tourismRegistries.at(0)?.id}`}
+                                </summary>
+                                <Flex my="4" pl="4" direction="column" gap="4">
+                                  <CompanyDetails
+                                    details={establishment.details}
+                                  />
+                                  {(establishment.tourismRegistries ?? []).map(
+                                    (registry) => (
+                                      <Flex
+                                        key={registry.id}
+                                        direction="column"
+                                        gap="4"
+                                      >
+                                        <Heading as="h4" size="4">
+                                          Registro Nacional de Turismo
+                                        </Heading>
+                                        <CompanyDetails
+                                          details={registry.details}
+                                        />
+                                      </Flex>
+                                    ),
+                                  )}
+                                </Flex>
+                              </details>
+                            </li>
+                          );
+                        })}
+                      />
                     </ul>
                   </Flex>
                 </Section>
