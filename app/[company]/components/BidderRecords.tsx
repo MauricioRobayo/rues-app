@@ -1,3 +1,4 @@
+import { ExpandableList } from "@/app/[company]/components/ExpandableList";
 import { COMPANY_REVALIDATION_TIME } from "@/app/lib/constants";
 import { ccbService } from "@/app/services/ccb/service";
 import { Code, Flex, Text } from "@radix-ui/themes";
@@ -12,18 +13,20 @@ export async function BidderRecords({ bidderId }: { bidderId: string }) {
 
   return (
     <ul>
-      {records.map((record) => (
-        <li key={record.id}>
-          <Flex align="center" asChild gap="2">
-            <Text size="2">
-              <Code variant="ghost" color="gray">
-                {record.date}
-              </Code>
-              {record.type}
-            </Text>
-          </Flex>
-        </li>
-      ))}
+      <ExpandableList
+        items={records.map((record) => (
+          <li key={record.id}>
+            <Flex align="center" asChild gap="2">
+              <Text size="2">
+                <Code variant="ghost" color="gray">
+                  {record.date}
+                </Code>
+                {record.type}
+              </Text>
+            </Flex>
+          </li>
+        ))}
+      />
     </ul>
   );
 }
