@@ -42,7 +42,7 @@ export const tokensRepository = {
     const response = await getCcbToken();
 
     if (response.status === "error") {
-      throw new Error("Failed to get new RUES token");
+      throw new Error("Failed to get new CCB token");
     }
 
     await redis.set(tokenKey.ccb, response.data.access_token, {
