@@ -15,7 +15,9 @@ export async function Chamber({ code }: { code: number }) {
     {
       label: "Nombre",
       value: chamber.url ? (
-        <Link href={chamber.url}>{chamber.name}</Link>
+        <Link href={chamber.url} target="_blank">
+          {chamber.name}
+        </Link>
       ) : (
         chamber.name
       ),
@@ -24,11 +26,16 @@ export async function Chamber({ code }: { code: number }) {
     { label: "Ciudad", value: chamber.city },
     { label: "Departamento", value: chamber.state },
     { label: "Teléfono", value: chamber.phoneNumber },
-    { label: "Correo electrónico", value: chamber.email },
+    {
+      label: "Correo electrónico",
+      value: chamber.email ? (
+        <Link href={`mailto:${chamber.email}`}>{chamber.email}</Link>
+      ) : null,
+    },
     {
       label: "Certificado Cámara de Comercio",
       value: chamber.certificateUrl && (
-        <Link href={chamber.certificateUrl}>
+        <Link href={chamber.certificateUrl} target="_blank">
           Solicitar certificado en línea
         </Link>
       ),
