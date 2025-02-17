@@ -1,9 +1,11 @@
-import { DataList } from "@radix-ui/themes";
+import { LearnMore } from "@/app/components/LearnMore";
+import { DataList, Flex } from "@radix-ui/themes";
 import type { ReactNode } from "react";
 
 export interface CompanyDetail {
   label: string;
   value: ReactNode;
+  learnMore?: ReactNode;
 }
 
 export function CompanyDetails({
@@ -24,7 +26,14 @@ export function CompanyDetails({
         }
         return (
           <DataList.Item key={detail.label}>
-            <DataList.Label>{detail.label}</DataList.Label>
+            <DataList.Label>
+              <Flex align="center" gap="2">
+                {detail.label}
+                {detail.learnMore && (
+                  <LearnMore label={detail.label}>{detail.learnMore}</LearnMore>
+                )}
+              </Flex>
+            </DataList.Label>
             <DataList.Value>{detail.value}</DataList.Value>
           </DataList.Item>
         );
