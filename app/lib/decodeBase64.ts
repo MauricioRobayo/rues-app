@@ -15,7 +15,7 @@ export function decodeBase64(str?: string, depth = 0) {
     }
     try {
       const decoded = iconv.decode(buffer, encoding);
-      if (encoding === "ascii") {
+      if (encoding === "ascii" && confidence > 0.85) {
         return decodeBase64(decoded, depth + 1);
       }
       return decoded.trim();
@@ -24,5 +24,5 @@ export function decodeBase64(str?: string, depth = 0) {
     }
   }
 
-  return null;
+  return str;
 }
