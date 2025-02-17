@@ -10,6 +10,8 @@ import { Link } from "@/app/components/Link";
 import NextTopLoader from "nextjs-toploader";
 import { Recaptcha } from "@/app/components/Recaptcha";
 
+const siteKey = process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY ?? "";
+
 export const metadata: Metadata = {
   title: "Registro NIT",
   description: "Consulta de registros empresariales y NIT",
@@ -22,7 +24,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="es-CO">
-      <Recaptcha />
+      <Recaptcha siteKey={siteKey} language="es-419" />
       <GoogleTagManager gtmId={process.env.NEXT_PUBLIC_GTM_ID ?? ""} />
       <body>
         <Theme accentColor="blue">
