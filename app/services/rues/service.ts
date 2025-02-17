@@ -147,7 +147,7 @@ export async function getRuesDataByNit({
   }
   const [fileResponse, businessEstablishmentsResponse, company, siis] =
     await Promise.all([
-      RUES.getFile(rues.id_rm),
+      RUES.getFile({ registrationId: rues.id_rm }),
       RUES.getBusinessEstablishments({
         query: RUES.getBusinessDetails(rues.id_rm),
         token,

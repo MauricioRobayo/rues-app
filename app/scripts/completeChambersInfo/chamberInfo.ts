@@ -63,7 +63,7 @@ async function main() {
             null);
 
       const file = company?.id_rm
-        ? await getFile(company.id_rm)
+        ? await getFile({ registrationId: company.id_rm })
         : (console.warn("no id_rm on", company), null);
 
       const certificateUrl =
