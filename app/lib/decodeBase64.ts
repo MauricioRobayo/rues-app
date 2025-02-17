@@ -22,7 +22,7 @@ export function decodeBase64(str?: string, depth = 0) {
       }
       return decoded.trim();
     } catch (err) {
-      console.log("decodeBase64 decoding failed:", encoding, str, err);
+      console.error("decodeBase64 decoding failed:", encoding, str, err);
     }
   }
 
