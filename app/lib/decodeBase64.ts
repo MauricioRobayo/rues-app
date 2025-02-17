@@ -1,8 +1,10 @@
 import jschardet from "jschardet";
 import iconv from "iconv-lite";
 
+const MAX_DEPTH = 5;
+
 export function decodeBase64(str?: string, depth = 0) {
-  if (!str || depth == 3) {
+  if (!str || depth == MAX_DEPTH) {
     return str;
   }
 
