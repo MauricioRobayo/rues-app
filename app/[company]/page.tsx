@@ -82,6 +82,13 @@ export default async function page({ params }: PageProps) {
     {
       label: "Razón social",
       value: data.name,
+      learnMore: (
+        <Box>
+          Es el nombre con el que se constituye una empresa y que aparece como
+          tal en el documento público o privado de constitución o en los
+          documentos posteriores que la reforman.
+        </Box>
+      ),
     },
     {
       label: "NIT",
@@ -91,10 +98,14 @@ export default async function page({ params }: PageProps) {
           <CopyButton value={data.nit} />
         </Flex>
       ),
+      learnMore:
+        "Es el Número de Identificación Tributaria, por sus siglas, es el identificador numérico único utilizado para registrar la administración tributaria de las personas naturales y jurídicas. El NIT consta de nueve dígitos y se otorga a través de la Dirección de Impuestos y Aduanas Nacionales (DIAN) con el fin de llevar un registro detallado de las obligaciones tributarias por las que deben responder los colombianos.",
     },
     {
       label: "Dígito de verificación",
       value: <Code variant="ghost">{data.verificationDigit}</Code>,
+      learnMore:
+        "Es un número que va en un rango del cero (0) a nueve (9) y se ubica al final del NIT. Su objetivo es verificar la autenticidad del NIT.",
     },
     {
       label: "Matrícula",
@@ -105,6 +116,8 @@ export default async function page({ params }: PageProps) {
           <CompanyStatusBadge isActive={data.isActive} />
         </Flex>
       ),
+      learnMore:
+        "La Matrícula Mercantil es el registro que deben hacer los comerciantes, ya sean personas naturales o jurídicas, y los establecimientos de comercio, en las cámaras de comercio con jurisdicción en el lugar donde van a desarrollar su actividad y donde va a funcionar el establecimiento de comercio, para dar cumplimiento a una de las obligaciones mercantiles dispuestas en el Código de comercio.",
     },
     {
       label: "Estado",

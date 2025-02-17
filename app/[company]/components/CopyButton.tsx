@@ -16,6 +16,7 @@ export function CopyButton({ value }: { value: string | number }) {
           size="1"
           aria-label="Copiar valor"
           variant="ghost"
+          color="gray"
           onClick={handleCopy}
         >
           {isCopied ? (
