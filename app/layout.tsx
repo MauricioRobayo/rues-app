@@ -28,7 +28,7 @@ export default function RootLayout({
       <GoogleTagManager gtmId={process.env.NEXT_PUBLIC_GTM_ID ?? ""} />
       <body>
         <Theme accentColor="blue">
-          <NextTopLoader />
+          <NextTopLoader showSpinner={false} />
           <Flex direction="column" style={{ height: "100vh" }}>
             <Box style={{ background: "var(--blue-a2)" }}>
               <PageContainer py="4">
