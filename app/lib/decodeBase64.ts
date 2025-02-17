@@ -4,7 +4,7 @@ import iconv from "iconv-lite";
 const MAX_DEPTH = 5;
 
 export function decodeBase64(str?: string, depth = 0) {
-  if (!str || depth == MAX_DEPTH) {
+  if (!str || depth === MAX_DEPTH) {
     return str;
   }
 
