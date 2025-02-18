@@ -1,7 +1,7 @@
 import { Details } from "@/app/[company]/components/Details";
 import { RevalidateLegalRepresentative } from "@/app/[company]/components/LegalRepresentatives/RevalidateLegalRepresentativePowers";
 import { COMPANY_REVALIDATION_TIME } from "@/app/lib/constants";
-import { getPowers } from "@/app/services/rues/service";
+import { getLegalPowers } from "@/app/services/rues/service";
 import { Box, Text } from "@radix-ui/themes";
 import { unstable_cache } from "next/cache";
 
@@ -54,7 +54,7 @@ const getPowersCached = ({
   const tag = `${chamberCode}${registrationNumber}`;
   return unstable_cache(
     () =>
-      getPowers({
+      getLegalPowers({
         chamberCode,
         registrationNumber,
       }),

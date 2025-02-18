@@ -42,6 +42,5 @@ export async function revalidateTag({
     return null;
   }
 
-  console.log(">>>>", tag);
   _revalidateTag(tag);
 }

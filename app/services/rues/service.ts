@@ -14,11 +14,6 @@ import * as RUES from "@mauriciorobayo/rues-api";
 import pRetry, { AbortError } from "p-retry";
 import { tokensService } from "@/app/services/tokens/service";
 
-// The legalRepresentativePowers request has
-// given very long timeouts which have ended
-// in the whole page timing out.
-const timeout = 2_000;
-
 export interface ConsolidatedCompanyInfo {
   details?: File;
   establishments?: BusinessEstablishmentsResponse["registros"];
@@ -199,13 +194,17 @@ async function getCompanyInfo(nit: number) {
   }
 }
 
-export async function getPowers({
+export async function getLegalPowers({
   chamberCode,
   registrationNumber,
 }: {
   chamberCode: string;
   registrationNumber: string;
 }) {
+  // The legalRepresentativePowers request has
+  // given very long timeouts which have ended
+  // in the whole page timing out.
+  const timeout = 2_000;
   const abortController = new AbortController();
   setTimeout(() => {
     abortController.abort();
@@ -225,6 +224,12 @@ export async function getPowers({
   }
 
   if (response.status === "error") {
+    if (
+      response.error instanceof DOMException &&
+      response.error.name === "AbortError"
+    ) {
+      console.error("getLegalPowers timeout", response);
+    }
     return null;
   }
 
