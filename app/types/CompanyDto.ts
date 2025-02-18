@@ -10,7 +10,7 @@ export interface CompanyDto {
   broadIndustry?: string;
   cancellationDate: string | null;
   category?: string;
-  chamber: { name: string; code: number };
+  chamber: { name: string; code: string };
   city?: string;
   economicActivities: { label: string; code: string; description: string }[];
   email?: string;

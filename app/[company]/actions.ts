@@ -2,9 +2,12 @@
 
 import { Action } from "@/app/lib/getRecapchaToken";
 import { verifyRecaptcha } from "@/app/lib/verifyRecaptcha";
-import { revalidatePath } from "next/cache";
+import {
+  revalidatePath as _revalidatePath,
+  revalidateTag as _revalidateTag,
+} from "next/cache";
 
-export async function revalidate({
+export async function revalidatePath({
   path,
   recaptchaToken,
 }: {
@@ -14,11 +17,30 @@ export async function revalidate({
   if (
     !(await verifyRecaptcha({
       token: recaptchaToken,
-      action: Action.REVALIDATE_COMPANY,
+      action: Action.REVALIDATE_PATH,
     }))
   ) {
     return null;
   }
 
-  revalidatePath(path);
+  _revalidatePath(path);
+}
+
+export async function revalidateTag({
+  tag,
+  recaptchaToken,
+}: {
+  tag: string;
+  recaptchaToken: string;
+}) {
+  if (
+    !(await verifyRecaptcha({
+      token: recaptchaToken,
+      action: Action.REVALIDATE_TAG,
+    }))
+  ) {
+    return null;
+  }
+
+  _revalidateTag(tag);
 }

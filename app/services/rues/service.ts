@@ -147,7 +147,7 @@ export async function getRuesDataByNit({
   }
   const [fileResponse, businessEstablishmentsResponse, company, siis] =
     await Promise.all([
-      RUES.getFile(rues.id_rm),
+      RUES.getFile({ registrationId: rues.id_rm }),
       RUES.getBusinessEstablishments({
         query: RUES.getBusinessDetails(rues.id_rm),
         token,
@@ -194,20 +194,29 @@ async function getCompanyInfo(nit: number) {
   }
 }
 
-export async function getPowers({
+export async function getLegalPowers({
   chamberCode,
-  registrationId,
+  registrationNumber,
 }: {
-  chamberCode: number;
-  registrationId: string;
+  chamberCode: string;
+  registrationNumber: string;
 }) {
+  // The legalRepresentativePowers request has
+  // given very long timeouts which have ended
+  // in the whole page timing out.
+  const timeout = 2_000;
+  const abortController = new AbortController();
+  setTimeout(() => {
+    abortController.abort();
+  }, timeout);
   const token = await tokensService.getToken();
   const response = await getLegalRepresentativePowers({
     query: {
-      chamberCode: String(chamberCode).padStart(2, "0"),
-      businessRegistrationNumber: registrationId.padStart(10, "0"),
+      chamberCode,
+      registrationNumber,
     },
     token,
+    signal: abortController.signal,
   });
 
   if (response.statusCode === 401 || response.statusCode === 404) {
@@ -215,6 +224,12 @@ export async function getPowers({
   }
 
   if (response.status === "error") {
+    if (
+      response.error instanceof DOMException &&
+      response.error.name === "AbortError"
+    ) {
+      console.error("getLegalPowers timeout", response);
+    }
     return null;
   }
 

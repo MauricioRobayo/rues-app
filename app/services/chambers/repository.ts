@@ -4,17 +4,17 @@ import { eq, getTableColumns } from "drizzle-orm";
 
 export const chambersRepository = {
   findChamberByCode(
-    code: number,
+    code: string,
     columns?: (keyof typeof chambers.$inferSelect)[],
   ) {
     return db.query.chambers.findFirst({
-      where: eq(chambers.code, code),
+      where: eq(chambers.id, Number(code)), // TODO: change to chamberCode
       columns: columns
         ? Object.fromEntries(columns.map((column) => [column, true]))
         : undefined,
     });
   },
-  update(code: number, data: Partial<typeof chambers.$inferInsert>) {
+  update(code: string, data: Partial<typeof chambers.$inferInsert>) {
     return db.update(chambers).set(data).where(eq(chambers.code, code));
   },
   getAll<T extends (keyof typeof chambers.$inferSelect)[]>(fields?: T) {

@@ -1,6 +1,7 @@
 export const Action = {
   SEARCH: "SEARCH",
-  REVALIDATE_COMPANY: "REVALIDATE_COMPANY",
+  REVALIDATE_PATH: "REVALIDATE_PATH",
+  REVALIDATE_TAG: "REVALIDATE_TAG",
 } as const;
 
 export function getRecaptchaToken(action: keyof typeof Action) {

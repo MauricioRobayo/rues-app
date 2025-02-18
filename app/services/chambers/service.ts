@@ -1,7 +1,7 @@
 import { chambersRepository } from "@/app/services/chambers/repository";
 import pRetry from "p-retry";
 
-export async function getChamber(code: number) {
+export async function getChamber(code: string) {
   try {
     const chamber = await pRetry(
       () =>
