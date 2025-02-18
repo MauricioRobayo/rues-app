@@ -8,14 +8,17 @@ export const chambersRepository = {
     columns?: (keyof typeof chambers.$inferSelect)[],
   ) {
     return db.query.chambers.findFirst({
-      where: eq(chambers.id, Number(code)), // TODO: change to chamberCode
+      where: eq(chambers.code, code),
       columns: columns
         ? Object.fromEntries(columns.map((column) => [column, true]))
         : undefined,
     });
   },
-  update(code: string, data: Partial<typeof chambers.$inferInsert>) {
+  updateByCode(code: string, data: Partial<typeof chambers.$inferInsert>) {
     return db.update(chambers).set(data).where(eq(chambers.code, code));
+  },
+  update(id: number, data: Partial<typeof chambers.$inferInsert>) {
+    return db.update(chambers).set(data).where(eq(chambers.id, id));
   },
   getAll<T extends (keyof typeof chambers.$inferSelect)[]>(fields?: T) {
     const allColumns = getTableColumns(chambers);
