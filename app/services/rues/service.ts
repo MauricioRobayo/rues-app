@@ -219,17 +219,8 @@ export async function getLegalPowers({
     signal: abortController.signal,
   });
 
-  if (response.statusCode === 401 || response.statusCode === 404) {
-    throw new AbortError(`queryNit failed ${JSON.stringify(response)}`);
-  }
-
   if (response.status === "error") {
-    if (
-      response.error instanceof DOMException &&
-      response.error.name === "AbortError"
-    ) {
-      console.error("getLegalPowers timeout", response);
-    }
+    console.log("getLegalPowers failed", response);
     return null;
   }
 

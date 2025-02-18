@@ -1,15 +1,12 @@
 import { Button } from "@radix-ui/themes";
-import type { ReactNode } from "react";
+import type { ComponentProps, ReactNode } from "react";
 
-export function Details({
-  children,
-  summary,
-}: {
-  children: ReactNode;
+interface DetailsProps extends ComponentProps<"details"> {
   summary: ReactNode;
-}) {
+}
+export function Details({ children, summary, ...props }: DetailsProps) {
   return (
-    <details className="group">
+    <details className="group" {...props}>
       <Button asChild>
         <summary className="group-open:hidden">{summary}</summary>
       </Button>

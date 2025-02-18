@@ -30,7 +30,7 @@ export function mapCompanyRecordToCompanyDto(data: CompanyRecord): CompanyDto {
     category: data.categoria_matricula,
     registrationDate: formatDetailsDate(data.fecha_matricula),
     yearsDoingBusinesses: yearsDoingBusinesses(data.fecha_matricula),
-    bidderId: data.inscripcion_proponente,
+    bidderId: data.inscripcion_proponente.padStart(8, "0"),
     lastRenewalYear: Number(data.ultimo_ano_renovado),
     renewalDate: formatDetailsDate(data.fecha_renovacion),
     cancellationDate: formatDetailsDate(data.fecha_cancelacion),

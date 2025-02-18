@@ -10,6 +10,7 @@ type Response<T> =
       status: "success";
       data: T;
     };
+const baseUrl = process.env.CCB_API_BASE_URL ?? "https://linea.ccb.org.co";
 
 export function getToken(): Promise<
   Response<{ access_token: string; expires_in: number }>
@@ -36,7 +37,7 @@ export interface BidderFilesResponse {
   tipoActo: string;
   fechaActo: string;
 }
-export function getBidderFiles({
+export function getBidderRecords({
   bidderId,
   token,
 }: {
@@ -72,7 +73,7 @@ async function ccbFetch<T>({
     ccbHeaders.append("authorization", `Bearer ${token}`);
   }
   const ccbPath = join("/gestionexpedientes/api/", path);
-  const url = new URL(ccbPath, "https://linea.ccb.org.co");
+  const url = new URL(ccbPath, baseUrl);
   if (query) {
     url.search = query.toString();
   }

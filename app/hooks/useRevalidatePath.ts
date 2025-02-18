@@ -1,18 +1,18 @@
-import { revalidatePath } from "@/app/[company]/actions";
+import { revalidatePathAction } from "@/app/[company]/actions";
 import { Action, getRecaptchaToken } from "@/app/lib/getRecapchaToken";
 import { useTransition } from "react";
 
 export function useRevalidatePath({ reset }: { reset?: () => void } = {}) {
   const [isPending, startTransition] = useTransition();
-  const onClickHandler = async () => {
+  const revalidatePath = async () => {
     startTransition(async () => {
       const recaptchaToken = await getRecaptchaToken(Action.REVALIDATE_PATH);
-      await revalidatePath({
+      await revalidatePathAction({
         path: window.location.pathname,
         recaptchaToken,
       });
       reset?.();
     });
   };
-  return [isPending, onClickHandler] as const;
+  return [isPending, revalidatePath] as const;
 }
