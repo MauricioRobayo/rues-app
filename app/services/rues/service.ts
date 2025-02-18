@@ -220,7 +220,6 @@ export async function getPowers({
     signal: abortController.signal,
   });
 
-  console.log(">>>> running", chamberCode, registrationNumber, response);
   if (response.statusCode === 401 || response.statusCode === 404) {
     throw new AbortError(`queryNit failed ${JSON.stringify(response)}`);
   }
