@@ -13,6 +13,7 @@ import {
 import * as RUES from "@mauriciorobayo/rues-api";
 import pRetry, { AbortError } from "p-retry";
 import { tokensService } from "@/app/services/tokens/service";
+import type { CompanyDto } from "@/app/types/CompanyDto";
 
 export interface ConsolidatedCompanyInfo {
   details?: File;
@@ -22,12 +23,24 @@ export interface ConsolidatedCompanyInfo {
   siis?: SiisData;
 }
 
-export async function queryNit(nit: number) {
+export async function queryNit(
+  nit: number,
+): Promise<
+  | { status: "success"; data: CompanyDto | null }
+  | { status: "error"; statusCode?: number; error?: unknown }
+> {
   let token = await tokensService.getToken();
   try {
     const response = await pRetry(
       async () => {
         let response = await RUES.queryNit({ nit, token });
+
+        if (response.statusCode === 404) {
+          return {
+            status: "success",
+            data: null,
+          } as const;
+        }
 
         if (response.statusCode === 401) {
           console.warn(
@@ -35,11 +48,15 @@ export async function queryNit(nit: number) {
           );
           token = await tokensService.getNewToken();
           response = await RUES.queryNit({ nit, token });
+          if (response.statusCode === 401) {
+            console.error("RUES: Authentication failed with fresh token.");
+            return {
+              status: "error",
+              statusCode: 401,
+            } as const;
+          }
         }
 
-        if (response.statusCode === 401 || response.statusCode === 404) {
-          throw new AbortError(`queryNit failed ${JSON.stringify(response)}`);
-        }
         if (response.status === "error") {
           throw new Error(`queryNit failed ${JSON.stringify(response)}`);
         }
@@ -57,17 +74,17 @@ export async function queryNit(nit: number) {
 
         return {
           data: record ? mapCompanyRecordToCompanyDto(record) : null,
-          token,
-        };
+          status: "success",
+        } as const;
       },
       {
         retries: 3,
       },
     );
     return response;
-  } catch (err) {
-    console.error(err);
-    return { data: null, token };
+  } catch (error) {
+    console.error(error);
+    return { error, status: "error" } as const;
   }
 }
 
