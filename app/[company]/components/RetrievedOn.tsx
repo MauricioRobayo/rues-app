@@ -11,7 +11,7 @@ import { useSearchParams } from "next/navigation";
 export function RetrievedOn({ retrievedOn }: { retrievedOn: number }) {
   const isClient = useIsClient();
   const searchParams = useSearchParams();
-  const { isPending, onClickHandler } = useRevalidatePath();
+  const [isPending, onClickHandler] = useRevalidatePath();
   const enableRevalidate = searchParams.get("enableRevalidate");
   const shouldShowRevalidateButton =
     enableRevalidate || Date.now() - retrievedOn > 15 * 24 * 60 * 60 * 1000;

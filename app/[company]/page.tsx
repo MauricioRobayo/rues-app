@@ -5,12 +5,11 @@ import { CopyButton } from "@/app/[company]/components/CopyButton";
 import { Details } from "@/app/[company]/components/Details";
 import { EconomicActivities } from "@/app/[company]/components/EconomicActivities";
 import { ErrorRecovery } from "@/app/[company]/components/ErrorRecovery";
-import { LegalRepresentativePowers } from "@/app/[company]/components/LegalRepresentativePowers";
-import { LegalRepresentatives } from "@/app/[company]/components/LegalRepresentatives";
+import { ExpandableList } from "@/app/[company]/components/ExpandableList";
+import { LegalRepresentatives } from "@/app/[company]/components/LegalRepresentatives/LegalRepresentatives";
 import PhoneNumbers from "@/app/[company]/components/PhoneNumbers";
 import { ReadMore } from "@/app/[company]/components/ReadMore";
 import { RetrievedOn } from "@/app/[company]/components/RetrievedOn";
-import { ExpandableList } from "@/app/[company]/components/ExpandableList";
 import { ToggleContent } from "@/app/[company]/components/ToogleContent";
 import { CompanyStatusBadge } from "@/app/components/CompanyStatusBadge";
 import { PageContainer } from "@/app/components/PageContainer";
@@ -214,23 +213,14 @@ export default async function page({ params }: PageProps) {
     },
     {
       label: "Representante legal",
-      value: (
-        <Flex direction="column" gap="2">
-          {data.legalRepresentatives && data.legalRepresentatives.length > 0 ? (
-            <LegalRepresentatives
-              legalRepresentatives={data.legalRepresentatives}
-            />
-          ) : null}
-          <Details summary="Facultades del representante legal">
-            <Suspense fallback={<Spinner />}>
-              <LegalRepresentativePowers
-                chamberCode={data.chamber.code}
-                registrationId={data.registrationNumber}
-              />
-            </Suspense>
-          </Details>
-        </Flex>
-      ),
+      value:
+        data.legalRepresentatives && data.legalRepresentatives.length > 0 ? (
+          <LegalRepresentatives
+            legalRepresentatives={data.legalRepresentatives}
+            chamberCode={data.chamber.code}
+            registrationNumber={data.registrationNumber}
+          />
+        ) : null,
     },
   ];
 

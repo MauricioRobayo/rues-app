@@ -11,11 +11,11 @@ const defaultCertificateUrl =
   "https://sii.confecamaras.co/vista/plantilla/certificados.php?empresa=";
 
 // https://www.serviciosvirtuales.com.co/es/
-const serviciosVirtuales: Record<number, string> = {
-  1: "https://www.serviciosvirtuales.com.co/es/camara/armenia/certificados/",
-  20: "https://www.serviciosvirtuales.com.co/es/camara/manizales/certificados/",
-  27: "https://www.serviciosvirtuales.com.co/es/camara/pereira/certificados/",
-  55: "https://www.serviciosvirtuales.com.co/es/camara/aburrasur/certificados/",
+const serviciosVirtuales: Record<string, string> = {
+  "01": "https://www.serviciosvirtuales.com.co/es/camara/armenia/certificados/",
+  "20": "https://www.serviciosvirtuales.com.co/es/camara/manizales/certificados/",
+  "27": "https://www.serviciosvirtuales.com.co/es/camara/pereira/certificados/",
+  "55": "https://www.serviciosvirtuales.com.co/es/camara/aburrasur/certificados/",
 };
 
 async function main() {
@@ -46,7 +46,7 @@ async function main() {
       const response = await advancedSearch({
         query: {
           razon: "de",
-          cod_camara: String(code).padStart(2, "0"),
+          cod_camara: code,
         },
         token,
       });
@@ -111,11 +111,11 @@ async function tryToGetMoreData({
   };
 }
 
-async function verifyDefaultUrl(code: number) {
+async function verifyDefaultUrl(code: string) {
   const body = {
     x_c: "c05MFPDI4pxFc",
     y_c: "c0lkdeKR4%2F0Zk",
-    cc: String(code).padStart(2, "0"),
+    cc: code.padStart(2, "0"),
     acc: 1,
   };
   const response = await fetch(

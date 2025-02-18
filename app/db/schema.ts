@@ -22,7 +22,7 @@ export const companies = sqliteTable(
 );
 export const chambers = sqliteTable("chambers", {
   id: int().primaryKey({ autoIncrement: true }),
-  code: int().unique().notNull(),
+  code: text().unique().notNull(),
   name: text().notNull(),
   city: text().notNull(),
   address: text().notNull(),

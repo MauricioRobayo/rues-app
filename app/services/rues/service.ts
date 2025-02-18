@@ -14,6 +14,11 @@ import * as RUES from "@mauriciorobayo/rues-api";
 import pRetry, { AbortError } from "p-retry";
 import { tokensService } from "@/app/services/tokens/service";
 
+// The legalRepresentativePowers request has
+// given very long timeouts which have ended
+// in the whole page timing out.
+const timeout = 2_000;
+
 export interface ConsolidatedCompanyInfo {
   details?: File;
   establishments?: BusinessEstablishmentsResponse["registros"];
@@ -196,20 +201,26 @@ async function getCompanyInfo(nit: number) {
 
 export async function getPowers({
   chamberCode,
-  registrationId,
+  registrationNumber,
 }: {
-  chamberCode: number;
-  registrationId: string;
+  chamberCode: string;
+  registrationNumber: string;
 }) {
+  const abortController = new AbortController();
+  setTimeout(() => {
+    abortController.abort();
+  }, timeout);
   const token = await tokensService.getToken();
   const response = await getLegalRepresentativePowers({
     query: {
-      chamberCode: String(chamberCode).padStart(2, "0"),
-      businessRegistrationNumber: registrationId.padStart(10, "0"),
+      chamberCode,
+      registrationNumber,
     },
     token,
+    signal: abortController.signal,
   });
 
+  console.log(">>>> running", chamberCode, registrationNumber, response);
   if (response.statusCode === 401 || response.statusCode === 404) {
     throw new AbortError(`queryNit failed ${JSON.stringify(response)}`);
   }

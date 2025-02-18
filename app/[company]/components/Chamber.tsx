@@ -4,7 +4,7 @@ import { Text, Flex, Skeleton, Link } from "@radix-ui/themes";
 import { unstable_cache } from "next/cache";
 import { cache } from "react";
 
-export async function Chamber({ code }: { code: number }) {
+export async function Chamber({ code }: { code: string }) {
   const chamber = await getChamberCached(code);
 
   if (!chamber?.name) {

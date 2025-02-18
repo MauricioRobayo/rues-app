@@ -5,7 +5,7 @@ import { useRevalidatePath } from "@/app/hooks/useRevalidatePath";
 import { Box, Button, Flex, Heading } from "@radix-ui/themes";
 
 export function ErrorRecovery({ reset }: { reset?: () => void }) {
-  const { onClickHandler, isPending } = useRevalidatePath({ reset });
+  const [isPending, onClickHandler] = useRevalidatePath({ reset });
   return (
     <PageContainer py={{ initial: "6", sm: "8" }}>
       <Flex direction="column" gap="4">
