@@ -40,7 +40,7 @@ export async function queryNit(nit: number) {
         if (response.statusCode === 401 || response.statusCode === 404) {
           throw new AbortError(`queryNit failed ${JSON.stringify(response)}`);
         }
-        if (response.status !== "success") {
+        if (response.status === "error") {
           throw new Error(`queryNit failed ${JSON.stringify(response)}`);
         }
 
@@ -106,7 +106,7 @@ export async function advancedSearch({
           );
         }
 
-        if (response.status !== "success") {
+        if (response.status === "error") {
           throw new Error(`advancedSearch failed ${JSON.stringify(response)}`);
         }
 
