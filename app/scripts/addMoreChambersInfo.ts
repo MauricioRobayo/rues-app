@@ -75,7 +75,7 @@ async function main() {
     }
 
     console.log(code, data);
-    await chambersRepository.update(code, data);
+    await chambersRepository.updateByCode(code, data);
   }
 }
 
