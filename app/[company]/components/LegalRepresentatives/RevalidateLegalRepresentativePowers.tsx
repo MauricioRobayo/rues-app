@@ -18,7 +18,7 @@ export function RevalidateLegalRepresentative({
   });
   return (
     <Button loading={isPending} onClick={onClickHandler}>
-      {Math.random() > 0 ? "Revalidate" : children}
+      {children}
     </Button>
   );
 }
