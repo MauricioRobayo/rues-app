@@ -1,31 +1,27 @@
-import { Details } from "@/app/[company]/components/Details";
-import { RevalidateLegalRepresentative } from "@/app/[company]/components/LegalRepresentatives/RevalidateLegalRepresentativePowers";
-import { COMPANY_REVALIDATION_TIME } from "@/app/lib/constants";
-import { getLegalPowers } from "@/app/services/rues/service";
-import { Box, Text } from "@radix-ui/themes";
-import { unstable_cache } from "next/cache";
+"use client";
 
-export async function LegalRepresentativePowers({
+import { Details } from "@/app/[company]/components/Details";
+import { useRevalidateTag } from "@/app/hooks/useRevalidateTag";
+import { Box, Button, Text } from "@radix-ui/themes";
+
+export function LegalRepresentativePowers({
   chamberCode,
-  registrationNumber: registrationNumber,
+  registrationNumber,
+  powers,
 }: {
   chamberCode: string;
   registrationNumber: string;
+  powers: string | null;
 }) {
-  const powers = await getPowersCached({
-    chamberCode,
-    registrationNumber,
+  const [isPending, revalidateTag] = useRevalidateTag({
+    tag: `${chamberCode}${registrationNumber}`,
   });
-
   if (!powers) {
     return (
       <Box>
-        <RevalidateLegalRepresentative
-          chamberCode={chamberCode}
-          registrationId={registrationNumber}
-        >
+        <Button loading={isPending} onClick={revalidateTag}>
           Facultades del representante legal
-        </RevalidateLegalRepresentative>
+        </Button>
       </Box>
     );
   }
@@ -43,25 +39,3 @@ export async function LegalRepresentativePowers({
     </Details>
   );
 }
-
-const getPowersCached = ({
-  chamberCode,
-  registrationNumber,
-}: {
-  chamberCode: string;
-  registrationNumber: string;
-}) => {
-  const tag = `${chamberCode}${registrationNumber}`;
-  return unstable_cache(
-    () =>
-      getLegalPowers({
-        chamberCode,
-        registrationNumber,
-      }),
-    [tag],
-    {
-      revalidate: COMPANY_REVALIDATION_TIME,
-      tags: [tag],
-    },
-  )();
-};

@@ -1,8 +1,11 @@
 import { LegalRepresentativePowers } from "@/app/[company]/components/LegalRepresentatives/LegalRepresentativePowers";
+import { COMPANY_REVALIDATION_TIME } from "@/app/lib/constants";
+import { getLegalPowers } from "@/app/services/rues/service";
 import { Flex, Spinner, Text } from "@radix-ui/themes";
+import { unstable_cache } from "next/cache";
 import { Suspense } from "react";
 
-export function LegalRepresentatives({
+export async function LegalRepresentatives({
   legalRepresentatives,
   chamberCode,
   registrationNumber,
@@ -11,6 +14,10 @@ export function LegalRepresentatives({
   chamberCode: string;
   registrationNumber: string;
 }) {
+  const powers = await getPowersCached({
+    chamberCode,
+    registrationNumber,
+  });
   return (
     <Flex direction="column" gap="2">
       <Flex asChild direction="column" gap={{ initial: "2", sm: "0" }}>
@@ -37,8 +44,31 @@ export function LegalRepresentatives({
         <LegalRepresentativePowers
           chamberCode={chamberCode}
           registrationNumber={registrationNumber}
+          powers={powers}
         />
       </Suspense>
     </Flex>
   );
 }
+
+const getPowersCached = ({
+  chamberCode,
+  registrationNumber,
+}: {
+  chamberCode: string;
+  registrationNumber: string;
+}) => {
+  const tag = `${chamberCode}${registrationNumber}`;
+  return unstable_cache(
+    () =>
+      getLegalPowers({
+        chamberCode,
+        registrationNumber,
+      }),
+    [tag],
+    {
+      revalidate: COMPANY_REVALIDATION_TIME,
+      tags: [tag],
+    },
+  )();
+};

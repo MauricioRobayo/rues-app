@@ -2,12 +2,9 @@
 
 import { Action } from "@/app/lib/getRecapchaToken";
 import { verifyRecaptcha } from "@/app/lib/verifyRecaptcha";
-import {
-  revalidatePath as _revalidatePath,
-  revalidateTag as _revalidateTag,
-} from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 
-export async function revalidatePath({
+export async function revalidatePathAction({
   path,
   recaptchaToken,
 }: {
@@ -23,10 +20,10 @@ export async function revalidatePath({
     return null;
   }
 
-  _revalidatePath(path);
+  revalidatePath(path);
 }
 
-export async function revalidateTag({
+export async function revalidateTagAction({
   tag,
   recaptchaToken,
 }: {
@@ -42,5 +39,5 @@ export async function revalidateTag({
     return null;
   }
 
-  _revalidateTag(tag);
+  revalidateTag(tag);
 }
