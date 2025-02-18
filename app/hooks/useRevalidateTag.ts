@@ -1,8 +1,9 @@
 import { revalidateTagAction } from "@/app/[company]/actions";
 import { getRecaptchaToken, Action } from "@/app/lib/getRecapchaToken";
-import { useTransition } from "react";
+import { useState, useTransition } from "react";
 
 export function useRevalidateTag({ tag }: { tag: string }) {
+  const [hasRevalidated, setHasRevalidated] = useState(false);
   const [isPending, startTransition] = useTransition();
   const revalidateTag = async () => {
     startTransition(async () => {
@@ -11,7 +12,11 @@ export function useRevalidateTag({ tag }: { tag: string }) {
         tag,
         recaptchaToken,
       });
+      // https://react.dev/reference/react/useTransition#react-doesnt-treat-my-state-update-after-await-as-a-transition
+      startTransition(() => {
+        setHasRevalidated(true);
+      });
     });
   };
-  return [isPending, revalidateTag] as const;
+  return { isPending, revalidateTag, hasRevalidated };
 }

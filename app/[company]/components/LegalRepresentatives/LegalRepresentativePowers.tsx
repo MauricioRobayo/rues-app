@@ -13,9 +13,16 @@ export function LegalRepresentativePowers({
   registrationNumber: string;
   powers: string | null;
 }) {
-  const [isPending, revalidateTag] = useRevalidateTag({
+  const { isPending, revalidateTag, hasRevalidated } = useRevalidateTag({
     tag: `${chamberCode}${registrationNumber}`,
   });
+  if (hasRevalidated && !powers) {
+    return (
+      <Text color="red" size="2">
+        Algo ha salido mal. Por favor, vuelva a intentarlos más tarde.
+      </Text>
+    );
+  }
   if (!powers) {
     return (
       <Box>
@@ -27,7 +34,7 @@ export function LegalRepresentativePowers({
   }
 
   return (
-    <Details summary="Facultades del representante legal">
+    <Details summary="Facultades del representante legal" open={hasRevalidated}>
       <Box p="2" className="rounded bg-[var(--gray-3)]">
         <Text
           size="2"
