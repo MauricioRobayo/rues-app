@@ -1,19 +1,17 @@
 import { mapCompanyRecordToCompanyDto } from "@/app/mappers/mapCompanyRecordToCompanyDto";
-import { mapConsolidatedCompanyToCompanyDto } from "@/app/mappers/mapConsolidatedCompanyToCompanyDto";
-import { getSiisInfo, type SiisData } from "@/app/services/siis";
 import { companiesRepository } from "@/app/services/companies/repository";
-import { VALID_RUES_CATEGORIES } from "@/app/lib/constants";
 import { processAdvancedSearchResults } from "@/app/services/rues/processAdvancesSearchResults";
+import { type SiisData } from "@/app/services/siis";
+import { tokensService } from "@/app/services/tokens/service";
+import type { CompanyDto } from "@/app/types/CompanyDto";
+import * as RUES from "@mauriciorobayo/rues-api";
 import {
   getLegalRepresentativePowers,
   type BusinessEstablishmentsResponse,
   type BusinessRecord,
   type File,
 } from "@mauriciorobayo/rues-api";
-import * as RUES from "@mauriciorobayo/rues-api";
 import pRetry, { AbortError } from "p-retry";
-import { tokensService } from "@/app/services/tokens/service";
-import type { CompanyDto } from "@/app/types/CompanyDto";
 
 export interface ConsolidatedCompanyInfo {
   details?: File;
@@ -140,74 +138,6 @@ export async function advancedSearch({
   } catch (err) {
     console.error(err);
     return { data: null, token: ruesToken };
-  }
-}
-
-export async function getRuesDataByNit({
-  nit,
-  token,
-}: {
-  nit: number;
-  token: string;
-}) {
-  const advancedSearchResponse = await advancedSearch({
-    search: { nit },
-    token,
-  });
-  const { data } = advancedSearchResponse ?? {};
-  if (!data || data.length === 0) {
-    return null;
-  }
-  const rues = data[0];
-  if (!token || !VALID_RUES_CATEGORIES.includes(rues.categoria)) {
-    return null;
-  }
-  const [fileResponse, businessEstablishmentsResponse, company, siis] =
-    await Promise.all([
-      RUES.getFile({ registrationId: rues.id_rm }),
-      RUES.getBusinessEstablishments({
-        query: RUES.getBusinessDetails(rues.id_rm),
-        token,
-      }),
-      getCompanyInfo(nit),
-      getSiisInfo(nit),
-    ]);
-
-  const result: ConsolidatedCompanyInfo = {
-    rues,
-  };
-
-  if (fileResponse.status === "success") {
-    result.details = fileResponse.data.registros;
-  }
-
-  if (businessEstablishmentsResponse.status === "success") {
-    result.establishments = businessEstablishmentsResponse.data.registros;
-  }
-
-  if (company) {
-    result.company = company;
-  }
-
-  if (siis) {
-    result.siis = siis;
-  }
-
-  return mapConsolidatedCompanyToCompanyDto(result);
-}
-
-async function getCompanyInfo(nit: number) {
-  try {
-    const response = await pRetry(
-      () => companiesRepository.getCompanyInfo(nit),
-      {
-        retries: 3,
-      },
-    );
-    return response;
-  } catch (err) {
-    console.error("Failed to get company info", err);
-    return null;
   }
 }
 
