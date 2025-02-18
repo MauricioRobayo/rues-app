@@ -224,12 +224,7 @@ export async function getLegalPowers({
   }
 
   if (response.status === "error") {
-    if (
-      response.error instanceof DOMException &&
-      response.error.name === "AbortError"
-    ) {
-      console.error("getLegalPowers timeout", response);
-    }
+    console.error("getLegalPowers error", response);
     return null;
   }
 
