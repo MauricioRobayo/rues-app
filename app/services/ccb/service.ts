@@ -1,11 +1,12 @@
-import { getBidderFiles } from "@/app/services/ccb/api";
+import { getBidderRecords } from "@/app/services/ccb/api";
 import { tokensRepository } from "@/app/services/tokens/repository";
+import type { BidderRecordDto } from "@/app/types/BidderDto";
 
 export const ccbService = {
-  async getBidderFiles(bidderId: string) {
+  async getBidderRecords(bidderId: string): Promise<BidderRecordDto[] | null> {
     try {
       const token = await tokensRepository.getCcbToken();
-      const filesResponse = await getBidderFiles({
+      const filesResponse = await getBidderRecords({
         bidderId,
         token,
       });

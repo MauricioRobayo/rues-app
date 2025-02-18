@@ -1,4 +1,4 @@
-import { BidderRecords } from "@/app/[company]/components/BidderRecords";
+import { Bidder } from "@/app/[company]/components/Bidder/Bidder";
 import { Chamber, ChamberSkeleton } from "@/app/[company]/components/Chamber";
 import { CompanyDetails } from "@/app/[company]/components/CompanyDetails";
 import { CopyButton } from "@/app/[company]/components/CopyButton";
@@ -32,7 +32,6 @@ import {
   Link,
   Section,
   Separator,
-  Spinner,
   Text,
 } from "@radix-ui/themes";
 import type { Metadata } from "next";
@@ -180,17 +179,7 @@ export default async function page({ params }: PageProps) {
     { label: "Número de empleados", value: data.totalEmployees },
     {
       label: "Registro proponente",
-      value: data.bidderId ? (
-        <Flex direction="column" gap="2">
-          <Flex gap="2" align="center">
-            <Code variant="ghost">{data.bidderId.padStart(8, "0")}</Code>
-            <CopyButton value={data.bidderId.padStart(8, "0")} />
-          </Flex>
-          <Suspense fallback={<Spinner />}>
-            <BidderRecords bidderId={data.bidderId} />
-          </Suspense>
-        </Flex>
-      ) : null,
+      value: data.bidderId ? <Bidder bidderId={data.bidderId} /> : null,
     },
     {
       label: "Objecto social",
