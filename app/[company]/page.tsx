@@ -11,6 +11,7 @@ import PhoneNumbers from "@/app/[company]/components/PhoneNumbers";
 import { ReadMore } from "@/app/[company]/components/ReadMore";
 import { RetrievedOn } from "@/app/[company]/components/RetrievedOn";
 import { ToggleContent } from "@/app/[company]/components/ToogleContent";
+import { UserReport } from "@/app/[company]/components/UserReport";
 import { CompanyStatusBadge } from "@/app/components/CompanyStatusBadge";
 import { PageContainer } from "@/app/components/PageContainer";
 import { BASE_URL, COMPANY_REVALIDATION_TIME } from "@/app/lib/constants";
@@ -441,7 +442,7 @@ export default async function page({ params }: PageProps) {
     .at(0);
 
   return (
-    <Box mb="2" asChild>
+    <Box>
       <article itemScope itemType="https://schema.org/Organization">
         <Box
           asChild
@@ -576,9 +577,20 @@ export default async function page({ params }: PageProps) {
               )}
             </Box>
           </Grid>
-          <RetrievedOn retrievedOn={data.retrievedOn} />
+          <Box mb="4">
+            <RetrievedOn retrievedOn={data.retrievedOn} />
+          </Box>
         </PageContainer>
       </article>
+      <aside>
+        <Box style={{ background: "var(--blue-a2)" }} py="6">
+          <PageContainer>
+            <Flex direction="column" gap="4" align="center">
+              <UserReport slug={data.slug} />
+            </Flex>
+          </PageContainer>
+        </Box>
+      </aside>
     </Box>
   );
 }

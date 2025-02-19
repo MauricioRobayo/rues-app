@@ -55,24 +55,29 @@ const octokit = new Octokit({
 });
 
 export type CreateUserReportStatus = {
-  status: "success" | "error" | "idle";
+  status: "success" | "error";
   message: string;
 };
 
 const schema = z.object({
   description: z.string().trim().min(4),
-  nit: z.number(),
+  nit: z.string().trim().min(8),
   recaptchaToken: z.string(),
 });
 
-export async function userReportAction(
-  _initialState: CreateUserReportStatus,
-  formData: FormData,
-): Promise<CreateUserReportStatus> {
+export async function userReportAction({
+  description,
+  slug,
+  recaptchaToken,
+}: {
+  description: string;
+  slug: string;
+  recaptchaToken: string;
+}): Promise<CreateUserReportStatus> {
   const validatedFields = schema.safeParse({
-    description: formData.get("description"),
-    page: formData.get("page"),
-    recaptchaToken: formData.get("token"),
+    description,
+    nit: slug,
+    recaptchaToken,
   });
 
   if (validatedFields.error) {
@@ -110,7 +115,7 @@ export async function userReportAction(
       return {
         status: "success",
         message: "Comment added successfully.",
-      } as const;
+      };
     }
 
     await octokit.issues.create({
@@ -125,10 +130,10 @@ export async function userReportAction(
     return {
       status: "success",
       message: "Issue created successfully.",
-    } as const;
+    };
   } catch (error) {
     console.error(error);
-    return { status: "error", message: "Failed to create the issue." } as const;
+    return { status: "error", message: "Failed to create the issue." };
   }
 }
 
