@@ -25,7 +25,9 @@ export function RetrievedOn({ retrievedOn }: { retrievedOn: number }) {
   return (
     <Flex direction="row" gap="2" align="center" justify="start">
       <Text size="1" color="gray">
-        {isPending ? "Actualizando…" : `Actualizado ${distanceToNow}`}
+        {isPending
+          ? "Actualizando…"
+          : `Información actualizada hace ${distanceToNow}.`}
       </Text>
       {shouldShowRevalidateButton ? (
         <IconButton

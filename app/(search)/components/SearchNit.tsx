@@ -143,22 +143,21 @@ export function SearchNit() {
           )}
         </>
       ) : null}
-      <Callout.Root color="green">
+      <Callout.Root color="amber" variant="surface">
         <Callout.Icon>
           <InfoCircledIcon />
         </Callout.Icon>
         <Callout.Text>
-          Puede consultar la información empresarial de cualquier NIT
-          añadiéndolo al final de la URL. Por ejemplo:{" "}
+          Consulte el NIT agregándolo al final de la URL:{" "}
           <Link href="/899999068" prefetch={false}>
-            https://www.registronit.com/
+            www.registronit.com/
             <Text weight="bold">899999068</Text>
           </Link>
-          , en donde{" "}
+          , en donde
           <Text weight="bold">
             <Code>899999068</Code>
           </Text>{" "}
-          es el NIT de la empresa que desea consultar.
+          es el NIT a consultar.
         </Callout.Text>
       </Callout.Root>
     </Flex>
