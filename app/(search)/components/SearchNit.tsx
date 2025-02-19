@@ -143,21 +143,18 @@ export function SearchNit() {
           )}
         </>
       ) : null}
-      <Callout.Root color="amber" variant="surface">
+      <Callout.Root color="grass" variant="surface">
         <Callout.Icon>
           <InfoCircledIcon />
         </Callout.Icon>
         <Callout.Text>
-          Consulte el NIT agregándolo al final de la URL:{" "}
+          Consulte cualquier NIT agregándolo a la URL:{" "}
           <Link href="/899999068" prefetch={false}>
             www.registronit.com/
-            <Text weight="bold">899999068</Text>
+            <Text weight="bold" asChild>
+              <Code variant="ghost">899999068</Code>
+            </Text>
           </Link>
-          , en donde
-          <Text weight="bold">
-            <Code>899999068</Code>
-          </Text>{" "}
-          es el NIT a consultar.
         </Callout.Text>
       </Callout.Root>
     </Flex>
