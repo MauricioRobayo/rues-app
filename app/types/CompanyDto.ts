@@ -6,7 +6,7 @@ export interface CompanyDto {
   retrievedOn: number;
   address: string | null;
   area?: string;
-  bidderId?: string;
+  bidderId?: string | null;
   broadIndustry?: string;
   cancellationDate: string | null;
   category?: string;
