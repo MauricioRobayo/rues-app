@@ -18,6 +18,7 @@ import { currencyFormatter } from "@/app/lib/formatters";
 import { parseCompanyPathSegment } from "@/app/lib/parseCompanyPathSegment";
 import { slugifyCompanyName } from "@/app/lib/slugifyComponentName";
 import { validateNit } from "@/app/lib/validateNit";
+import { companiesRepository } from "@/app/services/companies/repository";
 import { queryNit } from "@/app/services/rues/service";
 import type { CompanyDto } from "@/app/types/CompanyDto";
 import { GoogleMapsEmbed } from "@next/third-parties/google";
@@ -36,6 +37,7 @@ import {
 import type { Metadata } from "next";
 import { unstable_cache } from "next/cache";
 import { notFound, permanentRedirect } from "next/navigation";
+import { after } from "next/server";
 import { cache, Suspense } from "react";
 
 interface PageProps {
@@ -48,11 +50,17 @@ export async function generateMetadata({
   params,
 }: PageProps): Promise<Metadata> {
   const { company } = await params;
-  const data = await getPageData(company);
+  const { isNotFound, isError, data, nit } = await getPageData(company);
 
-  if (!data) {
+  if (isNotFound) {
     return {
-      title: "Algo ha salido mal",
+      title: "No tenemos esa información",
+    };
+  }
+
+  if (isError) {
+    return {
+      title: `${nit}: Algo ha salido mal`,
     };
   }
 
@@ -68,9 +76,13 @@ export async function generateMetadata({
 
 export default async function page({ params }: PageProps) {
   const { company } = await params;
-  const data = await getPageData(company);
+  const { isNotFound, isError, data } = await getPageData(company);
 
-  if (!data) {
+  if (isNotFound) {
+    notFound();
+  }
+
+  if (isError) {
     return <ErrorRecovery />;
   }
 
@@ -593,26 +605,80 @@ async function getPageData(company: string) {
   const { nit, slug } = parseCompanyPathSegment(company);
 
   if (!validateNit(nit)) {
-    notFound();
+    return {
+      nit,
+      slug,
+      ...responseStatus("notFound"),
+    };
   }
 
   const response = await queryNitCached(nit);
 
   if (response.status === "error") {
-    return null;
+    return {
+      nit,
+      slug,
+      ...responseStatus("error"),
+    };
   }
 
   if (!response.data?.name) {
-    notFound();
+    return {
+      nit,
+      slug,
+      ...responseStatus("notFound"),
+    };
   }
 
-  const companySlug = slugifyCompanyName(response.data.name);
+  const { name } = response.data;
+  const companySlug = slugifyCompanyName(name);
 
   if (slug !== companySlug) {
     permanentRedirect(`${companySlug}-${nit}`);
   }
 
-  return response.data;
+  after(async () => {
+    // This record might not be in the db.
+    // If it is we always want to update it
+    // so the "lastmod" in the sitemap is
+    // also updated.
+    await companiesRepository.upsertName({
+      nit,
+      name,
+    });
+  });
+
+  return {
+    nit,
+    slug,
+    data: response.data,
+    ...responseStatus("success"),
+  };
+}
+
+function responseStatus(status: "success"): {
+  isSuccess: true;
+  isNotFound: false;
+  isError: false;
+};
+function responseStatus(status: "error"): {
+  isSuccess: false;
+  isNotFound: false;
+  isError: true;
+  data?: never;
+};
+function responseStatus(status: "notFound"): {
+  isSuccess: false;
+  isNotFound: true;
+  isError: false;
+  data?: never;
+};
+function responseStatus(status: "success" | "error" | "notFound") {
+  return {
+    isSuccess: status === "success",
+    isError: status === "error",
+    isNotFound: status === "notFound",
+  };
 }
 
 const queryNitCached = unstable_cache(cache(queryNit), undefined, {
