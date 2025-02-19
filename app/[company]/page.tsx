@@ -19,7 +19,7 @@ import { parseCompanyPathSegment } from "@/app/lib/parseCompanyPathSegment";
 import { slugifyCompanyName } from "@/app/lib/slugifyComponentName";
 import { validateNit } from "@/app/lib/validateNit";
 import { companiesRepository } from "@/app/services/companies/repository";
-import { getRuesDataByNit, queryNit } from "@/app/services/rues/service";
+import { queryNit } from "@/app/services/rues/service";
 import type { CompanyDto } from "@/app/types/CompanyDto";
 import { GoogleMapsEmbed } from "@next/third-parties/google";
 import {
@@ -50,11 +50,11 @@ export async function generateMetadata({
   params,
 }: PageProps): Promise<Metadata> {
   const { company } = await params;
-  const data = await getPageData(company);
+  const { isError, data, nit } = await getPageData(company);
 
-  if (!data) {
+  if (isError) {
     return {
-      title: "Algo ha salido mal",
+      title: `${nit}: Algo ha salido mal`,
     };
   }
 
@@ -70,9 +70,9 @@ export async function generateMetadata({
 
 export default async function page({ params }: PageProps) {
   const { company } = await params;
-  const data = await getPageData(company);
+  const { isError, data } = await getPageData(company);
 
-  if (!data) {
+  if (isError) {
     return <ErrorRecovery />;
   }
 
@@ -583,97 +583,76 @@ export default async function page({ params }: PageProps) {
   );
 }
 
-// This function is unintentionally not cached so we can handle logic based
-// on the segmentPath which can be different given the same nit:
-//   - rnit.co/930123456
-//   - rnit.co/razon-social-930123456
-//   - rnit.co/razon-social-cambio-930123456
-// all of the above should trigger this uncached logic to do proper redirects
-// Get DO cache fetching the data based on the NIT, so we avoid doing requests
-// to the APIs given the same NIT if we already got the data.
-async function getPageData(company: string) {
+const getPageData = cache(async (company: string) => {
   const { nit, slug } = parseCompanyPathSegment(company);
 
   if (!validateNit(nit)) {
     notFound();
   }
 
-  // Cache at the NIT level to avoid multiple path segments
-  // with same NIT triggering multiple duplicated API calls
-  const response = await getCompanyDataCached(nit);
+  const response = await queryNitCached(nit);
 
   if (response.status === "error") {
-    return null;
+    return {
+      nit,
+      slug,
+      ...responseStatus("error"),
+    };
   }
 
   if (!response.data?.name) {
     notFound();
   }
 
-  const companySlug = slugifyCompanyName(response.data.name);
+  const { name } = response.data;
+  const companySlug = slugifyCompanyName(name);
 
   if (slug !== companySlug) {
-    permanentRedirect(`${companySlug}-${nit}`);
+    permanentRedirect(`/${companySlug}-${nit}`);
   }
 
-  return response.data;
-}
+  after(async () => {
+    // This record might not be in the db.
+    // If it is we always want to update it
+    // so the "lastmod" in the sitemap is
+    // also updated.
+    await companiesRepository.upsertName({
+      nit,
+      name,
+    });
+  });
 
-const getCompanyDataCached = unstable_cache(cache(getCompanyData), undefined, {
-  revalidate: COMPANY_REVALIDATION_TIME,
+  return {
+    nit,
+    slug,
+    data: response.data,
+    ...responseStatus("success"),
+  };
 });
 
-async function getCompanyData(
-  nit: number,
-): Promise<
-  | { status: "error"; error: unknown }
-  | { status: "success"; data: CompanyDto | null }
-> {
-  try {
-    const queryResponse = await queryNit(nit);
-
-    if (queryResponse.data) {
-      return {
-        status: "success",
-        data: queryResponse.data,
-      };
-    }
-
-    const companyData = await getRuesDataByNit({
-      nit,
-      token: queryResponse.token,
-    });
-
-    if (!companyData) {
-      return {
-        status: "success",
-        data: null,
-      } as const;
-    }
-
-    after(async () => {
-      // This record might not be in the db.
-      // If it is we always want to update it
-      // so the "lastmod" in the sitemap is
-      // also updated.
-      await companiesRepository.upsertName({
-        nit,
-        name: companyData.name,
-      });
-    });
-
-    return {
-      status: "success",
-      data: companyData,
-    } as const;
-  } catch (err) {
-    console.error("Failed to get Company data for nit", nit, err);
-    return {
-      error: err,
-      status: "error",
-    } as const;
-  }
+function responseStatus(status: "success"): {
+  isError: false;
+  isNotFound: false;
+  isRedirect: false;
+  isSuccess: true;
+};
+function responseStatus(status: "error"): {
+  data?: never;
+  isError: true;
+  isNotFound: false;
+  isRedirect: false;
+  isSuccess: false;
+};
+function responseStatus(status: "success" | "error") {
+  return {
+    isSuccess: status === "success",
+    isError: status === "error",
+  };
 }
+
+const queryNitCached = unstable_cache(queryNit, undefined, {
+  revalidate: COMPANY_REVALIDATION_TIME,
+});
 
 function companyDescription(company: CompanyDto) {
   let description = `${company.name} NIT ${company.fullNit}`;
