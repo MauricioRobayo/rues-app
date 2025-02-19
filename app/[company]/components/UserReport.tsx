@@ -12,7 +12,7 @@ export function UserReport({ slug }: { slug: string }) {
   const [isOpen, setIsOpen] = useState(false);
   return (
     <Flex direction="column" gap="2" align="center">
-      <Text size="4" weight="medium">
+      <Text size="4" weight="medium" color="gray">
         ¿Algo no está bien?
       </Text>
       {isOpen ? (
@@ -71,15 +71,15 @@ function UserReportForm({ slug }: { slug: string }) {
   }
   return (
     <form action={formAction} className="contents">
-      <Text asChild>
+      <Text asChild color="gray" align="center" wrap="pretty">
         <label htmlFor={descriptionId}>
-          Le agradecemos una descripción detallada del problema:
+          Denos una descripción detallada del problema:
         </label>
       </Text>
       <TextArea
         autoFocus
         resize="both"
-        style={{ width: "100%", maxWidth: "24rem" }}
+        className="w-full max-w-96"
         name={descriptionId}
         id={descriptionId}
         required

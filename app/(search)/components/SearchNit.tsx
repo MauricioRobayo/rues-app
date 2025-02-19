@@ -17,6 +17,7 @@ import {
   Code,
   Flex,
   Heading,
+  Strong,
   Text,
   TextField,
 } from "@radix-ui/themes";
@@ -124,40 +125,36 @@ export function SearchNit() {
               <Text>
                 El NIT{" "}
                 <Link href={`/${value}`}>
-                  <Text weight="bold">{fullNit}</Text>
+                  <Strong>{fullNit}</Strong>
                 </Link>{" "}
                 es válido y la información empresarial correspondiente puede ser
                 consultada en:
               </Text>
               <Link href={`/${value}`} underline="always">
                 <Text>{BASE_URL}/</Text>
-                <Text weight="bold">{value}</Text>
+                <Strong>{value}</Strong>
               </Link>
             </Flex>
           )}
           {data?.status === 404 && (
             <Text>
-              No tenemos información asociada al NIT{" "}
-              <Text weight="bold">{fullNit}</Text>.
+              No tenemos información asociada al NIT <Strong>{fullNit}</Strong>.
             </Text>
           )}
         </>
       ) : null}
-      <Callout.Root color="amber" variant="surface">
+      <Callout.Root color="gray">
         <Callout.Icon>
           <InfoCircledIcon />
         </Callout.Icon>
         <Callout.Text>
-          Consulte el NIT agregándolo al final de la URL:{" "}
+          Consulte cualquier NIT agregándolo a la URL:{" "}
           <Link href="/899999068" prefetch={false}>
             www.registronit.com/
-            <Text weight="bold">899999068</Text>
+            <Strong asChild>
+              <Code variant="ghost">899999068</Code>
+            </Strong>
           </Link>
-          , en donde
-          <Text weight="bold">
-            <Code>899999068</Code>
-          </Text>{" "}
-          es el NIT a consultar.
         </Callout.Text>
       </Callout.Root>
     </Flex>
