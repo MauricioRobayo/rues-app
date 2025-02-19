@@ -50,7 +50,8 @@ export async function generateMetadata({
   params,
 }: PageProps): Promise<Metadata> {
   const { company } = await params;
-  const { isNotFound, isError, data, nit } = await getPageData(company);
+  const { isNotFound, isError, isRedirect, data, nit } =
+    await getPageData(company);
 
   if (isNotFound) {
     return {
@@ -62,6 +63,10 @@ export async function generateMetadata({
     return {
       title: `${nit}: Algo ha salido mal`,
     };
+  }
+
+  if (isRedirect) {
+    return {};
   }
 
   return {
@@ -76,7 +81,7 @@ export async function generateMetadata({
 
 export default async function page({ params }: PageProps) {
   const { company } = await params;
-  const { isNotFound, isError, data } = await getPageData(company);
+  const { isNotFound, isError, isRedirect, data } = await getPageData(company);
 
   if (isNotFound) {
     notFound();
@@ -84,6 +89,10 @@ export default async function page({ params }: PageProps) {
 
   if (isError) {
     return <ErrorRecovery />;
+  }
+
+  if (isRedirect) {
+    permanentRedirect(data);
   }
 
   const details = [
@@ -593,15 +602,7 @@ export default async function page({ params }: PageProps) {
   );
 }
 
-// This function is unintentionally not cached so we can handle logic based
-// on the segmentPath which can be different given the same nit:
-//   - rnit.co/930123456
-//   - rnit.co/razon-social-930123456
-//   - rnit.co/razon-social-cambio-930123456
-// all of the above should trigger this uncached logic to do proper redirects
-// Get DO cache fetching the data based on the NIT, so we avoid doing requests
-// to the APIs given the same NIT if we already got the data.
-async function getPageData(company: string) {
+const getPageData = cache(async (company: string) => {
   const { nit, slug } = parseCompanyPathSegment(company);
 
   if (!validateNit(nit)) {
@@ -634,7 +635,12 @@ async function getPageData(company: string) {
   const companySlug = slugifyCompanyName(name);
 
   if (slug !== companySlug) {
-    permanentRedirect(`${companySlug}-${nit}`);
+    return {
+      nit,
+      slug,
+      data: `${companySlug}-${nit}`,
+      ...responseStatus("redirect"),
+    };
   }
 
   after(async () => {
@@ -654,34 +660,45 @@ async function getPageData(company: string) {
     data: response.data,
     ...responseStatus("success"),
   };
-}
+});
 
 function responseStatus(status: "success"): {
-  isSuccess: true;
-  isNotFound: false;
   isError: false;
+  isNotFound: false;
+  isRedirect: false;
+  isSuccess: true;
 };
 function responseStatus(status: "error"): {
-  isSuccess: false;
-  isNotFound: false;
-  isError: true;
   data?: never;
+  isError: true;
+  isNotFound: false;
+  isRedirect: false;
+  isSuccess: false;
 };
 function responseStatus(status: "notFound"): {
-  isSuccess: false;
-  isNotFound: true;
-  isError: false;
   data?: never;
+  isError: false;
+  isNotFound: true;
+  isRedirect: false;
+  isSuccess: false;
 };
-function responseStatus(status: "success" | "error" | "notFound") {
+function responseStatus(status: "redirect"): {
+  isError: false;
+  isNotFound: false;
+  isRedirect: true;
+  isSuccess: false;
+};
+
+function responseStatus(status: "success" | "error" | "notFound" | "redirect") {
   return {
     isSuccess: status === "success",
     isError: status === "error",
     isNotFound: status === "notFound",
+    isRedirect: status === "redirect",
   };
 }
 
-const queryNitCached = unstable_cache(cache(queryNit), undefined, {
+const queryNitCached = unstable_cache(queryNit, undefined, {
   revalidate: COMPANY_REVALIDATION_TIME,
 });
 
