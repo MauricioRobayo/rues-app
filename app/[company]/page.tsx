@@ -632,15 +632,11 @@ const getPageData = cache(async (company: string) => {
 
 function responseStatus(status: "success"): {
   isError: false;
-  isNotFound: false;
-  isRedirect: false;
   isSuccess: true;
 };
 function responseStatus(status: "error"): {
   data?: never;
   isError: true;
-  isNotFound: false;
-  isRedirect: false;
   isSuccess: false;
 };
 function responseStatus(status: "success" | "error") {
