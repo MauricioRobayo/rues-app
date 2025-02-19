@@ -1,3 +1,5 @@
+import type { Action } from "@/app/lib/getRecapchaToken";
+
 const projectID = process.env.GCP_PROJECT_ID ?? "";
 const secretKey = process.env.RECAPTCHA_SECRET_KEY ?? "";
 const siteKey = process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY ?? "";
@@ -9,7 +11,7 @@ export async function verifyRecaptcha({
   action,
 }: {
   token: string;
-  action: string;
+  action: keyof typeof Action;
 }) {
   try {
     const response = await fetch(verificationUrl, {
