@@ -50,23 +50,12 @@ export async function generateMetadata({
   params,
 }: PageProps): Promise<Metadata> {
   const { company } = await params;
-  const { isNotFound, isError, isRedirect, data, nit } =
-    await getPageData(company);
-
-  if (isNotFound) {
-    return {
-      title: "No tenemos esa información",
-    };
-  }
+  const { isError, data, nit } = await getPageData(company);
 
   if (isError) {
     return {
       title: `${nit}: Algo ha salido mal`,
     };
-  }
-
-  if (isRedirect) {
-    return {};
   }
 
   return {
@@ -81,18 +70,10 @@ export async function generateMetadata({
 
 export default async function page({ params }: PageProps) {
   const { company } = await params;
-  const { isNotFound, isError, isRedirect, data } = await getPageData(company);
-
-  if (isNotFound) {
-    notFound();
-  }
+  const { isError, data } = await getPageData(company);
 
   if (isError) {
     return <ErrorRecovery />;
-  }
-
-  if (isRedirect) {
-    permanentRedirect(data);
   }
 
   const details = [
@@ -606,11 +587,7 @@ const getPageData = cache(async (company: string) => {
   const { nit, slug } = parseCompanyPathSegment(company);
 
   if (!validateNit(nit)) {
-    return {
-      nit,
-      slug,
-      ...responseStatus("notFound"),
-    };
+    notFound();
   }
 
   const response = await queryNitCached(nit);
@@ -624,23 +601,14 @@ const getPageData = cache(async (company: string) => {
   }
 
   if (!response.data?.name) {
-    return {
-      nit,
-      slug,
-      ...responseStatus("notFound"),
-    };
+    notFound();
   }
 
   const { name } = response.data;
   const companySlug = slugifyCompanyName(name);
 
   if (slug !== companySlug) {
-    return {
-      nit,
-      slug,
-      data: `${companySlug}-${nit}`,
-      ...responseStatus("redirect"),
-    };
+    permanentRedirect(`/${companySlug}-${nit}`);
   }
 
   after(async () => {
@@ -675,26 +643,10 @@ function responseStatus(status: "error"): {
   isRedirect: false;
   isSuccess: false;
 };
-function responseStatus(status: "notFound"): {
-  data?: never;
-  isError: false;
-  isNotFound: true;
-  isRedirect: false;
-  isSuccess: false;
-};
-function responseStatus(status: "redirect"): {
-  isError: false;
-  isNotFound: false;
-  isRedirect: true;
-  isSuccess: false;
-};
-
-function responseStatus(status: "success" | "error" | "notFound" | "redirect") {
+function responseStatus(status: "success" | "error") {
   return {
     isSuccess: status === "success",
     isError: status === "error",
-    isNotFound: status === "notFound",
-    isRedirect: status === "redirect",
   };
 }
 
