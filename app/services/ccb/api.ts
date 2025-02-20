@@ -40,9 +40,11 @@ export interface BidderFilesResponse {
 export function getBidderRecords({
   bidderId,
   token,
+  signal,
 }: {
   bidderId: string;
   token: string;
+  signal?: AbortSignal;
 }) {
   return ccbFetch<BidderFilesResponse[]>({
     path: "documentosActos",
@@ -50,6 +52,7 @@ export function getBidderRecords({
       numInscripcion: bidderId.padStart(8, "0"),
     }),
     token,
+    signal,
   });
 }
 
@@ -60,6 +63,7 @@ async function ccbFetch<T>({
   token,
   headers,
   method = "GET",
+  signal,
 }: {
   path: string;
   body?: string;
@@ -67,6 +71,7 @@ async function ccbFetch<T>({
   token?: string;
   headers?: Headers;
   method?: "GET" | "POST";
+  signal?: AbortSignal;
 }): Promise<Response<T>> {
   const ccbHeaders = headers ?? new Headers();
   if (token) {
@@ -82,6 +87,7 @@ async function ccbFetch<T>({
       method,
       headers: ccbHeaders,
       body,
+      signal,
     });
 
     if (!response.ok) {

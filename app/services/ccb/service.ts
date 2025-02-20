@@ -4,11 +4,16 @@ import type { BidderRecordDto } from "@/app/types/BidderDto";
 
 export const ccbService = {
   async getBidderRecords(bidderId: string): Promise<BidderRecordDto[] | null> {
+    const abortController = new AbortController();
+    setTimeout(() => {
+      abortController.abort();
+    }, 2000);
     try {
       const token = await tokensRepository.getCcbToken();
       const filesResponse = await getBidderRecords({
         bidderId,
         token,
+        signal: abortController.signal,
       });
       if (filesResponse.status === "error") {
         console.log("getBiddersFiles failed", bidderId);
