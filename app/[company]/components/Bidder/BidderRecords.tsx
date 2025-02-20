@@ -1,47 +1,53 @@
 "use client";
 
+import { getBidderRecords } from "@/app/[company]/actions";
 import { ExpandableList } from "@/app/[company]/components/ExpandableList";
-import { useRevalidateTag } from "@/app/hooks/useRevalidateTag";
+import { Action, getRecaptchaToken } from "@/app/lib/getRecapchaToken";
 import type { BidderRecordDto } from "@/app/types/BidderDto";
 import { Box, Button, Code, Flex, Text } from "@radix-ui/themes";
+import { startTransition, useActionState } from "react";
 
-export function BidderRecords({
-  bidderId,
-  records,
-}: {
-  bidderId: string;
-  records: BidderRecordDto[] | null;
-}) {
-  const { isPending, revalidateTag, hasRevalidated } = useRevalidateTag({
-    tag: bidderId,
-  });
-
-  if (hasRevalidated && !records) {
+export function BidderRecords({ bidderId }: { bidderId: string }) {
+  const [state, fetchRecords, isPending] = useActionState<
+    | { status: "idle" }
+    | { status: "success"; records: BidderRecordDto[] }
+    | { status: "error" },
+    string
+  >(
+    async (_, bidderId) => {
+      const recaptchaToken = await getRecaptchaToken(Action.BIDDER_RECORDS);
+      return getBidderRecords({ bidderId, recaptchaToken });
+    },
+    { status: "idle" },
+  );
+  if (state.status === "error") {
     return (
       <Text color="red" size="2">
-        Algo ha salido mal. Por favor, vuelva a intentarlos más tarde.
+        Algo ha salido mal. Por favor, vuelva a intentarlo más tarde.
       </Text>
     );
   }
-
-  if (!records) {
+  if (state.status === "idle") {
     return (
       <Box>
-        <Button loading={isPending} onClick={revalidateTag}>
+        <Button
+          loading={isPending}
+          onClick={() => {
+            startTransition(() => {
+              fetchRecords(bidderId);
+            });
+          }}
+        >
           Ver actas
         </Button>
       </Box>
     );
   }
 
-  if (records.length === 0) {
-    return null;
-  }
-
   return (
     <ul>
       <ExpandableList
-        items={records.map((record) => (
+        items={state.records.map((record) => (
           <li key={record.id}>
             <Flex align="center" asChild gap="2">
               <Text size="2">
