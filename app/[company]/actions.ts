@@ -6,6 +6,7 @@ import { revalidatePath, revalidateTag } from "next/cache";
 import { BASE_URL } from "@/app/lib/constants";
 import { Octokit } from "@octokit/rest";
 import { z } from "zod";
+import { ccbService } from "@/app/services/ccb/service";
 
 const token = process.env.GITHUB_TOKEN ?? "";
 const owner = process.env.GITHUB_OWNER ?? "";
@@ -135,6 +136,26 @@ export async function userReportAction({
     console.error(error);
     return { status: "error", message: "Failed to create the issue." };
   }
+}
+
+export async function getBidderRecords({
+  bidderId,
+  recaptchaToken,
+}: {
+  bidderId: string;
+  recaptchaToken: string;
+}) {
+  if (
+    !(await verifyRecaptcha({
+      token: recaptchaToken,
+      action: Action.BIDDER_RECORDS,
+    }))
+  ) {
+    return {
+      status: "error",
+    } as const;
+  }
+  return ccbService.getBidderRecords(bidderId);
 }
 
 async function findOpenIssue(title: string) {
