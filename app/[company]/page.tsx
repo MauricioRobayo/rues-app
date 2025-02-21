@@ -1,14 +1,16 @@
-import { Bidder } from "@/app/[company]/components/Bidder/Bidder";
 import { Chamber, ChamberSkeleton } from "@/app/[company]/components/Chamber";
-import { DataList } from "@/app/[company]/components/DataList";
+import {
+  companyDescription,
+  CompanyDescription,
+} from "@/app/[company]/components/CompanyDescription";
+import { CompanyDetails } from "@/app/[company]/components/CompanyDetails";
 import { CopyButton } from "@/app/[company]/components/CopyButton";
+import { DataList } from "@/app/[company]/components/DataList";
 import { Details } from "@/app/[company]/components/Details";
 import { EconomicActivities } from "@/app/[company]/components/EconomicActivities";
 import { ErrorRecovery } from "@/app/[company]/components/ErrorRecovery";
 import { ExpandableList } from "@/app/[company]/components/ExpandableList";
-import { LegalRepresentatives } from "@/app/[company]/components/LegalRepresentatives/LegalRepresentatives";
 import PhoneNumbers from "@/app/[company]/components/PhoneNumbers";
-import { ReadMore } from "@/app/[company]/components/ReadMore";
 import { RetrievedOn } from "@/app/[company]/components/RetrievedOn";
 import { ToggleContent } from "@/app/[company]/components/ToogleContent";
 import { UserReport } from "@/app/[company]/components/UserReport";
@@ -21,8 +23,6 @@ import { slugifyCompanyName } from "@/app/lib/slugifyComponentName";
 import { validateNit } from "@/app/lib/validateNit";
 import { companiesRepository } from "@/app/services/companies/repository";
 import { queryNit } from "@/app/services/rues/service";
-import type { CompanyDto } from "@/app/types/CompanyDto";
-import { GoogleMapsEmbed } from "@next/third-parties/google";
 import {
   Box,
   Card,
@@ -33,14 +33,12 @@ import {
   Link,
   Section,
   Separator,
-  Text,
 } from "@radix-ui/themes";
 import type { Metadata } from "next";
 import { unstable_cache } from "next/cache";
 import { notFound, permanentRedirect } from "next/navigation";
 import { after } from "next/server";
 import { cache, Suspense } from "react";
-import { CompanyDetails } from "@/app/[company]/components/CompanyDetails";
 
 interface PageProps {
   params: Promise<{ company: string }>;
@@ -347,7 +345,7 @@ export default async function page({ params }: PageProps) {
           </header>
         </Box>
         <PageContainer mt={{ initial: "6", sm: "8" }}>
-          <Text>{companyDescription(data)}</Text>
+          <CompanyDescription company={data} />
           <Grid
             columns={{ initial: "1", sm: "2" }}
             gapX="8"
@@ -518,63 +516,3 @@ function responseStatus(status: "success" | "error") {
 const queryNitCached = unstable_cache(queryNit, undefined, {
   revalidate: COMPANY_REVALIDATION_TIME,
 });
-
-function companyDescription(company: CompanyDto) {
-  let description = `${company.name} NIT ${company.fullNit}`;
-
-  if (company.size) {
-    const companySize = company.size.toLocaleUpperCase();
-    if (companySize.includes("EMPRESA")) {
-      description += ` es una ${companySize}`;
-    } else {
-      description += ` es una ${companySize} EMPRESA`;
-    }
-  } else {
-    description += " es una empresa";
-  }
-
-  if (company.city) {
-    description += ` ubicada en ${company.city}`;
-  }
-
-  if (company.state) {
-    description += `, ${company.state}`;
-  }
-
-  if (company.address) {
-    description += `. Su dirección comercial es ${company.address}`;
-  }
-
-  if (company.phoneNumbers?.[0]) {
-    description += ` y su teléfono de contacto es ${company.phoneNumbers[0]}`;
-  }
-
-  description += `. Fundada hace ${company.yearsDoingBusinesses}`;
-
-  if (company.chamber?.name) {
-    description += ` y registrada en la cámara de comercio de ${company.chamber.name}`;
-  }
-
-  if (company.economicActivities && company.economicActivities.length > 0) {
-    const mainEconomicActivity = company.economicActivities[0];
-    description += `. Su principal actividad económica corresponde al código CIIU ${mainEconomicActivity.code}: ${mainEconomicActivity.description}`;
-  }
-
-  if (company.totalEmployees || company.totalBusinessEstablishments) {
-    description += ". Cuenta con";
-    const totals: string[] = [];
-    if (company.totalEmployees) {
-      totals.push(
-        ` ${company.totalEmployees} empleado${company.totalEmployees === 1 ? "" : "s"}`,
-      );
-    }
-    if (company.totalBusinessEstablishments) {
-      totals.push(
-        `${company.totalBusinessEstablishments} establecimiento${company.totalBusinessEstablishments === 1 ? "" : "s"} comercial${company.totalBusinessEstablishments === 1 ? "" : "es"}`,
-      );
-    }
-    description += totals.join(" y ");
-  }
-
-  return `${description}.`;
-}
