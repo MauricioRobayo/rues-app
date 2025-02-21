@@ -1,6 +1,6 @@
 import { Bidder } from "@/app/[company]/components/Bidder/Bidder";
 import { Chamber, ChamberSkeleton } from "@/app/[company]/components/Chamber";
-import { CompanyDetails } from "@/app/[company]/components/CompanyDetails";
+import { DataList } from "@/app/[company]/components/DataList";
 import { CopyButton } from "@/app/[company]/components/CopyButton";
 import { Details } from "@/app/[company]/components/Details";
 import { EconomicActivities } from "@/app/[company]/components/EconomicActivities";
@@ -40,6 +40,7 @@ import { unstable_cache } from "next/cache";
 import { notFound, permanentRedirect } from "next/navigation";
 import { after } from "next/server";
 import { cache, Suspense } from "react";
+import { CompanyDetails } from "@/app/[company]/components/CompanyDetails";
 
 interface PageProps {
   params: Promise<{ company: string }>;
@@ -76,138 +77,6 @@ export default async function page({ params }: PageProps) {
   if (isError) {
     return <ErrorRecovery />;
   }
-
-  const details = [
-    {
-      label: "Razón social",
-      value: data.name,
-      learnMore:
-        "Es el nombre con el que se constituye una empresa y que aparece como tal en el documento público o privado de constitución o en los documentos posteriores que la reforman.",
-    },
-    {
-      label: "NIT",
-      value: (
-        <Flex align="center" gap="2">
-          <Code variant="ghost">{data.nit}</Code>
-          <CopyButton value={data.nit} />
-        </Flex>
-      ),
-      learnMore:
-        "El Número de Identificación Tributaria es el identificador numérico único utilizado para registrar la administración tributaria de las personas naturales y jurídicas.",
-    },
-    {
-      label: "Dígito de verificación",
-      value: <Code variant="ghost">{data.verificationDigit}</Code>,
-      learnMore:
-        "Es un número que va en un rango del cero (0) a nueve (9) y se ubica al final del NIT. Su objetivo es verificar la autenticidad del NIT.",
-    },
-    {
-      label: "Matrícula",
-      value: (
-        <Flex align="center" gap="2">
-          <Code variant="ghost">{data.registrationNumber}</Code>
-          <CopyButton value={data.registrationNumber} />
-          <CompanyStatusBadge isActive={data.isActive} />
-        </Flex>
-      ),
-      learnMore:
-        "La Matrícula Mercantil es el registro que deben hacer los comerciantes, ya sean personas naturales o jurídicas, y los establecimientos de comercio, en las cámaras de comercio con jurisdicción en el lugar donde van a desarrollar su actividad y donde va a funcionar el establecimiento de comercio.",
-    },
-    {
-      label: "Estado",
-      value: data.status.split(" ").length > 1 ? data.status : null,
-    },
-    {
-      label: "Sigla",
-      value: data.shortName,
-    },
-    { label: "Tipo de sociedad", value: data.type },
-    { label: "Organización jurídica", value: data.legalEntityType },
-    { label: "Categoría de la matrícula", value: data.category },
-    { label: "Fecha de matrícula", value: data.registrationDate },
-    { label: "Antigüedad", value: data.yearsDoingBusinesses },
-    { label: "Último año renovado", value: data.lastRenewalYear },
-    { label: "Fecha de renovación", value: data.renewalDate },
-    { label: "Fecha de cancelación", value: data.cancellationDate },
-    { label: "Tamaño de la empresa", value: data.size },
-    { label: "Municipio", value: data.city },
-    { label: "Departamento", value: data.state },
-    {
-      label: "Dirección",
-      value:
-        data.address &&
-        data.city &&
-        data.state &&
-        process.env.GOOGLE_MAPS_API_KEY ? (
-          <Flex direction="column" gap="2" width="100%">
-            {data.address}
-            <Box>
-              <ToggleContent label="Ver mapa">
-                <GoogleMapsEmbed
-                  apiKey={process.env.GOOGLE_MAPS_API_KEY}
-                  height={400}
-                  width="100%"
-                  mode="place"
-                  q={`${data.address},${data.city},${data.state},Colombia`}
-                />
-              </ToggleContent>
-            </Box>
-          </Flex>
-        ) : null,
-    },
-    { label: "Zona comercial", value: data.area },
-    {
-      label: "Teléfono",
-      value:
-        data.phoneNumbers && data.phoneNumbers.length > 0 ? (
-          <PhoneNumbers phoneNumbers={data.phoneNumbers} />
-        ) : null,
-    },
-    {
-      label: "Corre electrónico",
-      value: data.email ? (
-        <Box>
-          <ToggleContent label="Ver correo electrónico">
-            <Link href={`mailto:${data.email}`}>{data.email}</Link>
-          </ToggleContent>
-        </Box>
-      ) : null,
-    },
-    {
-      label: "Cantidad de establecimientos",
-      value: data.totalBusinessEstablishments,
-    },
-    { label: "Número de empleados", value: data.totalEmployees },
-    {
-      label: "Registro proponente",
-      value: data.bidderId ? <Bidder bidderId={data.bidderId} /> : null,
-    },
-    {
-      label: "Objecto social",
-      value: data.scope ? <ReadMore text={data.scope} /> : null,
-    },
-    {
-      label: "Actividad económica",
-      value: <EconomicActivities activities={data.economicActivities} />,
-    },
-    {
-      label: "Actividad económica de mayores ingresos",
-      value: data.highestRevenueEconomicActivityCode ? (
-        <Code size="2">{data.highestRevenueEconomicActivityCode}</Code>
-      ) : null,
-    },
-    {
-      label: "Representante legal",
-      value:
-        data.legalRepresentatives && data.legalRepresentatives.length > 0 ? (
-          <LegalRepresentatives
-            legalRepresentatives={data.legalRepresentatives}
-            chamberCode={data.chamber.code}
-            registrationNumber={data.registrationNumber}
-          />
-        ) : null,
-    },
-  ];
 
   const establishments = data.establishments?.map((establishment) => ({
     id: establishment.registrationNumber,
@@ -485,15 +354,7 @@ export default async function page({ params }: PageProps) {
             width="auto"
             flow="row-dense"
           >
-            <Section
-              size={{ initial: "1", sm: "2" }}
-              id="detalles-de-la-empresa"
-            >
-              <Heading as="h3" size="4" mb="2">
-                Detalles de la Empresa
-              </Heading>
-              <CompanyDetails details={details} />
-            </Section>
+            <CompanyDetails company={data} />
             <Box>
               <Section size="2" id="camara-de-comercio">
                 <Heading as="h3" size="4" mb="2">
@@ -509,7 +370,7 @@ export default async function page({ params }: PageProps) {
                     Información financiera {financialInformation.year}
                   </Heading>
                   <Details summary="Ver información financiera">
-                    <CompanyDetails details={financialInformation.details} />
+                    <DataList items={financialInformation.details} />
                   </Details>
                 </Section>
               )}
@@ -519,7 +380,7 @@ export default async function page({ params }: PageProps) {
                     Información de Capitales
                   </Heading>
                   <Details summary="Ver información de capitales">
-                    <CompanyDetails details={capitalInformation} />
+                    <DataList items={capitalInformation} />
                   </Details>
                 </Section>
               )}
@@ -546,9 +407,7 @@ export default async function page({ params }: PageProps) {
                                     `RNT ${establishment.tourismRegistries.at(0)?.id}`}
                                 </summary>
                                 <Flex my="4" pl="4" direction="column" gap="4">
-                                  <CompanyDetails
-                                    details={establishment.details}
-                                  />
+                                  <DataList items={establishment.details} />
                                   {(establishment.tourismRegistries ?? []).map(
                                     (registry) => (
                                       <Flex
@@ -559,9 +418,7 @@ export default async function page({ params }: PageProps) {
                                         <Heading as="h4" size="4">
                                           Registro Nacional de Turismo
                                         </Heading>
-                                        <CompanyDetails
-                                          details={registry.details}
-                                        />
+                                        <DataList items={registry.details} />
                                       </Flex>
                                     ),
                                   )}
