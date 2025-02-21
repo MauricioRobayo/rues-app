@@ -5,19 +5,19 @@ import { Text, Box, Code, Flex, Heading, Section } from "@radix-ui/themes";
 
 export function NameChanges({ changes }: { changes?: CompanyNameChangeDto[] }) {
   const nameChanges = (changes ?? []).map((nameChange) => ({
-    registrationNumber: nameChange.registrationNumber,
     name: nameChange.previousName,
+    date: nameChange.date,
     details: [
       { label: "Razón Social", value: nameChange.previousName },
       { label: "Fecha del cambio", value: nameChange.date },
       {
         label: "Matrícula",
-        value: (
+        value: nameChange.registrationNumber ? (
           <Flex align="center" gap="2">
             <Code variant="ghost">{nameChange.registrationNumber}</Code>
             <CopyButton value={nameChange.registrationNumber} />
           </Flex>
-        ),
+        ) : null,
       },
     ],
   }));
@@ -34,7 +34,7 @@ export function NameChanges({ changes }: { changes?: CompanyNameChangeDto[] }) {
       <Flex asChild direction="column" gap="2">
         <ul>
           {nameChanges.map((nameChange) => (
-            <li key={`${nameChange.name}-${nameChange.registrationNumber}`}>
+            <li key={`${nameChange.name}-${nameChange.date}`}>
               <details>
                 <Text truncate asChild>
                   <summary>{nameChange.name}</summary>
