@@ -9,8 +9,9 @@ import { yearsDoingBusinesses } from "@/app/lib/yearsDoingBusinesses";
 import { mapStoreFrontToEstablishmentDto } from "@/app/mappers/mapStoreFrontToBusinessEstablishmentDto";
 import type { CapitalInformationDto } from "@/app/types/CapitalDto";
 import type { CompanyDto } from "@/app/types/CompanyDto";
+import type { CompanyNameChangeDto } from "@/app/types/CompanyNameChangeDto";
 import type { FinancialInformationDto } from "@/app/types/FinancialInformationDto";
-import type { CompanyRecord } from "@mauriciorobayo/rues-api";
+import type { CompanyRecord, NameChange } from "@mauriciorobayo/rues-api";
 
 export function mapCompanyRecordToCompanyDto(data: CompanyRecord): CompanyDto {
   return {
@@ -72,9 +73,18 @@ export function mapCompanyRecordToCompanyDto(data: CompanyRecord): CompanyDto {
     nameChanges: data.HistoricoCambiosNombre?.map((nameChange) => ({
       date: formatDetailsDate(nameChange.fecha_cambio),
       previousName: nameChange.razon_social_anterior,
-      chamberCode: nameChange.codigo_camara.padStart(2, "0"),
-      registrationNumber: nameChange.matricula.padStart(10, "0"),
-    })),
+      chamberCode: nameChange.codigo_camara
+        ? nameChange.codigo_camara.padStart(2, "0")
+        : null,
+      registrationNumber: nameChange.matricula
+        ? nameChange.matricula.padStart(10, "0")
+        : null,
+    })).filter(
+      (nameChange): nameChange is CompanyNameChangeDto =>
+        !!nameChange.date &&
+        !!nameChange.chamberCode &&
+        !!nameChange.registrationNumber,
+    ),
   };
 }
 
