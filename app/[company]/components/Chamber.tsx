@@ -1,10 +1,23 @@
 import { DataList } from "@/app/[company]/components/DataList";
 import { getChamber } from "@/app/services/chambers/service";
-import { Text, Flex, Skeleton, Link } from "@radix-ui/themes";
+import { Text, Flex, Skeleton, Link, Heading, Section } from "@radix-ui/themes";
 import { unstable_cache } from "next/cache";
-import { cache } from "react";
+import { cache, Suspense } from "react";
 
-export async function Chamber({ code }: { code: string }) {
+export function CommerceChamber({ code }: { code: string }) {
+  return (
+    <Section size="2" id="camara-de-comercio">
+      <Heading as="h3" size="4" mb="2">
+        Cámara de Comercio
+      </Heading>
+      <Suspense fallback={<ChamberSkeleton />}>
+        <CommerceChamberDetails code={code} />
+      </Suspense>
+    </Section>
+  );
+}
+
+async function CommerceChamberDetails({ code }: { code: string }) {
   const chamber = await getChamberCached(code);
 
   if (!chamber?.name) {
