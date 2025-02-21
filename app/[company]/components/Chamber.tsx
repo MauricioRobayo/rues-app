@@ -1,4 +1,4 @@
-import { CompanyDetails } from "@/app/[company]/components/CompanyDetails";
+import { DataList } from "@/app/[company]/components/DataList";
 import { getChamber } from "@/app/services/chambers/service";
 import { Text, Flex, Skeleton, Link } from "@radix-ui/themes";
 import { unstable_cache } from "next/cache";
@@ -45,7 +45,7 @@ export async function Chamber({ code }: { code: string }) {
   if (!chamber) {
     return <div>Algo salió mal.</div>;
   }
-  return <CompanyDetails details={details} />;
+  return <DataList items={details} />;
 }
 
 export function ChamberSkeleton() {
