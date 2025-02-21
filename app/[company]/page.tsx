@@ -9,6 +9,7 @@ import { CompanyDetails } from "@/app/[company]/components/CompanyDetails";
 import { CompanyHeader } from "@/app/[company]/components/CompanyHeader";
 import { ErrorRecovery } from "@/app/[company]/components/ErrorRecovery";
 import { FinancialDetails } from "@/app/[company]/components/FinancialDetails";
+import { NameChanges } from "@/app/[company]/components/NameChanges";
 import { RetrievedOn } from "@/app/[company]/components/RetrievedOn";
 import { UserReport } from "@/app/[company]/components/UserReport";
 import { PageContainer } from "@/app/components/PageContainer";
@@ -79,6 +80,7 @@ export default async function page({ params }: PageProps) {
               <FinancialDetails financialDetails={data.financialInformation} />
               <CapitalDetails capitalDetails={data.capitalInformation} />
               <BusinessEstablishments establishments={data.establishments} />
+              <NameChanges changes={data.nameChanges} />
             </Box>
           </Grid>
           <Box mb="4">
