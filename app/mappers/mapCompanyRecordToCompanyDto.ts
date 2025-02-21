@@ -11,7 +11,7 @@ import type { CapitalInformationDto } from "@/app/types/CapitalDto";
 import type { CompanyDto } from "@/app/types/CompanyDto";
 import type { CompanyNameChangeDto } from "@/app/types/CompanyNameChangeDto";
 import type { FinancialInformationDto } from "@/app/types/FinancialInformationDto";
-import type { CompanyRecord, NameChange } from "@mauriciorobayo/rues-api";
+import type { CompanyRecord } from "@mauriciorobayo/rues-api";
 
 export function mapCompanyRecordToCompanyDto(data: CompanyRecord): CompanyDto {
   return {
