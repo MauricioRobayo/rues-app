@@ -69,6 +69,12 @@ export function mapCompanyRecordToCompanyDto(data: CompanyRecord): CompanyDto {
     legalRepresentatives: getLegalRepresentative(data.vinculos),
     financialInformation: getFinancialInformation(data.informacionFinanciera),
     capitalInformation: getCapitalInformation(data.informacionCapitales),
+    nameChanges: data.HistoricoCambiosNombre?.map((nameChange) => ({
+      date: formatDetailsDate(nameChange.fecha_cambio),
+      previousName: nameChange.razon_social_anterior,
+      chamberCode: nameChange.codigo_camara.padStart(2, "0"),
+      registrationNumber: nameChange.matricula.padStart(10, "0"),
+    })),
   };
 }
 

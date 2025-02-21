@@ -1,5 +1,6 @@
 import type { BusinessEstablishmentDto } from "@/app/types/BusinessEstablishmentDto";
 import type { CapitalInformationDto } from "@/app/types/CapitalDto";
+import type { CompanyNameChangeDto } from "@/app/types/CompanyNameChangeDto";
 import type { FinancialInformationDto } from "@/app/types/FinancialInformationDto";
 
 export interface CompanyDto {
@@ -42,4 +43,5 @@ export interface CompanyDto {
   yearsDoingBusinesses: string | null;
   financialInformation?: FinancialInformationDto[];
   capitalInformation?: CapitalInformationDto[];
+  nameChanges?: CompanyNameChangeDto[];
 }
