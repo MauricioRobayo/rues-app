@@ -20,18 +20,6 @@ export const companies = sqliteTable(
     return [index("rues_sync_idx").on(table.ruesSyncId)];
   },
 );
-export const chambers = sqliteTable("chambers", {
-  id: int().primaryKey({ autoIncrement: true }),
-  code: text().unique().notNull(),
-  name: text().notNull(),
-  city: text().notNull(),
-  address: text().notNull(),
-  state: text().notNull(),
-  email: text(),
-  phoneNumber: text(),
-  certificateUrl: text(),
-  url: text(),
-});
 export const ruesSync = sqliteTable("rues_sync", {
   id: int().primaryKey({ autoIncrement: true }),
   startedAtMs: int({ mode: "timestamp_ms" }).notNull(),

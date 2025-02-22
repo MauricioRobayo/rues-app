@@ -1,26 +1,11 @@
+import { chambers } from "@/app/lib/chambers";
 import { DataList } from "@/app/[company]/components/DataList";
-import { getChamber } from "@/app/services/chambers/service";
-import { Text, Flex, Skeleton, Link, Heading, Section } from "@radix-ui/themes";
-import { unstable_cache } from "next/cache";
-import { cache, Suspense } from "react";
+import { Heading, Link, Section } from "@radix-ui/themes";
 
 export function CommerceChamber({ code }: { code: string }) {
-  return (
-    <Section size="2" id="camara-de-comercio">
-      <Heading as="h3" size="4" mb="2">
-        Cámara de Comercio
-      </Heading>
-      <Suspense fallback={<ChamberSkeleton />}>
-        <CommerceChamberDetails code={code} />
-      </Suspense>
-    </Section>
-  );
-}
+  const chamber = getChamber(code);
 
-async function CommerceChamberDetails({ code }: { code: string }) {
-  const chamber = await getChamberCached(code);
-
-  if (!chamber?.name) {
+  if (!chamber) {
     return null;
   }
 
@@ -55,35 +40,24 @@ async function CommerceChamberDetails({ code }: { code: string }) {
     },
   ];
 
-  if (!chamber) {
-    return <div>Algo salió mal.</div>;
-  }
-  return <DataList items={details} />;
-}
-
-export function ChamberSkeleton() {
-  const placeholders = [
-    ["Nombre", "Cámara de comercio de algún lado"],
-    ["Dirección", "Algún lugar en algún lado"],
-    ["Ciudad", "Alguna lugar"],
-    ["Departamento", "Algún lado"],
-  ];
-
   return (
-    <Flex direction="column" gap="4">
-      {placeholders.map((placeholder) => (
-        <Flex key={placeholder.join()} direction="column" gap="2">
-          {placeholder.map((item) => (
-            <Text key={item}>
-              <Skeleton>{item}</Skeleton>
-            </Text>
-          ))}
-        </Flex>
-      ))}
-    </Flex>
+    <Section size="2" id="camara-de-comercio">
+      <Heading as="h3" size="4" mb="2">
+        Cámara de Comercio
+      </Heading>
+      <DataList items={details} />;
+    </Section>
   );
 }
 
-const getChamberCached = unstable_cache(cache(getChamber), undefined, {
-  revalidate: false, // cache indefinitely or until matching
-});
+function isChamberCode(code: string): code is keyof typeof chambers {
+  return code in chambers;
+}
+
+function getChamber(code: string) {
+  if (isChamberCode(code)) {
+    return chambers[code];
+  }
+
+  return null;
+}
