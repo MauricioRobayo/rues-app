@@ -1,7 +1,7 @@
 import { drizzle } from "drizzle-orm/libsql";
 import { createClient } from "@libsql/client";
 
-import { companies, chambers, ruesSync } from "@/app/db/schema";
+import { companies, ruesSync } from "@/app/db/schema";
 
 const client = createClient({
   url: process.env.TURSO_DATABASE_URL!,
@@ -9,7 +9,7 @@ const client = createClient({
 });
 export const db = drizzle({
   client,
-  schema: { companies, chambers, ruesSync },
+  schema: { companies, ruesSync },
   casing: "camelCase",
   // logger: true,
 });

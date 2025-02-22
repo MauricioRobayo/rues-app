@@ -1,190 +1,196 @@
-import dotenv from "dotenv";
+/*
+  This script was used to get more chambers info from different sources,
+  but it was used when the chambers where a table in the db.
+  There is no longer a chambers table in the db as it has been moved to a json file.
+*/
 
-dotenv.config({ path: ".env.local" });
+// import dotenv from "dotenv";
 
-import { chambersRepository } from "@/app/services/chambers/repository";
-import { tokensService } from "@/app/services/tokens/service";
-import { advancedSearch, getFile } from "@mauriciorobayo/rues-api";
-import * as cheerio from "cheerio";
+// dotenv.config({ path: ".env.local" });
 
-const defaultCertificateUrl =
-  "https://sii.confecamaras.co/vista/plantilla/certificados.php?empresa=";
+// import { chambersRepository } from "@/app/services/chambers/repository";
+// import { tokensService } from "@/app/services/tokens/service";
+// import { advancedSearch, getFile } from "@mauriciorobayo/rues-api";
+// import * as cheerio from "cheerio";
 
-// https://www.serviciosvirtuales.com.co/es/
-const serviciosVirtuales: Record<string, string> = {
-  "01": "https://www.serviciosvirtuales.com.co/es/camara/armenia/certificados/",
-  "20": "https://www.serviciosvirtuales.com.co/es/camara/manizales/certificados/",
-  "27": "https://www.serviciosvirtuales.com.co/es/camara/pereira/certificados/",
-  "55": "https://www.serviciosvirtuales.com.co/es/camara/aburrasur/certificados/",
-};
+// const defaultCertificateUrl =
+//   "https://sii.confecamaras.co/vista/plantilla/certificados.php?empresa=";
 
-async function main() {
-  const chambers = await chambersRepository.getAll([
-    "name",
-    "code",
-    "city",
-    "state",
-  ]);
-  for (const { code, name, city, state } of chambers) {
-    const moreData = await tryToGetMoreData({ name, city, state });
-    const data: {
-      url?: string;
-      certificateUrl?: string;
-      email?: string;
-      phoneNumber?: string;
-    } = moreData;
+// // https://www.serviciosvirtuales.com.co/es/
+// const serviciosVirtuales: Record<string, string> = {
+//   "01": "https://www.serviciosvirtuales.com.co/es/camara/armenia/certificados/",
+//   "20": "https://www.serviciosvirtuales.com.co/es/camara/manizales/certificados/",
+//   "27": "https://www.serviciosvirtuales.com.co/es/camara/pereira/certificados/",
+//   "55": "https://www.serviciosvirtuales.com.co/es/camara/aburrasur/certificados/",
+// };
 
-    if (serviciosVirtuales[code]) {
-      data.certificateUrl = serviciosVirtuales[code];
-    } else {
-      const url = await verifyDefaultUrl(code);
-      data.certificateUrl = url ?? undefined;
-    }
+// async function main() {
+//   const chambers = await chambersRepository.getAll([
+//     "name",
+//     "code",
+//     "city",
+//     "state",
+//   ]);
+//   for (const { code, name, city, state } of chambers) {
+//     const moreData = await tryToGetMoreData({ name, city, state });
+//     const data: {
+//       url?: string;
+//       certificateUrl?: string;
+//       email?: string;
+//       phoneNumber?: string;
+//     } = moreData;
 
-    if (!data.certificateUrl) {
-      const token = await tokensService.getToken();
-      const response = await advancedSearch({
-        query: {
-          razon: "de",
-          cod_camara: code,
-        },
-        token,
-      });
+//     if (serviciosVirtuales[code]) {
+//       data.certificateUrl = serviciosVirtuales[code];
+//     } else {
+//       const url = await verifyDefaultUrl(code);
+//       data.certificateUrl = url ?? undefined;
+//     }
 
-      const company =
-        response.status === "success"
-          ? response.data.registros?.at(0)
-          : (console.warn(
-              "failed on ",
-              code,
-              response.statusCode,
-              response.error,
-            ),
-            null);
+//     if (!data.certificateUrl) {
+//       const token = await tokensService.getToken();
+//       const response = await advancedSearch({
+//         query: {
+//           razon: "de",
+//           cod_camara: code,
+//         },
+//         token,
+//       });
 
-      const file = company?.id_rm
-        ? await getFile({ registrationId: company.id_rm })
-        : (console.warn("no id_rm on", company), null);
+//       const company =
+//         response.status === "success"
+//           ? response.data.registros?.at(0)
+//           : (console.warn(
+//               "failed on ",
+//               code,
+//               response.statusCode,
+//               response.error,
+//             ),
+//             null);
 
-      const certificateUrl =
-        file?.status === "success"
-          ? file.data.registros.url_venta_certificados
-          : (console.warn("failed to get file", code), null);
+//       const file = company?.id_rm
+//         ? await getFile({ registrationId: company.id_rm })
+//         : (console.warn("no id_rm on", company), null);
 
-      data.certificateUrl = certificateUrl ?? undefined;
-    }
+//       const certificateUrl =
+//         file?.status === "success"
+//           ? file.data.registros.url_venta_certificados
+//           : (console.warn("failed to get file", code), null);
 
-    console.log(code, data);
-    await chambersRepository.updateByCode(code, data);
-  }
-}
+//       data.certificateUrl = certificateUrl ?? undefined;
+//     }
 
-const chambersData = await scrapeChamberData();
-async function tryToGetMoreData({
-  name,
-  city,
-  state,
-}: {
-  name: string;
-  city: string;
-  state: string;
-}) {
-  const shortName = name.replace(/^Cámara de comercio (del |de )?/i, "");
-  const normalizedShortName = normalize(shortName);
-  const normalizedCity = normalize(city);
-  const normalizedState = normalize(state);
-  const moreData = chambersData.find((chamber) => {
-    const normalizedChamberName = normalize(chamber.name);
-    return (
-      normalizedChamberName.includes(normalizedShortName) ||
-      normalizedShortName.includes(normalizedChamberName) ||
-      normalizedChamberName.includes(normalizedCity) ||
-      normalizedCity.includes(normalizedChamberName) ||
-      normalizedChamberName.includes(normalizedState) ||
-      normalizedState.includes(normalizedChamberName)
-    );
-  });
-  return {
-    url: moreData?.url,
-    phoneNumber: moreData?.phoneNumber,
-    email: moreData?.email,
-  };
-}
+//     console.log(code, data);
+//     await chambersRepository.updateByCode(code, data);
+//   }
+// }
 
-async function verifyDefaultUrl(code: string) {
-  const body = {
-    x_c: "c05MFPDI4pxFc",
-    y_c: "c0lkdeKR4%2F0Zk",
-    cc: code.padStart(2, "0"),
-    acc: 1,
-  };
-  const response = await fetch(
-    "https://sii.confecamaras.co/controlador/Route.php",
-    {
-      headers: {
-        "content-type": "application/x-www-form-urlencoded; charset=UTF-8",
-      },
-      body: Object.entries(body)
-        .map((entry) => entry.join("="))
-        .join("&"),
-      method: "POST",
-    },
-  );
+// const chambersData = await scrapeChamberData();
+// async function tryToGetMoreData({
+//   name,
+//   city,
+//   state,
+// }: {
+//   name: string;
+//   city: string;
+//   state: string;
+// }) {
+//   const shortName = name.replace(/^Cámara de comercio (del |de )?/i, "");
+//   const normalizedShortName = normalize(shortName);
+//   const normalizedCity = normalize(city);
+//   const normalizedState = normalize(state);
+//   const moreData = chambersData.find((chamber) => {
+//     const normalizedChamberName = normalize(chamber.name);
+//     return (
+//       normalizedChamberName.includes(normalizedShortName) ||
+//       normalizedShortName.includes(normalizedChamberName) ||
+//       normalizedChamberName.includes(normalizedCity) ||
+//       normalizedCity.includes(normalizedChamberName) ||
+//       normalizedChamberName.includes(normalizedState) ||
+//       normalizedState.includes(normalizedChamberName)
+//     );
+//   });
+//   return {
+//     url: moreData?.url,
+//     phoneNumber: moreData?.phoneNumber,
+//     email: moreData?.email,
+//   };
+// }
 
-  const data = await response.json();
+// async function verifyDefaultUrl(code: string) {
+//   const body = {
+//     x_c: "c05MFPDI4pxFc",
+//     y_c: "c0lkdeKR4%2F0Zk",
+//     cc: code.padStart(2, "0"),
+//     acc: 1,
+//   };
+//   const response = await fetch(
+//     "https://sii.confecamaras.co/controlador/Route.php",
+//     {
+//       headers: {
+//         "content-type": "application/x-www-form-urlencoded; charset=UTF-8",
+//       },
+//       body: Object.entries(body)
+//         .map((entry) => entry.join("="))
+//         .join("&"),
+//       method: "POST",
+//     },
+//   );
 
-  if (Number(data.codigoerror)) {
-    return null;
-  }
+//   const data = await response.json();
 
-  return `${defaultCertificateUrl}${data.cc}`;
-}
+//   if (Number(data.codigoerror)) {
+//     return null;
+//   }
 
-async function scrapeChamberData() {
-  const url =
-    "https://confecamaras.org.co/conozca-la-red-de-camaras-de-comercio/";
+//   return `${defaultCertificateUrl}${data.cc}`;
+// }
 
-  const response = await fetch(url);
-  if (!response.ok) {
-    throw new Error(`Failed to get page ${url}`);
-  }
-  const html = await response.text();
+// async function scrapeChamberData() {
+//   const url =
+//     "https://confecamaras.org.co/conozca-la-red-de-camaras-de-comercio/";
 
-  const $ = cheerio.load(html);
+//   const response = await fetch(url);
+//   if (!response.ok) {
+//     throw new Error(`Failed to get page ${url}`);
+//   }
+//   const html = await response.text();
 
-  const tooltips = $("#mapa-zonas .elementor-element .e-hotspot__tooltip");
+//   const $ = cheerio.load(html);
 
-  const result: {
-    name: string;
-    email?: string;
-    url?: string;
-    phoneNumber?: string;
-  }[] = [];
-  tooltips.each((_, element) => {
-    const tooltip = $(element);
+//   const tooltips = $("#mapa-zonas .elementor-element .e-hotspot__tooltip");
 
-    const name = tooltip.find("b, strong").text().replace(/\s+/g, " ").trim();
-    const email = tooltip
-      .find('a[href^="mailto:"]')
-      .attr("href")
-      ?.replace("mailto:", "");
-    const url = tooltip.find('a[href^="http"]').attr("href");
-    const phoneNumber = tooltip
-      .text()
-      .match(/(?<=>)[\d()\s-]+(?=<)/)?.[0]
-      .trim();
-    result.push({ name, email, url, phoneNumber });
-  });
-  return result;
-}
+//   const result: {
+//     name: string;
+//     email?: string;
+//     url?: string;
+//     phoneNumber?: string;
+//   }[] = [];
+//   tooltips.each((_, element) => {
+//     const tooltip = $(element);
 
-function normalize(str: string): string {
-  return str
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "")
-    .replace(/\s+/g, " ")
-    .toLowerCase()
-    .trim();
-}
+//     const name = tooltip.find("b, strong").text().replace(/\s+/g, " ").trim();
+//     const email = tooltip
+//       .find('a[href^="mailto:"]')
+//       .attr("href")
+//       ?.replace("mailto:", "");
+//     const url = tooltip.find('a[href^="http"]').attr("href");
+//     const phoneNumber = tooltip
+//       .text()
+//       .match(/(?<=>)[\d()\s-]+(?=<)/)?.[0]
+//       .trim();
+//     result.push({ name, email, url, phoneNumber });
+//   });
+//   return result;
+// }
 
-main();
+// function normalize(str: string): string {
+//   return str
+//     .normalize("NFD")
+//     .replace(/[\u0300-\u036f]/g, "")
+//     .replace(/\s+/g, " ")
+//     .toLowerCase()
+//     .trim();
+// }
+
+// main();

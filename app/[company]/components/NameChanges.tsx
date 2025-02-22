@@ -1,26 +1,34 @@
 import { CopyButton } from "@/app/[company]/components/CopyButton";
 import { DataList } from "@/app/[company]/components/DataList";
+import { getChamber } from "@/app/lib/chambers";
 import type { CompanyNameChangeDto } from "@/app/types/CompanyNameChangeDto";
-import { Text, Box, Code, Flex, Heading, Section } from "@radix-ui/themes";
+import { Box, Code, Flex, Heading, Section, Text } from "@radix-ui/themes";
 
 export function NameChanges({ changes }: { changes?: CompanyNameChangeDto[] }) {
-  const nameChanges = (changes ?? []).map((nameChange) => ({
-    name: nameChange.previousName,
-    date: nameChange.date,
-    details: [
-      { label: "Razón Social", value: nameChange.previousName },
-      { label: "Fecha del cambio", value: nameChange.date },
-      {
-        label: "Matrícula",
-        value: nameChange.registrationNumber ? (
-          <Flex align="center" gap="2">
-            <Code variant="ghost">{nameChange.registrationNumber}</Code>
-            <CopyButton value={nameChange.registrationNumber} />
-          </Flex>
-        ) : null,
-      },
-    ],
-  }));
+  const nameChanges = (changes ?? []).map((nameChange) => {
+    const chamber = getChamber(nameChange.chamberCode);
+    return {
+      name: nameChange.previousName,
+      date: nameChange.date,
+      details: [
+        { label: "Razón Social", value: nameChange.previousName },
+        { label: "Fecha del cambio", value: nameChange.date },
+        {
+          label: "Matrícula",
+          value: nameChange.registrationNumber ? (
+            <Flex align="center" gap="2">
+              <Code variant="ghost">{nameChange.registrationNumber}</Code>
+              <CopyButton value={nameChange.registrationNumber} />
+            </Flex>
+          ) : null,
+        },
+        {
+          label: "Cámara de Comercio",
+          value: chamber?.name.replace(/Cámara de comercio (de|del|de la)/, ""),
+        },
+      ],
+    };
+  });
 
   if (nameChanges.length === 0) {
     return null;
