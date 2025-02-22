@@ -2,15 +2,7 @@ import { CopyButton } from "@/app/[company]/components/CopyButton";
 import { DataList } from "@/app/[company]/components/DataList";
 import { getChamber } from "@/app/lib/chambers";
 import type { CompanyNameChangeDto } from "@/app/types/CompanyNameChangeDto";
-import {
-  Text,
-  Box,
-  Code,
-  Flex,
-  Heading,
-  Section,
-  Link,
-} from "@radix-ui/themes";
+import { Box, Code, Flex, Heading, Section, Text } from "@radix-ui/themes";
 
 export function NameChanges({ changes }: { changes?: CompanyNameChangeDto[] }) {
   const nameChanges = (changes ?? []).map((nameChange) => {
