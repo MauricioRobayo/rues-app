@@ -1,5 +1,5 @@
-import { chambers } from "@/app/lib/chambers";
 import { DataList } from "@/app/[company]/components/DataList";
+import { getChamber } from "@/app/lib/chambers";
 import { Heading, Link, Section } from "@radix-ui/themes";
 
 export function CommerceChamber({ code }: { code: string }) {
@@ -45,19 +45,7 @@ export function CommerceChamber({ code }: { code: string }) {
       <Heading as="h3" size="4" mb="2">
         Cámara de Comercio
       </Heading>
-      <DataList items={details} />;
+      <DataList items={details} />
     </Section>
   );
-}
-
-function isChamberCode(code: string): code is keyof typeof chambers {
-  return code in chambers;
-}
-
-function getChamber(code: string) {
-  if (isChamberCode(code)) {
-    return chambers[code];
-  }
-
-  return null;
 }

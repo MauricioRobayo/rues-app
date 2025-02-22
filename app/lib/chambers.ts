@@ -682,3 +682,15 @@ export const chambers = {
     url: "http://www.cccartagena.org.co/",
   },
 };
+
+function isChamberCode(code: string): code is keyof typeof chambers {
+  return code in chambers;
+}
+
+export function getChamber(code: string) {
+  if (isChamberCode(code)) {
+    return chambers[code];
+  }
+
+  return null;
+}
