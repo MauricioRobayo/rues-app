@@ -9,10 +9,12 @@ export async function LegalRepresentatives({
   legalRepresentatives,
   chamberCode,
   registrationNumber,
+  fetchPowers,
 }: {
   legalRepresentatives: { name: string; type: string }[];
   chamberCode: string;
   registrationNumber: string;
+  fetchPowers: boolean;
 }) {
   const powers = await getPowersCached({
     chamberCode: chamberCode.padStart(2, "0"),

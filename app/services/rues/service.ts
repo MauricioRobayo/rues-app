@@ -24,7 +24,7 @@ export interface ConsolidatedCompanyInfo {
 export async function queryNit(
   nit: number,
 ): Promise<
-  | { status: "success"; data: CompanyDto | null }
+  | { status: "success"; data: CompanyDto[] | null }
   | { status: "error"; statusCode?: number; error?: unknown }
 > {
   let token = await tokensService.getToken();
@@ -59,19 +59,19 @@ export async function queryNit(
           throw new Error(`queryNit failed ${JSON.stringify(response)}`);
         }
 
-        const activeRecord = response.data.registros.find(
-          (record) => record.estado_matricula === "ACTIVA",
-        );
-        const mostRecentRecord = response.data.registros
-          .sort(
-            (a, b) =>
-              Number(b.ultimo_ano_renovado) - Number(a.ultimo_ano_renovado),
-          )
-          .at(0);
-        const record = activeRecord ?? mostRecentRecord;
-
         return {
-          data: record ? mapCompanyRecordToCompanyDto(record) : null,
+          data: response.data.registros
+            .map(mapCompanyRecordToCompanyDto)
+            .filter((record) => !!record.name)
+            .toSorted((a, b) => {
+              if (a.isActive && !b.isActive) {
+                return -1;
+              }
+              if (a.isActive && b.isActive) {
+                return 0;
+              }
+              return 1;
+            }),
           status: "success",
         } as const;
       },
