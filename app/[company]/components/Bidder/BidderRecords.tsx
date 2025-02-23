@@ -1,6 +1,6 @@
 "use client";
 
-import { getBidderRecords } from "@/app/[company]/actions";
+import { getBidderRecordsAction } from "@/app/[company]/actions";
 import { ExpandableList } from "@/app/[company]/components/ExpandableList";
 import { Action, getRecaptchaToken } from "@/app/lib/getRecapchaToken";
 import type { BidderRecordDto } from "@/app/types/BidderDto";
@@ -16,7 +16,7 @@ export function BidderRecords({ bidderId }: { bidderId: string }) {
   >(
     async (_, bidderId) => {
       const recaptchaToken = await getRecaptchaToken(Action.BIDDER_RECORDS);
-      return getBidderRecords({ bidderId, recaptchaToken });
+      return getBidderRecordsAction({ bidderId, recaptchaToken });
     },
     { status: "idle" },
   );

@@ -148,28 +148,20 @@ export async function getLegalPowers({
   chamberCode: string;
   registrationNumber: string;
 }) {
-  // The legalRepresentativePowers request has
-  // given very long timeouts which have ended
-  // in the whole page timing out.
-  const timeout = 2_000;
+  // The legalRepresentativePowers request
+  //  ended after very long timeouts.
+  const timeout = 3_000;
   const abortController = new AbortController();
   setTimeout(() => {
     abortController.abort();
   }, timeout);
   const token = await tokensService.getToken();
-  const response = await getLegalRepresentativePowers({
+  return getLegalRepresentativePowers({
     query: {
-      chamberCode,
-      registrationNumber,
+      chamberCode: chamberCode.padStart(2, "0"),
+      registrationNumber: registrationNumber.padStart(10, "0"),
     },
     token,
     signal: abortController.signal,
   });
-
-  if (response.status === "error") {
-    console.log("getLegalPowers failed", response);
-    return null;
-  }
-
-  return response.data;
 }
