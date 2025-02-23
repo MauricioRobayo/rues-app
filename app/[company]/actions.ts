@@ -2,16 +2,20 @@
 
 import { Action } from "@/app/lib/getRecapchaToken";
 import { verifyRecaptcha } from "@/app/lib/verifyRecaptcha";
-import { revalidatePath, revalidateTag } from "next/cache";
-import { BASE_URL } from "@/app/lib/constants";
+import { revalidatePath, revalidateTag, unstable_cache } from "next/cache";
+import { BASE_URL, COMPANY_REVALIDATION_TIME } from "@/app/lib/constants";
 import { Octokit } from "@octokit/rest";
 import { z } from "zod";
 import { ccbService } from "@/app/services/ccb/service";
+import { getLegalPowers } from "@/app/services/rues/service";
 
-const token = process.env.GITHUB_TOKEN ?? "";
-const owner = process.env.GITHUB_OWNER ?? "";
-const repo = process.env.GITHUB_REPO ?? "";
-const label = "user report";
+const ghToken = process.env.GITHUB_TOKEN ?? "";
+const ghRepoOwner = process.env.GITHUB_OWNER ?? "";
+const ghRepo = process.env.GITHUB_REPO ?? "";
+
+const octokit = new Octokit({
+  auth: ghToken,
+});
 
 export async function revalidatePathAction({
   path,
@@ -51,15 +55,6 @@ export async function revalidateTagAction({
   revalidateTag(tag);
 }
 
-const octokit = new Octokit({
-  auth: token,
-});
-
-export type CreateUserReportStatus = {
-  status: "success" | "error";
-  message: string;
-};
-
 const schema = z.object({
   description: z.string().trim().min(4),
   nit: z.string().trim().min(8),
@@ -74,7 +69,11 @@ export async function userReportAction({
   description: string;
   slug: string;
   recaptchaToken: string;
-}): Promise<CreateUserReportStatus> {
+}): Promise<{
+  status: "success" | "error";
+  message: string;
+}> {
+  const label = "user report";
   const validatedFields = schema.safeParse({
     description,
     nit: slug,
@@ -104,14 +103,14 @@ export async function userReportAction({
   }
 
   try {
-    const existingIssue = await findOpenIssue(title);
+    const existingIssue = await findOpenIssue({ label, title });
 
     if (existingIssue) {
       await octokit.issues.createComment({
         body: validatedFields.data.description,
         issue_number: existingIssue.number,
-        owner,
-        repo,
+        owner: ghRepoOwner,
+        repo: ghRepo,
       });
       return {
         status: "success",
@@ -120,10 +119,10 @@ export async function userReportAction({
     }
 
     await octokit.issues.create({
-      owner,
-      repo,
+      owner: ghRepoOwner,
+      repo: ghRepo,
       title,
-      assignee: owner,
+      assignee: ghRepoOwner,
       body: `${validatedFields.data.description}\n\n${url}`,
       labels: [label],
     });
@@ -138,7 +137,7 @@ export async function userReportAction({
   }
 }
 
-export async function getBidderRecords({
+export async function getBidderRecordsAction({
   bidderId,
   recaptchaToken,
 }: {
@@ -155,15 +154,48 @@ export async function getBidderRecords({
       status: "error",
     } as const;
   }
-  return ccbService.getBidderRecords(bidderId);
+  return getBidderRecordsCache(bidderId);
 }
 
-async function findOpenIssue(title: string) {
+export async function getLegalPowersAction({
+  chamberCode,
+  registrationNumber,
+  recaptchaToken,
+}: {
+  chamberCode: string;
+  registrationNumber: string;
+  recaptchaToken: string;
+}) {
+  if (
+    !(await verifyRecaptcha({
+      token: recaptchaToken,
+      action: Action.LEGAL_POWERS,
+    }))
+  ) {
+    return {
+      status: "error",
+    } as const;
+  }
+  const powers = await getLegalPowersCached({
+    chamberCode,
+    registrationNumber,
+  });
+
+  return powers;
+}
+
+async function findOpenIssue({
+  title,
+  label,
+}: {
+  title: string;
+  label: string;
+}) {
   const issues = await octokit.issues.listForRepo({
-    owner,
-    repo,
-    assignee: owner,
-    creator: owner,
+    owner: ghRepoOwner,
+    repo: ghRepo,
+    assignee: ghRepoOwner,
+    creator: ghRepoOwner,
     label,
     state: "open",
   });
@@ -176,3 +208,15 @@ async function findOpenIssue(title: string) {
     return null;
   }
 }
+
+const getBidderRecordsCache = unstable_cache(
+  ccbService.getBidderRecords,
+  undefined,
+  {
+    revalidate: COMPANY_REVALIDATION_TIME,
+  },
+);
+
+const getLegalPowersCached = unstable_cache(getLegalPowers, undefined, {
+  revalidate: COMPANY_REVALIDATION_TIME,
+});

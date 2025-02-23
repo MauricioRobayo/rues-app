@@ -3,7 +3,7 @@ import { getChamber } from "@/app/lib/chambers";
 import { Heading, Link, Section } from "@radix-ui/themes";
 
 export function CommerceChamber({ code }: { code: string }) {
-  const chamber = getChamber(code);
+  const chamber = getChamber(code.padStart(2, "0"));
 
   if (!chamber) {
     return null;

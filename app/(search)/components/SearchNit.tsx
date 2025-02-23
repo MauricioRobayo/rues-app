@@ -143,12 +143,12 @@ export function SearchNit() {
           )}
         </>
       ) : null}
-      <Callout.Root color="gray">
+      <Callout.Root color="green" variant="soft">
         <Callout.Icon>
           <InfoCircledIcon />
         </Callout.Icon>
         <Callout.Text>
-          Consulte cualquier NIT agregándolo a la URL:{" "}
+          Consulte cualquier NIT agregándolo directamente a la URL:{" "}
           <Link href="/899999068" prefetch={false}>
             www.registronit.com/
             <Strong asChild>

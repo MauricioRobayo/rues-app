@@ -4,7 +4,6 @@ import type { CompanyNameChangeDto } from "@/app/types/CompanyNameChangeDto";
 import type { FinancialInformationDto } from "@/app/types/FinancialInformationDto";
 
 export interface CompanyDto {
-  retrievedOn: number;
   address: string | null;
   area?: string;
   bidderId?: string | null;

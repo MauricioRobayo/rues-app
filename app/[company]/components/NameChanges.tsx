@@ -1,5 +1,6 @@
 import { CopyButton } from "@/app/[company]/components/CopyButton";
 import { DataList } from "@/app/[company]/components/DataList";
+import { ExpandableList } from "@/app/[company]/components/ExpandableList";
 import { getChamber } from "@/app/lib/chambers";
 import type { CompanyNameChangeDto } from "@/app/types/CompanyNameChangeDto";
 import { Box, Code, Flex, Heading, Section, Text } from "@radix-ui/themes";
@@ -41,18 +42,20 @@ export function NameChanges({ changes }: { changes?: CompanyNameChangeDto[] }) {
       </Heading>
       <Flex asChild direction="column" gap="2">
         <ul>
-          {nameChanges.map((nameChange) => (
-            <li key={`${nameChange.name}-${nameChange.date}`}>
-              <details>
-                <Text truncate asChild>
-                  <summary>{nameChange.name}</summary>
-                </Text>
-                <Box my="4" pl="4">
-                  <DataList items={nameChange.details} />
-                </Box>
-              </details>
-            </li>
-          ))}
+          <ExpandableList
+            items={nameChanges.map((nameChange) => (
+              <li key={`${nameChange.name}-${nameChange.date}`}>
+                <details name="cambio-de-nombre">
+                  <Text truncate asChild>
+                    <summary>{nameChange.name}</summary>
+                  </Text>
+                  <Box my="4" pl="4">
+                    <DataList items={nameChange.details} />
+                  </Box>
+                </details>
+              </li>
+            ))}
+          />
         </ul>
       </Flex>
     </Section>

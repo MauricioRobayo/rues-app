@@ -15,15 +15,14 @@ import type { CompanyRecord } from "@mauriciorobayo/rues-api";
 
 export function mapCompanyRecordToCompanyDto(data: CompanyRecord): CompanyDto {
   return {
-    retrievedOn: Date.now(),
     name: data.razon_social,
     shortName: data.sigla,
     slug: `${slugifyCompanyName(data.razon_social)}-${data.numero_identificacion}`,
     nit: Number(data.numero_identificacion),
     fullNit: formatNit(data.numero_identificacion),
-    chamber: { name: data.camara, code: data.codigo_camara.padStart(2, "0") },
+    chamber: { name: data.camara, code: data.codigo_camara },
     verificationDigit: Number(data.digito_verificacion),
-    registrationNumber: data.matricula.padStart(10, "0"),
+    registrationNumber: data.matricula,
     status: data.estado_matricula,
     isActive: data.estado_matricula === "ACTIVA",
     type: data.tipo_sociedad,

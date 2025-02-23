@@ -15,7 +15,6 @@ export function mapConsolidatedCompanyToCompanyDto({
   siis,
 }: ConsolidatedCompany): CompanyDto {
   return {
-    retrievedOn: Date.now(),
     name: rues.razon_social,
     slug: `${slugifyCompanyName(rues.razon_social)}-${rues.nit}`,
     nit: Number(rues.nit),

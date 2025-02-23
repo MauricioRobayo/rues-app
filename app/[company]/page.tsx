@@ -1,17 +1,13 @@
-import { BusinessEstablishments } from "@/app/[company]/components/BusinessEstablishments";
-import { CapitalDetails } from "@/app/[company]/components/CapitalDetails";
-import { CommerceChamber } from "@/app/[company]/components/Chamber";
-import {
-  companyDescription,
-  CompanyDescription,
-} from "@/app/[company]/components/CompanyDescription";
 import { CompanyDetails } from "@/app/[company]/components/CompanyDetails";
 import { CompanyHeader } from "@/app/[company]/components/CompanyHeader";
+import {
+  companySummary,
+  CompanySummary,
+} from "@/app/[company]/components/CompanySummary";
 import { ErrorRecovery } from "@/app/[company]/components/ErrorRecovery";
-import { FinancialDetails } from "@/app/[company]/components/FinancialDetails";
-import { NameChanges } from "@/app/[company]/components/NameChanges";
 import { RetrievedOn } from "@/app/[company]/components/RetrievedOn";
 import { UserReport } from "@/app/[company]/components/UserReport";
+import { CompanyStatusBadge } from "@/app/components/CompanyStatusBadge";
 import { PageContainer } from "@/app/components/PageContainer";
 import { BASE_URL, COMPANY_REVALIDATION_TIME } from "@/app/lib/constants";
 import { parseCompanyPathSegment } from "@/app/lib/parseCompanyPathSegment";
@@ -19,7 +15,7 @@ import { slugifyCompanyName } from "@/app/lib/slugifyComponentName";
 import { validateNit } from "@/app/lib/validateNit";
 import { companiesRepository } from "@/app/services/companies/repository";
 import { queryNit } from "@/app/services/rues/service";
-import { Box, Flex, Grid } from "@radix-ui/themes";
+import { Box, Flex, Heading } from "@radix-ui/themes";
 import type { Metadata } from "next";
 import { unstable_cache } from "next/cache";
 import { notFound, permanentRedirect } from "next/navigation";
@@ -45,11 +41,11 @@ export async function generateMetadata({
   }
 
   return {
-    title: `${data.name} NIT ${data.fullNit}`,
-    description: companyDescription(data),
+    title: `${data.mainRecord.name} NIT ${data.mainRecord.fullNit}`,
+    description: companySummary(data.mainRecord),
     metadataBase: new URL(BASE_URL),
     alternates: {
-      canonical: data.slug,
+      canonical: data.mainRecord.slug,
     },
   };
 }
@@ -65,34 +61,57 @@ export default async function page({ params }: PageProps) {
   return (
     <Box>
       <article itemScope itemType="https://schema.org/Organization">
-        <CompanyHeader company={data} />
+        <CompanyHeader company={data.mainRecord} />
         <PageContainer mt={{ initial: "6", sm: "8" }}>
-          <CompanyDescription company={data} />
-          <Grid
-            columns={{ initial: "1", sm: "2" }}
-            gapX="8"
-            width="auto"
-            flow="row-dense"
-          >
-            <CompanyDetails company={data} />
-            <Box>
-              <CommerceChamber code={data.chamber.code} />
-              <FinancialDetails financialDetails={data.financialInformation} />
-              <CapitalDetails capitalDetails={data.capitalInformation} />
-              <BusinessEstablishments establishments={data.establishments} />
-              <NameChanges changes={data.nameChanges} />
-            </Box>
-          </Grid>
-          <Box mb="4">
-            <RetrievedOn retrievedOn={data.retrievedOn} />
-          </Box>
+          <CompanySummary company={data.mainRecord} />
+          <CompanyDetails company={data.mainRecord} />
         </PageContainer>
       </article>
+      {data.remainingRecords.length > 0 && (
+        <PageContainer>
+          <Heading as="h4" mb="4">
+            Registros Anteriores ({data.remainingRecords.length})
+          </Heading>
+          <Flex direction="column" gap="2">
+            {data.remainingRecords.map((companyRecord) => (
+              <details
+                key={companyRecord.registrationNumber}
+                name="matricula-mercantil"
+              >
+                <summary>
+                  <Flex gap="2" display="inline-flex">
+                    {companyRecord.registrationNumber}
+                    <CompanyStatusBadge
+                      isActive={companyRecord.isActive}
+                      variant="long"
+                    />
+                  </Flex>
+                </summary>
+                <Box
+                  px="4"
+                  my="2"
+                  className="rounded-[var(--radius-2)] bg-[var(--gray-2)]"
+                  asChild
+                >
+                  <article>
+                    <CompanyDetails company={companyRecord} />
+                  </article>
+                </Box>
+              </details>
+            ))}
+          </Flex>
+        </PageContainer>
+      )}
+      <PageContainer>
+        <Box my="4">
+          <RetrievedOn retrievedOn={data.retrievedOn} />
+        </Box>
+      </PageContainer>
       <aside>
         <Box style={{ background: "var(--blue-a2)" }} py="6">
           <PageContainer>
             <Flex direction="column" gap="4" align="center">
-              <UserReport slug={data.slug} />
+              <UserReport slug={data.mainRecord.slug} />
             </Flex>
           </PageContainer>
         </Box>
@@ -118,11 +137,12 @@ const getPageData = cache(async (company: string) => {
     };
   }
 
-  if (!response.data?.name) {
+  const [mainRecord, ...remainingRecords] = response.data ?? [];
+  if (!mainRecord) {
     notFound();
   }
 
-  const { name } = response.data;
+  const { name } = mainRecord;
   const companySlug = slugifyCompanyName(name);
 
   if (slug !== companySlug) {
@@ -143,7 +163,11 @@ const getPageData = cache(async (company: string) => {
   return {
     nit,
     slug,
-    data: response.data,
+    data: {
+      mainRecord,
+      remainingRecords,
+      retrievedOn: response.retrievedOn,
+    },
     ...responseStatus("success"),
   };
 });

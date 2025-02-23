@@ -24,7 +24,7 @@ export interface ConsolidatedCompanyInfo {
 export async function queryNit(
   nit: number,
 ): Promise<
-  | { status: "success"; data: CompanyDto | null }
+  | { status: "success"; data: CompanyDto[] | null; retrievedOn: number }
   | { status: "error"; statusCode?: number; error?: unknown }
 > {
   let token = await tokensService.getToken();
@@ -37,6 +37,7 @@ export async function queryNit(
           return {
             status: "success",
             data: null,
+            retrievedOn: Date.now(),
           } as const;
         }
 
@@ -59,19 +60,20 @@ export async function queryNit(
           throw new Error(`queryNit failed ${JSON.stringify(response)}`);
         }
 
-        const activeRecord = response.data.registros.find(
-          (record) => record.estado_matricula === "ACTIVA",
-        );
-        const mostRecentRecord = response.data.registros
-          .sort(
-            (a, b) =>
-              Number(b.ultimo_ano_renovado) - Number(a.ultimo_ano_renovado),
-          )
-          .at(0);
-        const record = activeRecord ?? mostRecentRecord;
-
         return {
-          data: record ? mapCompanyRecordToCompanyDto(record) : null,
+          data: response.data.registros
+            .map(mapCompanyRecordToCompanyDto)
+            .filter((record) => !!record.name)
+            .toSorted((a, b) => {
+              if (a.isActive && !b.isActive) {
+                return -1;
+              }
+              if (a.isActive && b.isActive) {
+                return 0;
+              }
+              return 1;
+            }),
+          retrievedOn: Date.now(),
           status: "success",
         } as const;
       },
@@ -148,28 +150,20 @@ export async function getLegalPowers({
   chamberCode: string;
   registrationNumber: string;
 }) {
-  // The legalRepresentativePowers request has
-  // given very long timeouts which have ended
-  // in the whole page timing out.
-  const timeout = 2_000;
+  // The legalRepresentativePowers request
+  //  ended after very long timeouts.
+  const timeout = 3_000;
   const abortController = new AbortController();
   setTimeout(() => {
     abortController.abort();
   }, timeout);
   const token = await tokensService.getToken();
-  const response = await getLegalRepresentativePowers({
+  return getLegalRepresentativePowers({
     query: {
-      chamberCode,
-      registrationNumber,
+      chamberCode: chamberCode.padStart(2, "0"),
+      registrationNumber: registrationNumber.padStart(10, "0"),
     },
     token,
     signal: abortController.signal,
   });
-
-  if (response.status === "error") {
-    console.log("getLegalPowers failed", response);
-    return null;
-  }
-
-  return response.data;
 }

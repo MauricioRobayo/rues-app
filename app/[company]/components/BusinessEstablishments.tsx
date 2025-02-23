@@ -190,7 +190,7 @@ export function BusinessEstablishments({
       <Flex asChild direction="column" gap="2">
         <ul>
           <ExpandableList
-            initialVisibleCount={25}
+            visibleItemsCount={25}
             items={businessEstablishments.map((establishment) => {
               return (
                 <li
@@ -199,7 +199,7 @@ export function BusinessEstablishments({
                     establishment.tourismRegistries.at(0)?.id
                   }
                 >
-                  <details>
+                  <details name="establecimiento-comercial">
                     <Text truncate asChild>
                       <summary>
                         {establishment.name ??
