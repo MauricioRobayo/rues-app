@@ -11,20 +11,13 @@ import type { CompanyDto } from "@/app/types/CompanyDto";
 import { GoogleMapsEmbed } from "@next/third-parties/google";
 import { Box, Code, Flex, Heading, Link, Section } from "@radix-ui/themes";
 
-export function CompanyDescription({
-  company,
-  isMain,
-}: {
-  company: CompanyDto;
-  isMain: boolean;
-}) {
+export function CompanyDescription({ company }: { company: CompanyDto }) {
   const details = [
     {
       label: "Razón social",
       value: company.name,
-      learnMore: isMain
-        ? "Es el nombre con el que se constituye una empresa y que aparece como tal en el documento público o privado de constitución o en los documentos posteriores que la reforman."
-        : null,
+      learnMore:
+        "Es el nombre con el que se constituye una empresa y que aparece como tal en el documento público o privado de constitución o en los documentos posteriores que la reforman.",
     },
     {
       label: "NIT",
@@ -34,16 +27,14 @@ export function CompanyDescription({
           <CopyButton value={company.nit} />
         </Flex>
       ),
-      learnMore: isMain
-        ? "El Número de Identificación Tributaria es el identificador numérico único utilizado para registrar la administración tributaria de las personas naturales y jurídicas."
-        : null,
+      learnMore:
+        "El Número de Identificación Tributaria es el identificador numérico único utilizado para registrar la administración tributaria de las personas naturales y jurídicas.",
     },
     {
       label: "Dígito de verificación",
       value: <Code variant="ghost">{company.verificationDigit}</Code>,
-      learnMore: isMain
-        ? "Es un número que va en un rango del cero (0) a nueve (9) y se ubica al final del NIT. Su objetivo es verificar la autenticidad del NIT."
-        : null,
+      learnMore:
+        "Es un número que va en un rango del cero (0) a nueve (9) y se ubica al final del NIT. Su objetivo es verificar la autenticidad del NIT.",
     },
     {
       label: "Matrícula",
@@ -54,9 +45,8 @@ export function CompanyDescription({
           <CompanyStatusBadge isActive={company.isActive} />
         </Flex>
       ),
-      learnMore: isMain
-        ? "La Matrícula Mercantil es el registro que deben hacer los comerciantes, ya sean personas naturales o jurídicas, y los establecimientos de comercio, en las cámaras de comercio con jurisdicción en el lugar donde van a desarrollar su actividad y donde va a funcionar el establecimiento de comercio."
-        : null,
+      learnMore:
+        "La Matrícula Mercantil es el registro que deben hacer los comerciantes, ya sean personas naturales o jurídicas, y los establecimientos de comercio, en las cámaras de comercio con jurisdicción en el lugar donde van a desarrollar su actividad y donde va a funcionar el establecimiento de comercio.",
     },
     {
       label: "Estado",
@@ -150,7 +140,6 @@ export function CompanyDescription({
             legalRepresentatives={company.legalRepresentatives}
             chamberCode={company.chamber.code}
             registrationNumber={company.registrationNumber}
-            fetchPowers={isMain}
           />
         ) : null,
     },

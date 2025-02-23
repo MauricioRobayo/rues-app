@@ -7,13 +7,7 @@ import { NameChanges } from "@/app/[company]/components/NameChanges";
 import type { CompanyDto } from "@/app/types/CompanyDto";
 import { Box, Grid } from "@radix-ui/themes";
 
-export function CompanyDetails({
-  company,
-  isMain = false,
-}: {
-  company: CompanyDto;
-  isMain?: boolean;
-}) {
+export function CompanyDetails({ company }: { company: CompanyDto }) {
   return (
     <Grid
       columns={{ initial: "1", sm: "2" }}
@@ -21,7 +15,7 @@ export function CompanyDetails({
       width="auto"
       flow="row-dense"
     >
-      <CompanyDescription company={company} isMain={isMain} />
+      <CompanyDescription company={company} />
       <Box>
         <CommerceChamber code={company.chamber.code} />
         <FinancialDetails financialDetails={company.financialInformation} />

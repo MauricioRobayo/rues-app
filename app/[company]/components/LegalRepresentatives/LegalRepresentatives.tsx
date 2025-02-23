@@ -9,12 +9,10 @@ export async function LegalRepresentatives({
   legalRepresentatives,
   chamberCode,
   registrationNumber,
-  fetchPowers,
 }: {
   legalRepresentatives: { name: string; type: string }[];
   chamberCode: string;
   registrationNumber: string;
-  fetchPowers: boolean;
 }) {
   const powers = await getPowersCached({
     chamberCode: chamberCode.padStart(2, "0"),
@@ -42,15 +40,13 @@ export async function LegalRepresentatives({
           ))}
         </ol>
       </Flex>
-      {fetchPowers && (
-        <Suspense fallback={<Spinner />}>
-          <LegalRepresentativePowers
-            chamberCode={chamberCode}
-            registrationNumber={registrationNumber}
-            powers={powers}
-          />
-        </Suspense>
-      )}
+      <Suspense fallback={<Spinner />}>
+        <LegalRepresentativePowers
+          chamberCode={chamberCode}
+          registrationNumber={registrationNumber}
+          powers={powers}
+        />
+      </Suspense>
     </Flex>
   );
 }

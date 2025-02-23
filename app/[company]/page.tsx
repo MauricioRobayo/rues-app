@@ -14,7 +14,7 @@ import { slugifyCompanyName } from "@/app/lib/slugifyComponentName";
 import { validateNit } from "@/app/lib/validateNit";
 import { companiesRepository } from "@/app/services/companies/repository";
 import { queryNit } from "@/app/services/rues/service";
-import { Box, Flex } from "@radix-ui/themes";
+import { Box, Flex, Heading } from "@radix-ui/themes";
 import type { Metadata } from "next";
 import { unstable_cache } from "next/cache";
 import { notFound, permanentRedirect } from "next/navigation";
@@ -63,17 +63,24 @@ export default async function page({ params }: PageProps) {
         <CompanyHeader company={data.mainRecord} />
         <PageContainer mt={{ initial: "6", sm: "8" }}>
           <CompanySummary company={data.mainRecord} />
-          <CompanyDetails company={data.mainRecord} isMain />
+          <CompanyDetails company={data.mainRecord} />
         </PageContainer>
       </article>
       {data.remainingRecords.length > 0 && (
-        <PageContainer className="bg-[var(--gray-2)]">
-          {data.remainingRecords.map((companyRecord) => (
-            <article key={companyRecord.registrationNumber}>
-              <CompanyDetails company={companyRecord} />
-            </article>
-          ))}
-        </PageContainer>
+        <Box>
+          <PageContainer>
+            <Heading as="h4" mb="4">
+              Registros Anteriores ({data.remainingRecords.length})
+            </Heading>
+          </PageContainer>
+          <PageContainer className="bg-[var(--gray-2)]">
+            {data.remainingRecords.map((companyRecord) => (
+              <article key={companyRecord.registrationNumber}>
+                <CompanyDetails company={companyRecord} />
+              </article>
+            ))}
+          </PageContainer>
+        </Box>
       )}
       <PageContainer>
         <Box mb="4">

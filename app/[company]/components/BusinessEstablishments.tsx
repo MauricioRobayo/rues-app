@@ -190,7 +190,7 @@ export function BusinessEstablishments({
       <Flex asChild direction="column" gap="2">
         <ul>
           <ExpandableList
-            initialVisibleCount={25}
+            visibleItemsCount={25}
             items={businessEstablishments.map((establishment) => {
               return (
                 <li
