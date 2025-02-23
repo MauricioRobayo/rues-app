@@ -15,7 +15,7 @@ import { slugifyCompanyName } from "@/app/lib/slugifyComponentName";
 import { validateNit } from "@/app/lib/validateNit";
 import { companiesRepository } from "@/app/services/companies/repository";
 import { queryNit } from "@/app/services/rues/service";
-import { Box, Code, Flex, Heading } from "@radix-ui/themes";
+import { Box, Flex, Heading } from "@radix-ui/themes";
 import type { Metadata } from "next";
 import { unstable_cache } from "next/cache";
 import { notFound, permanentRedirect } from "next/navigation";
@@ -103,8 +103,8 @@ export default async function page({ params }: PageProps) {
         </PageContainer>
       )}
       <PageContainer>
-        <Box mb="4">
-          <RetrievedOn retrievedOn={data.mainRecord.retrievedOn} />
+        <Box my="4">
+          <RetrievedOn retrievedOn={data.retrievedOn} />
         </Box>
       </PageContainer>
       <aside>
@@ -163,7 +163,11 @@ const getPageData = cache(async (company: string) => {
   return {
     nit,
     slug,
-    data: { mainRecord, remainingRecords },
+    data: {
+      mainRecord,
+      remainingRecords,
+      retrievedOn: response.retrievedOn,
+    },
     ...responseStatus("success"),
   };
 });

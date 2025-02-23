@@ -53,7 +53,7 @@ export function LegalRepresentativePowers({
   }
 
   return (
-    <Box p="2" className="rounded bg-[var(--gray-2)]">
+    <Box p="2" className="rounded-[var(--radius-2)] bg-[var(--gray-2)]">
       <Text
         size="2"
         dangerouslySetInnerHTML={{

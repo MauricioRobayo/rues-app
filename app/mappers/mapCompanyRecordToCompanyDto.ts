@@ -15,7 +15,6 @@ import type { CompanyRecord } from "@mauriciorobayo/rues-api";
 
 export function mapCompanyRecordToCompanyDto(data: CompanyRecord): CompanyDto {
   return {
-    retrievedOn: Date.now(),
     name: data.razon_social,
     shortName: data.sigla,
     slug: `${slugifyCompanyName(data.razon_social)}-${data.numero_identificacion}`,

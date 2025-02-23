@@ -24,7 +24,7 @@ export interface ConsolidatedCompanyInfo {
 export async function queryNit(
   nit: number,
 ): Promise<
-  | { status: "success"; data: CompanyDto[] | null }
+  | { status: "success"; data: CompanyDto[] | null; retrievedOn: number }
   | { status: "error"; statusCode?: number; error?: unknown }
 > {
   let token = await tokensService.getToken();
@@ -37,6 +37,7 @@ export async function queryNit(
           return {
             status: "success",
             data: null,
+            retrievedOn: Date.now(),
           } as const;
         }
 
@@ -72,6 +73,7 @@ export async function queryNit(
               }
               return 1;
             }),
+          retrievedOn: Date.now(),
           status: "success",
         } as const;
       },
