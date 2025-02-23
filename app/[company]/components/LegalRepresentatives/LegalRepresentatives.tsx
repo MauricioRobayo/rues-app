@@ -42,13 +42,15 @@ export async function LegalRepresentatives({
           ))}
         </ol>
       </Flex>
-      <Suspense fallback={<Spinner />}>
-        <LegalRepresentativePowers
-          chamberCode={chamberCode}
-          registrationNumber={registrationNumber}
-          powers={powers}
-        />
-      </Suspense>
+      {fetchPowers && (
+        <Suspense fallback={<Spinner />}>
+          <LegalRepresentativePowers
+            chamberCode={chamberCode}
+            registrationNumber={registrationNumber}
+            powers={powers}
+          />
+        </Suspense>
+      )}
     </Flex>
   );
 }
