@@ -46,12 +46,8 @@ export default function RootLayout({
                 </Flex>
               </PageContainer>
             </Box>
-            <main style={{ flexGrow: 1 }}>{children}</main>
-            <Box
-              style={{ background: "var(--blue-9)", color: "white" }}
-              asChild
-              py="8"
-            >
+            <main className="flex-grow">{children}</main>
+            <Box className="bg-[var(--sand-11)] text-white" asChild py="8">
               <footer>
                 <PageContainer>
                   <Flex align="center" direction="column">
