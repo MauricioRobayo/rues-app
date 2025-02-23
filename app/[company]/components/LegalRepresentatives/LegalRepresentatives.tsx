@@ -15,8 +15,8 @@ export async function LegalRepresentatives({
   registrationNumber: string;
 }) {
   const powers = await getPowersCached({
-    chamberCode,
-    registrationNumber,
+    chamberCode: chamberCode.padStart(2, "0"),
+    registrationNumber: registrationNumber.padStart(10, "0"),
   });
   return (
     <Flex direction="column" gap="2">
