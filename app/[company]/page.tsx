@@ -1,16 +1,10 @@
-import { BusinessEstablishments } from "@/app/[company]/components/BusinessEstablishments";
-import { CapitalDetails } from "@/app/[company]/components/CapitalDetails";
-import { CommerceChamber } from "@/app/[company]/components/Chamber";
 import { CompanyDetails } from "@/app/[company]/components/CompanyDetails";
+import { CompanyHeader } from "@/app/[company]/components/CompanyHeader";
 import {
   companySummary,
   CompanySummary,
 } from "@/app/[company]/components/CompanySummary";
-import { CompanyDescription } from "@/app/[company]/components/CompanyDescription";
-import { CompanyHeader } from "@/app/[company]/components/CompanyHeader";
 import { ErrorRecovery } from "@/app/[company]/components/ErrorRecovery";
-import { FinancialDetails } from "@/app/[company]/components/FinancialDetails";
-import { NameChanges } from "@/app/[company]/components/NameChanges";
 import { RetrievedOn } from "@/app/[company]/components/RetrievedOn";
 import { UserReport } from "@/app/[company]/components/UserReport";
 import { PageContainer } from "@/app/components/PageContainer";
@@ -20,7 +14,7 @@ import { slugifyCompanyName } from "@/app/lib/slugifyComponentName";
 import { validateNit } from "@/app/lib/validateNit";
 import { companiesRepository } from "@/app/services/companies/repository";
 import { queryNit } from "@/app/services/rues/service";
-import { Box, Flex, Grid } from "@radix-ui/themes";
+import { Box, Flex } from "@radix-ui/themes";
 import type { Metadata } from "next";
 import { unstable_cache } from "next/cache";
 import { notFound, permanentRedirect } from "next/navigation";
