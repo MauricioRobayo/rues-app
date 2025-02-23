@@ -199,7 +199,7 @@ export function BusinessEstablishments({
                     establishment.tourismRegistries.at(0)?.id
                   }
                 >
-                  <details>
+                  <details name="establecimiento-comercial">
                     <Text truncate asChild>
                       <summary>
                         {establishment.name ??

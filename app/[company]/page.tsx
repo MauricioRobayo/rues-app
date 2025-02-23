@@ -7,6 +7,7 @@ import {
 import { ErrorRecovery } from "@/app/[company]/components/ErrorRecovery";
 import { RetrievedOn } from "@/app/[company]/components/RetrievedOn";
 import { UserReport } from "@/app/[company]/components/UserReport";
+import { CompanyStatusBadge } from "@/app/components/CompanyStatusBadge";
 import { PageContainer } from "@/app/components/PageContainer";
 import { BASE_URL, COMPANY_REVALIDATION_TIME } from "@/app/lib/constants";
 import { parseCompanyPathSegment } from "@/app/lib/parseCompanyPathSegment";
@@ -14,7 +15,7 @@ import { slugifyCompanyName } from "@/app/lib/slugifyComponentName";
 import { validateNit } from "@/app/lib/validateNit";
 import { companiesRepository } from "@/app/services/companies/repository";
 import { queryNit } from "@/app/services/rues/service";
-import { Box, Flex, Heading } from "@radix-ui/themes";
+import { Box, Code, Flex, Heading } from "@radix-ui/themes";
 import type { Metadata } from "next";
 import { unstable_cache } from "next/cache";
 import { notFound, permanentRedirect } from "next/navigation";
@@ -67,20 +68,39 @@ export default async function page({ params }: PageProps) {
         </PageContainer>
       </article>
       {data.remainingRecords.length > 0 && (
-        <Box>
-          <PageContainer>
-            <Heading as="h4" mb="4">
-              Registros Anteriores ({data.remainingRecords.length})
-            </Heading>
-          </PageContainer>
-          <PageContainer className="bg-[var(--gray-2)]">
+        <PageContainer>
+          <Heading as="h4" mb="4">
+            Registros Anteriores ({data.remainingRecords.length})
+          </Heading>
+          <Flex direction="column" gap="2">
             {data.remainingRecords.map((companyRecord) => (
-              <article key={companyRecord.registrationNumber}>
-                <CompanyDetails company={companyRecord} />
-              </article>
+              <details
+                key={companyRecord.registrationNumber}
+                name="matricula-mercantil"
+              >
+                <summary>
+                  <Flex gap="2" display="inline-flex">
+                    {companyRecord.registrationNumber}
+                    <CompanyStatusBadge
+                      isActive={companyRecord.isActive}
+                      variant="long"
+                    />
+                  </Flex>
+                </summary>
+                <Box
+                  px="4"
+                  my="2"
+                  className="rounded-[var(--radius-2)] bg-[var(--gray-2)]"
+                  asChild
+                >
+                  <article>
+                    <CompanyDetails company={companyRecord} />
+                  </article>
+                </Box>
+              </details>
             ))}
-          </PageContainer>
-        </Box>
+          </Flex>
+        </PageContainer>
       )}
       <PageContainer>
         <Box mb="4">
