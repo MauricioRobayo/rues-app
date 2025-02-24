@@ -688,8 +688,9 @@ function isChamberCode(code: string): code is keyof typeof chambers {
 }
 
 export function getChamber(code: string) {
-  if (isChamberCode(code)) {
-    return chambers[code];
+  const paddedCode = code.padStart(2, "0");
+  if (isChamberCode(paddedCode)) {
+    return chambers[paddedCode];
   }
 
   return null;
