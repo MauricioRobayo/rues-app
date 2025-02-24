@@ -6,7 +6,7 @@ import { mapConsolidatedCompanyToCompanyDto } from "@/app/mappers/mapConsolidate
 import { advancedSearch } from "@/app/services/rues/service";
 import { unstable_cache } from "next/cache";
 
-export async function searchByCompanyName({
+export async function searchByCompanyNameAction({
   companyName,
   recaptchaToken,
 }: {

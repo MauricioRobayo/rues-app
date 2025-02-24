@@ -45,7 +45,7 @@ export function NameChanges({ changes }: { changes?: CompanyNameChangeDto[] }) {
           <ExpandableList
             items={nameChanges.map((nameChange) => (
               <li key={`${nameChange.name}-${nameChange.date}`}>
-                <details name="cambio-de-nombre">
+                <details>
                   <Text truncate asChild>
                     <summary>{nameChange.name}</summary>
                   </Text>

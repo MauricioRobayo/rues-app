@@ -1,6 +1,6 @@
 "use client";
 
-import { searchByCompanyName } from "@/app/(search)/actions";
+import { searchByCompanyNameAction } from "@/app/(search)/actions";
 import { SearchResults } from "@/app/(search)/components/SearchResults";
 import { useNormalizedCompanyName } from "@/app/hooks/useNormalizedCompanyName";
 import { Action, getRecaptchaToken } from "@/app/lib/getRecapchaToken";
@@ -27,7 +27,7 @@ export function SearchName() {
         return;
       }
       const recaptchaToken = await getRecaptchaToken(Action.SEARCH);
-      const company = await searchByCompanyName({
+      const company = await searchByCompanyNameAction({
         companyName,
         recaptchaToken,
       });
