@@ -30,9 +30,7 @@ export function mapCompanyRecordToCompanyDto(data: CompanyRecord): CompanyDto {
     category: data.categoria_matricula,
     registrationDate: formatDetailsDate(data.fecha_matricula),
     yearsDoingBusinesses: yearsDoingBusinesses(data.fecha_matricula),
-    bidderId: data.inscripcion_proponente
-      ? data.inscripcion_proponente.padStart(8, "0")
-      : null,
+    bidderId: data.inscripcion_proponente ? data.inscripcion_proponente : null,
     lastRenewalYear: Number(data.ultimo_ano_renovado),
     renewalDate: formatDetailsDate(data.fecha_renovacion),
     cancellationDate: formatDetailsDate(data.fecha_cancelacion),
@@ -72,12 +70,8 @@ export function mapCompanyRecordToCompanyDto(data: CompanyRecord): CompanyDto {
     nameChanges: data.HistoricoCambiosNombre?.map((nameChange) => ({
       date: formatDetailsDate(nameChange.fecha_cambio),
       previousName: nameChange.razon_social_anterior,
-      chamberCode: nameChange.codigo_camara
-        ? nameChange.codigo_camara.padStart(2, "0")
-        : null,
-      registrationNumber: nameChange.matricula
-        ? nameChange.matricula.padStart(10, "0")
-        : null,
+      chamberCode: nameChange.codigo_camara ? nameChange.codigo_camara : null,
+      registrationNumber: nameChange.matricula ? nameChange.matricula : null,
     })).filter(
       (nameChange): nameChange is CompanyNameChangeDto =>
         !!nameChange.date &&
