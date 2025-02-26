@@ -2,6 +2,7 @@ import type { BusinessEstablishmentDto } from "@/app/types/BusinessEstablishment
 import type { CapitalInformationDto } from "@/app/types/CapitalDto";
 import type { CompanyNameChangeDto } from "@/app/types/CompanyNameChangeDto";
 import type { FinancialInformationDto } from "@/app/types/FinancialInformationDto";
+import type { PenaltyDto } from "@/app/types/PenaltyDto";
 
 export interface CompanyDto {
   address: string | null;
@@ -43,4 +44,5 @@ export interface CompanyDto {
   financialInformation?: FinancialInformationDto[];
   capitalInformation?: CapitalInformationDto[];
   nameChanges?: CompanyNameChangeDto[];
+  penalties?: PenaltyDto[];
 }

@@ -1,0 +1,37 @@
+import { formatDetailsDate } from "@/app/lib/formatDetailsDate";
+import type { PenaltyDto } from "@/app/types/PenaltyDto";
+import type {Penalty}
+
+export const mapPenaltyToPenaltyDto = (penalty: Penalty): PenaltyDto => ({
+  stateCode: penalty.cod_estado,
+  chamberCode: penalty.codigo_camara,
+  registryBookCode: penalty.codigo_libro_registro,
+  nonComplianceCondition: penalty.condicion_incumplimiento,
+  sanctionDescription: penalty.descripcion_sancion,
+  entityVerificationDigit: penalty.dv_entidad,
+  proponentVerificationDigit: penalty.dv_proponente,
+  state: penalty.estado,
+  administrativeActDate: formatDetailsDate(penalty.fecha_acto_administrativo),
+  confirmationActDate: formatDetailsDate(penalty.fecha_acto_confirmacion),
+  revocationActDate: formatDetailsDate(penalty.fecha_acto_revocacion),
+  suspensionActDate: formatDetailsDate(penalty.fecha_acto_suspension),
+  enforcementDate: formatDetailsDate(penalty.fecha_ejecutoria),
+  chamberRegistrationDate: formatDetailsDate(penalty.fecha_inscripcion_camara),
+  legalBasis: penalty.fundamento_legal,
+  entityMunicipality: penalty.municipio_entidad,
+  entityTaxId: penalty.nit_entidad,
+  proponentTaxId: penalty.nit_proponente,
+  entityName: penalty.nombre_entidad,
+  proponentName: penalty.nombre_proponente,
+  administrativeActNumber: penalty.numero_acto_administrativo,
+  confirmationActNumber: penalty.numero_acto_confirmacion,
+  enforcementActNumber: penalty.numero_acto_ejecutoria,
+  revocationActNumber: penalty.numero_acto_revocacion,
+  suspensionActNumber: penalty.numero_acto_suspension,
+  contractNumber: penalty.numero_contrato,
+  registrationBookNumber: penalty.numero_inscripcion_libro,
+  remarks: penalty.observaciones,
+  entitySectional: penalty.seccional_entidad,
+  reportType: penalty.tipo_reporte,
+  sanctionValidity: penalty.vigencia_sancion,
+});
