@@ -1,6 +1,6 @@
 import { formatDetailsDate } from "@/app/lib/formatDetailsDate";
 import type { PenaltyDto } from "@/app/types/PenaltyDto";
-import type {Penalty}
+import type { Penalty } from "@mauriciorobayo/rues-api";
 
 export const mapPenaltyToPenaltyDto = (penalty: Penalty): PenaltyDto => ({
   stateCode: penalty.cod_estado,
@@ -9,7 +9,7 @@ export const mapPenaltyToPenaltyDto = (penalty: Penalty): PenaltyDto => ({
   nonComplianceCondition: penalty.condicion_incumplimiento,
   sanctionDescription: penalty.descripcion_sancion,
   entityVerificationDigit: penalty.dv_entidad,
-  proponentVerificationDigit: penalty.dv_proponente,
+  bidderVerificationDigit: penalty.dv_proponente,
   state: penalty.estado,
   administrativeActDate: formatDetailsDate(penalty.fecha_acto_administrativo),
   confirmationActDate: formatDetailsDate(penalty.fecha_acto_confirmacion),
@@ -19,10 +19,10 @@ export const mapPenaltyToPenaltyDto = (penalty: Penalty): PenaltyDto => ({
   chamberRegistrationDate: formatDetailsDate(penalty.fecha_inscripcion_camara),
   legalBasis: penalty.fundamento_legal,
   entityMunicipality: penalty.municipio_entidad,
-  entityTaxId: penalty.nit_entidad,
-  proponentTaxId: penalty.nit_proponente,
+  entityNit: penalty.nit_entidad,
+  bidderNit: penalty.nit_proponente,
   entityName: penalty.nombre_entidad,
-  proponentName: penalty.nombre_proponente,
+  bidderName: penalty.nombre_proponente,
   administrativeActNumber: penalty.numero_acto_administrativo,
   confirmationActNumber: penalty.numero_acto_confirmacion,
   enforcementActNumber: penalty.numero_acto_ejecutoria,
@@ -33,5 +33,5 @@ export const mapPenaltyToPenaltyDto = (penalty: Penalty): PenaltyDto => ({
   remarks: penalty.observaciones,
   entitySectional: penalty.seccional_entidad,
   reportType: penalty.tipo_reporte,
-  sanctionValidity: penalty.vigencia_sancion,
+  sanctionValidity: formatDetailsDate(penalty.vigencia_sancion),
 });

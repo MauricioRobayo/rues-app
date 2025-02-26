@@ -5,7 +5,7 @@ export interface PenaltyDto {
   nonComplianceCondition: string;
   sanctionDescription: string;
   entityVerificationDigit: string;
-  proponentVerificationDigit: string;
+  bidderVerificationDigit: string;
   state: string;
   administrativeActDate: string | null;
   confirmationActDate: string | null;
@@ -15,10 +15,10 @@ export interface PenaltyDto {
   chamberRegistrationDate: string | null;
   legalBasis: string;
   entityMunicipality: string;
-  entityTaxId: string;
-  proponentTaxId: string;
+  entityNit: string;
+  bidderNit: string;
   entityName: string;
-  proponentName: string;
+  bidderName: string;
   administrativeActNumber: string;
   confirmationActNumber: string;
   enforcementActNumber: string;
@@ -29,5 +29,5 @@ export interface PenaltyDto {
   remarks: string;
   entitySectional: string;
   reportType: string;
-  sanctionValidity: string;
+  sanctionValidity: string | null;
 }
