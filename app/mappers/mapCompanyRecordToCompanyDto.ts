@@ -6,6 +6,7 @@ import { getPhoneNumbers } from "@/app/lib/getPhoneNumbers";
 import { parseEconomicActivities } from "@/app/lib/parseEconomicActivities";
 import { slugifyCompanyName } from "@/app/lib/slugifyComponentName";
 import { yearsDoingBusinesses } from "@/app/lib/yearsDoingBusinesses";
+import { mapPenaltyToPenaltyDto } from "@/app/mappers/mapPenaltyToPenaltyDto";
 import { mapStoreFrontToEstablishmentDto } from "@/app/mappers/mapStoreFrontToBusinessEstablishmentDto";
 import type { CapitalInformationDto } from "@/app/types/CapitalDto";
 import type { CompanyDto } from "@/app/types/CompanyDto";
@@ -78,6 +79,7 @@ export function mapCompanyRecordToCompanyDto(data: CompanyRecord): CompanyDto {
         !!nameChange.chamberCode &&
         !!nameChange.registrationNumber,
     ),
+    penalties: data.sanciones?.map(mapPenaltyToPenaltyDto),
   };
 }
 
