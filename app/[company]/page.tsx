@@ -14,7 +14,7 @@ import { parseCompanyPathSegment } from "@/app/lib/parseCompanyPathSegment";
 import { slugifyCompanyName } from "@/app/lib/slugifyComponentName";
 import { validateNit } from "@/app/lib/validateNit";
 import { companiesRepository } from "@/app/services/companies/repository";
-import { queryNit } from "@/app/services/rues/service";
+import { ruesService } from "@/app/services/rues/service";
 import { Box, Flex, Heading } from "@radix-ui/themes";
 import type { Metadata } from "next";
 import { unstable_cache } from "next/cache";
@@ -188,6 +188,6 @@ function responseStatus(status: "success" | "error") {
   };
 }
 
-const queryNitCached = unstable_cache(queryNit, undefined, {
+const queryNitCached = unstable_cache(ruesService.queryNit, undefined, {
   revalidate: COMPANY_REVALIDATION_TIME,
 });
