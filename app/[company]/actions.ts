@@ -7,7 +7,7 @@ import { BASE_URL, COMPANY_REVALIDATION_TIME } from "@/app/lib/constants";
 import { Octokit } from "@octokit/rest";
 import { z } from "zod";
 import { ccbService } from "@/app/services/ccb/service";
-import { getLegalPowers } from "@/app/services/rues/service";
+import { ruesService } from "@/app/services/rues/service";
 
 const ghToken = process.env.GITHUB_TOKEN ?? "";
 const ghRepoOwner = process.env.GITHUB_OWNER ?? "";
@@ -217,6 +217,10 @@ const getBidderRecordsCache = unstable_cache(
   },
 );
 
-const getLegalPowersCached = unstable_cache(getLegalPowers, undefined, {
-  revalidate: COMPANY_REVALIDATION_TIME,
-});
+const getLegalPowersCached = unstable_cache(
+  ruesService.getLegalPowers,
+  undefined,
+  {
+    revalidate: COMPANY_REVALIDATION_TIME,
+  },
+);

@@ -3,7 +3,7 @@
 import { Action } from "@/app/lib/getRecapchaToken";
 import { verifyRecaptcha } from "@/app/lib/verifyRecaptcha";
 import { mapConsolidatedCompanyToCompanyDto } from "@/app/mappers/mapConsolidatedCompanyToCompanyDto";
-import { advancedSearch } from "@/app/services/rues/service";
+import { ruesService } from "@/app/services/rues/service";
 import { unstable_cache } from "next/cache";
 
 export async function searchByCompanyNameAction({
@@ -34,7 +34,7 @@ export async function searchByCompanyNameAction({
 }
 
 const getSearchResultsByCompanyNameCached = unstable_cache(
-  advancedSearch,
+  ruesService.advancedSearch,
   undefined,
   {
     revalidate: 7 * 24 * 60 * 60,
