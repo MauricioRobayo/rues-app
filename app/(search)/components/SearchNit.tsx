@@ -88,14 +88,15 @@ export function SearchNit() {
           <Flex gap="1" align="center">
             <Box width={{ initial: "100%", sm: "14rem" }}>
               <TextField.Root
-                required
+                autoFocus
                 id="nit"
-                size="3"
                 name="nit"
-                placeholder="NIT"
                 onChange={onChangeHandler}
-                value={value}
+                placeholder="NIT"
+                required
+                size="3"
                 type="number"
+                value={value}
               >
                 <TextField.Slot>
                   <MagnifyingGlassIcon height="16" width="16" />

@@ -56,13 +56,14 @@ export function SearchName() {
           <Container size="1">
             <Grid columns={{ initial: "1", sm: "1fr auto" }} gapX="2" gapY="4">
               <TextField.Root
+                autoFocus
+                defaultValue={companyName ?? undefined}
+                disabled={isLoading}
                 id="razon-social"
                 name="razon-social"
                 placeholder="Razón Social..."
-                size="3"
-                defaultValue={companyName ?? undefined}
-                disabled={isLoading}
                 required
+                size="3"
               >
                 <TextField.Slot>
                   <MagnifyingGlassIcon height="16" width="16" />
