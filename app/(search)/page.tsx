@@ -7,7 +7,7 @@ import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
 export default function Page() {
   return (
-    <PageContainer size="2" my="8">
+    <PageContainer my="8">
       <Flex direction="column" gap="4">
         <Text size="4">
           Consultar información empresarial por NIT o Razón Social.
