@@ -32,7 +32,8 @@ export const ruesService = {
     try {
       const response = await pRetry(
         async () => {
-          let response = await RUES.queryNit({ nit, token });
+          const signal = AbortSignal.timeout(3_000);
+          let response = await RUES.queryNit({ nit, token, signal });
 
           if (response.statusCode === 404) {
             return {
@@ -155,11 +156,7 @@ export const ruesService = {
   }) {
     // The legalRepresentativePowers request
     //  ended after very long timeouts.
-    const timeout = 3_000;
-    const abortController = new AbortController();
-    setTimeout(() => {
-      abortController.abort();
-    }, timeout);
+    const signal = AbortSignal.timeout(3_000);
     const token = await tokensService.getToken();
     return getLegalRepresentativePowers({
       query: {
@@ -167,7 +164,7 @@ export const ruesService = {
         registrationNumber: registrationNumber.padStart(10, "0"),
       },
       token,
-      signal: abortController.signal,
+      signal,
     });
   },
 };
