@@ -1,14 +1,14 @@
+import { Link } from "@/app/components/Link";
 import { Logo } from "@/app/components/Logo";
 import { Nit } from "@/app/components/Nit";
+import { PageContainer } from "@/app/components/PageContainer";
+import { Recaptcha } from "@/app/components/Recaptcha";
 import { GoogleTagManager } from "@next/third-parties/google";
 import { Box, Flex, Text, Theme } from "@radix-ui/themes";
 import type { Metadata } from "next";
+import NextTopLoader from "nextjs-toploader";
 import { Email } from "react-obfuscate-email";
 import "./globals.css";
-import { PageContainer } from "@/app/components/PageContainer";
-import { Link } from "@/app/components/Link";
-import NextTopLoader from "nextjs-toploader";
-import { Recaptcha } from "@/app/components/Recaptcha";
 
 const siteKey = process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY ?? "";
 
