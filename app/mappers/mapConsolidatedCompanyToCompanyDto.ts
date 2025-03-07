@@ -23,7 +23,7 @@ export function mapConsolidatedCompanyToCompanyDto({
     chamber: { name: rues.nom_camara, code: rues.cod_camara },
     registrationNumber: rues.matricula,
     status: rues.estado_matricula,
-    isActive: rues.estado_matricula === "ACTIVA",
+    isActive: !/cancel/i.test(rues.estado_matricula),
     legalEntityType: rues.organizacion_juridica,
     shortName: rues.sigla,
     registrationDate: formatDetailsDate(details?.fecha_matricula ?? ""),

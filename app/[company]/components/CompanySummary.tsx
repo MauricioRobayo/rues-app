@@ -20,7 +20,14 @@ export function companySummary(company: CompanyDto) {
       summary += ` es una ${companySize} EMPRESA`;
     }
   } else {
-    summary += " es una empresa";
+    summary += ` es una empresa`;
+  }
+
+  if (!company.isActive) {
+    summary += ` ${company.status}`;
+    if (company.cancellationDate) {
+      summary += ` que operó hasta el ${company.cancellationDate},`;
+    }
   }
 
   if (company.city) {
@@ -39,10 +46,17 @@ export function companySummary(company: CompanyDto) {
     summary += ` y su teléfono de contacto es ${company.phoneNumbers[0]}`;
   }
 
-  summary += `. Fundada hace ${company.yearsDoingBusinesses}`;
+  if (company.isActive && company.yearsDoingBusinesses) {
+    summary += `. Fundada hace ${company.yearsDoingBusinesses}`;
+  }
 
   if (company.chamber?.name) {
-    summary += ` y registrada en la cámara de comercio de ${company.chamber.name}`;
+    if (company.isActive) {
+      summary += ` y registrada en la cámara de comercio de ${company.chamber.name}`;
+    } else {
+      summary += `. Registrada en la cámara de comercio de ${company.chamber.name}.`;
+      return summary;
+    }
   }
 
   if (company.economicActivities && company.economicActivities.length > 0) {
@@ -60,10 +74,10 @@ export function companySummary(company: CompanyDto) {
     }
     if (company.totalBusinessEstablishments) {
       totals.push(
-        `${company.totalBusinessEstablishments} establecimiento${company.totalBusinessEstablishments === 1 ? "" : "s"} comercial${company.totalBusinessEstablishments === 1 ? "" : "es"}`,
+        ` ${company.totalBusinessEstablishments} establecimiento${company.totalBusinessEstablishments === 1 ? "" : "s"} comercial${company.totalBusinessEstablishments === 1 ? "" : "es"}`,
       );
     }
-    summary += totals.join(" y ");
+    summary += totals.join(" y");
   }
 
   return `${summary}.`;

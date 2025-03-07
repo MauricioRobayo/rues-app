@@ -123,7 +123,10 @@ export function CompanyDescription({ company }: { company: CompanyDto }) {
     },
     {
       label: "Actividad económica",
-      value: <EconomicActivities activities={company.economicActivities} />,
+      value:
+        company.economicActivities.length > 0 ? (
+          <EconomicActivities activities={company.economicActivities} />
+        ) : null,
     },
     {
       label: "Actividad económica de mayores ingresos",

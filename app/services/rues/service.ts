@@ -65,7 +65,12 @@ export const ruesService = {
           return {
             data: response.data.registros
               .map(mapCompanyRecordToCompanyDto)
-              .filter((record) => !!record.name)
+              .filter(
+                (record) =>
+                  !!record.name &&
+                  !!record.registrationNumber &&
+                  !!record.status,
+              )
               .toSorted((a, b) => {
                 if (a.isActive && !b.isActive) {
                   return -1;
