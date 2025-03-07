@@ -20,15 +20,14 @@ export function companySummary(company: CompanyDto) {
       summary += ` es una ${companySize} EMPRESA`;
     }
   } else {
-    summary += " es una empresa";
+    summary += ` es una empresa`;
   }
 
   if (!company.isActive) {
-    summary += ` ${company.status || " CANCELADA"}`;
+    summary += ` ${company.status}`;
     if (company.cancellationDate) {
-      summary += ` el ${company.cancellationDate}`;
+      summary += ` que operó hasta el ${company.cancellationDate},`;
     }
-    return `${summary}.`;
   }
 
   if (company.city) {
@@ -47,10 +46,17 @@ export function companySummary(company: CompanyDto) {
     summary += ` y su teléfono de contacto es ${company.phoneNumbers[0]}`;
   }
 
-  summary += `. Fundada hace ${company.yearsDoingBusinesses}`;
+  if (company.isActive && company.yearsDoingBusinesses) {
+    summary += `. Fundada hace ${company.yearsDoingBusinesses}`;
+  }
 
   if (company.chamber?.name) {
-    summary += ` y registrada en la cámara de comercio de ${company.chamber.name}`;
+    if (company.isActive) {
+      summary += ` y registrada en la cámara de comercio de ${company.chamber.name}`;
+    } else {
+      summary += `. Registrada en la cámara de comercio de ${company.chamber.name}.`;
+      return summary;
+    }
   }
 
   if (company.economicActivities && company.economicActivities.length > 0) {

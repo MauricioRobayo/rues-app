@@ -25,7 +25,7 @@ export function mapCompanyRecordToCompanyDto(data: CompanyRecord): CompanyDto {
     verificationDigit: Number(data.digito_verificacion),
     registrationNumber: data.matricula,
     status: data.estado_matricula,
-    isActive: data.estado_matricula === "ACTIVA",
+    isActive: !/cancel/i.test(data.estado_matricula),
     type: data.tipo_sociedad,
     legalEntityType: data.organizacion_juridica,
     category: data.categoria_matricula,
