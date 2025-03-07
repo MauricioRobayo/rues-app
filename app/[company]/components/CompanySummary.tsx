@@ -23,6 +23,14 @@ export function companySummary(company: CompanyDto) {
     summary += " es una empresa";
   }
 
+  if (!company.isActive) {
+    summary += ` ${company.status || " CANCELADA"}`;
+    if (company.cancellationDate) {
+      summary += ` el ${company.cancellationDate}`;
+    }
+    return `${summary}.`;
+  }
+
   if (company.city) {
     summary += ` ubicada en ${company.city}`;
   }
@@ -60,10 +68,10 @@ export function companySummary(company: CompanyDto) {
     }
     if (company.totalBusinessEstablishments) {
       totals.push(
-        `${company.totalBusinessEstablishments} establecimiento${company.totalBusinessEstablishments === 1 ? "" : "s"} comercial${company.totalBusinessEstablishments === 1 ? "" : "es"}`,
+        ` ${company.totalBusinessEstablishments} establecimiento${company.totalBusinessEstablishments === 1 ? "" : "s"} comercial${company.totalBusinessEstablishments === 1 ? "" : "es"}`,
       );
     }
-    summary += totals.join(" y ");
+    summary += totals.join(" y");
   }
 
   return `${summary}.`;
