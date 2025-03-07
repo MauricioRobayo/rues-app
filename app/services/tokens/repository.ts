@@ -1,5 +1,5 @@
 import { getToken as getCcbToken } from "@/app/services/ccb/api";
-import { getToken as getRuesToken } from "@mauriciorobayo/rues-api";
+import { getTokenWithPassword } from "@mauriciorobayo/rues-api";
 import { Redis } from "@upstash/redis";
 
 const redis = new Redis({
@@ -21,15 +21,20 @@ export const tokensRepository = {
       }
     }
 
-    const { status, data } = await getRuesToken();
+    const tokenResponse = await getTokenWithPassword({
+      username: process.env.RUES_USERNAME ?? "",
+      password: process.env.RUES_PASSWORD ?? "",
+    });
 
-    if (status === "error") {
+    if (tokenResponse.status === "error") {
       throw new Error("Failed to get new RUES token");
     }
 
-    await redis.set(tokenKey.rues, data.token, { ex: 7 * 24 * 60 * 60 });
+    await redis.set(tokenKey.rues, tokenResponse.data.access_token, {
+      ex: tokenResponse.data.expires_in - 60 * 60,
+    });
 
-    return data.token;
+    return tokenResponse.data.access_token;
   },
   async getCcbToken({ skipCache = false }: { skipCache?: boolean } = {}) {
     if (!skipCache) {
