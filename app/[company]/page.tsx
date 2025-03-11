@@ -62,13 +62,13 @@ export default async function page({ params }: PageProps) {
     <Box>
       <article itemScope itemType="https://schema.org/Organization">
         <CompanyHeader company={data.mainRecord} />
-        <PageContainer mt={{ initial: "6", sm: "8" }}>
+        <PageContainer wide mt={{ initial: "6", sm: "8" }}>
           <CompanySummary company={data.mainRecord} />
           <CompanyDetails company={data.mainRecord} />
         </PageContainer>
       </article>
       {data.remainingRecords.length > 0 && (
-        <PageContainer>
+        <PageContainer wide>
           <Heading as="h4" mb="4">
             Registros Anteriores ({data.remainingRecords.length})
           </Heading>
@@ -102,14 +102,14 @@ export default async function page({ params }: PageProps) {
           </Flex>
         </PageContainer>
       )}
-      <PageContainer>
+      <PageContainer wide>
         <Box my="4">
           <RetrievedOn retrievedOn={data.retrievedOn} />
         </Box>
       </PageContainer>
       <aside>
         <Box style={{ background: "var(--blue-a2)" }} py="6">
-          <PageContainer>
+          <PageContainer wide>
             <Flex direction="column" gap="4" align="center">
               <UserReport slug={data.mainRecord.slug} />
             </Flex>

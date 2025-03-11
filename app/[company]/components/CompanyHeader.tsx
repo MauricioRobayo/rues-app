@@ -8,7 +8,7 @@ export function CompanyHeader({ company }: { company: CompanyDto }) {
   return (
     <Box asChild style={{ position: "sticky", top: 0, background: "white" }}>
       <header>
-        <PageContainer py={{ initial: "6", sm: "8" }}>
+        <PageContainer wide py={{ initial: "6", sm: "8" }}>
           <Card size="4" variant="ghost">
             <Flex direction="column" gap="1">
               <Heading itemProp="name" color="blue">
