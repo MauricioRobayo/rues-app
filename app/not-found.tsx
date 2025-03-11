@@ -4,7 +4,7 @@ import { Flex, Heading, Text } from "@radix-ui/themes";
 
 export default function NotFound() {
   return (
-    <PageContainer variant="narrow" my="8">
+    <PageContainer my="8">
       <Flex direction="column" gap="4">
         <Heading as="h2">No hay nada acá :(</Heading>
         <Flex direction="column" gap="2">

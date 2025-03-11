@@ -31,7 +31,7 @@ export default function RootLayout({
           <NextTopLoader showSpinner={false} />
           <Flex direction="column" style={{ height: "100vh" }}>
             <Box style={{ background: "var(--blue-a2)" }}>
-              <PageContainer py="4">
+              <PageContainer wide py="4">
                 <Flex dir="row" justify="between">
                   <header>
                     <div>
@@ -47,11 +47,18 @@ export default function RootLayout({
               </PageContainer>
             </Box>
             <main className="flex-grow">{children}</main>
-            <Box className="bg-[var(--sand-11)] text-white" asChild py="8">
+            <Box
+              className="bg-[var(--mauve-12)] text-white [&_a]:text-current"
+              asChild
+              py="8"
+            >
               <footer>
-                <PageContainer>
-                  <Flex align="center" direction="column">
+                <PageContainer wide>
+                  <Flex align="center" direction="column" gap="2">
                     <Email email="info@registronit.com" />
+                    <Link href="/politica-de-privacidad" prefetch={false}>
+                      Política de Privacidad
+                    </Link>
                   </Flex>
                 </PageContainer>
               </footer>
