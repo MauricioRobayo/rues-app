@@ -6,6 +6,7 @@ import { slugifyCompanyName } from "@/app/lib/slugifyComponentName";
 import { yearsDoingBusinesses } from "@/app/lib/yearsDoingBusinesses";
 import type { ConsolidatedCompanyInfo as ConsolidatedCompany } from "@/app/services/rues/service";
 import type { CompanyDto } from "@/app/types/CompanyDto";
+import { isCompanyActive } from "@/app/lib/isCompanyActive";
 
 export function mapConsolidatedCompanyToCompanyDto({
   rues,
@@ -23,7 +24,7 @@ export function mapConsolidatedCompanyToCompanyDto({
     chamber: { name: rues.nom_camara, code: rues.cod_camara },
     registrationNumber: rues.matricula,
     status: rues.estado_matricula,
-    isActive: !/cancel/i.test(rues.estado_matricula),
+    isActive: isCompanyActive(rues.estado_matricula),
     legalEntityType: rues.organizacion_juridica,
     shortName: rues.sigla,
     registrationDate: formatDetailsDate(details?.fecha_matricula ?? ""),

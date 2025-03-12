@@ -3,6 +3,7 @@ import { decodeBase64 } from "@/app/lib/decodeBase64";
 import { formatDetailsDate } from "@/app/lib/formatDetailsDate";
 import { formatNit } from "@/app/lib/formatNit";
 import { getPhoneNumbers } from "@/app/lib/getPhoneNumbers";
+import { isCompanyActive } from "@/app/lib/isCompanyActive";
 import { parseEconomicActivities } from "@/app/lib/parseEconomicActivities";
 import { slugifyCompanyName } from "@/app/lib/slugifyComponentName";
 import { yearsDoingBusinesses } from "@/app/lib/yearsDoingBusinesses";
@@ -25,7 +26,7 @@ export function mapCompanyRecordToCompanyDto(data: CompanyRecord): CompanyDto {
     verificationDigit: Number(data.digito_verificacion),
     registrationNumber: data.matricula,
     status: data.estado_matricula,
-    isActive: !/cancel/i.test(data.estado_matricula),
+    isActive: isCompanyActive(data.estado_matricula),
     type: data.tipo_sociedad,
     legalEntityType: data.organizacion_juridica,
     category: data.categoria_matricula,
