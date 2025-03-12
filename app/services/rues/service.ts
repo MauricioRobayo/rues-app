@@ -139,8 +139,6 @@ export const ruesService = {
             );
           }
 
-          console.dir(response.data, { depth: Infinity });
-
           const data = processAdvancedSearchResults(
             response.data.registros ?? [],
           );
