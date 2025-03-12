@@ -1,4 +1,5 @@
 import csvParser from "csv-parser";
+import pRetry from "p-retry";
 import { Readable } from "stream";
 export const CompanySize = {
   "NO DETERMINADO": "00",
@@ -36,11 +37,22 @@ export type CompanyRecord = {
 export async function getFileUrl(filters: Filters) {
   const headers = new Headers();
   headers.append("Content-Type", "application/json");
-  const response = await fetch(
-    "https://3qdqz6yla2.execute-api.us-east-1.amazonaws.com/panel-beneficiarios/reporte-informacion-detallada",
-    { method: "POST", headers, body: getFilters(filters) },
+  const data = await pRetry(
+    async () => {
+      const response = await fetch(
+        "https://3qdqz6yla2.execute-api.us-east-1.amazonaws.com/panel-beneficiarios/reporte-informacion-detallada",
+        { method: "POST", headers, body: getFilters(filters) },
+      );
+      if (!response.ok) {
+        throw new Error(
+          `Failed to fetch file url. Status code: ${response.status}`,
+        );
+      }
+      return response.json() as Promise<string>;
+    },
+    { retries: 5 },
   );
-  return response.json() as Promise<string>;
+  return data;
 }
 
 export async function streamData({
@@ -186,14 +198,25 @@ async function processStream({
 }
 
 export async function getTotal(filters: Filters) {
-  const response = await fetch(
-    "https://3qdqz6yla2.execute-api.us-east-1.amazonaws.com/panel-beneficiarios/total-registros",
-    {
-      method: "POST",
-      body: getFilters(filters),
+  const data = await pRetry(
+    async () => {
+      const response = await fetch(
+        "https://3qdqz6yla2.execute-api.us-east-1.amazonaws.com/panel-beneficiarios/total-registros",
+        {
+          method: "POST",
+          body: getFilters(filters),
+        },
+      );
+      if (!response.ok) {
+        throw new Error(
+          `Failed to fetch total. Status code: ${response.status}`,
+        );
+      }
+      return response.json();
     },
+    { retries: 5 },
   );
-  return response.json();
+  return data;
 }
 
 function getFilters({ startDate, endDate, companySize = [] }: Filters) {
