@@ -3,6 +3,9 @@ import { companies } from "@/app/db/schema";
 import { asc, count, eq, getTableColumns, sql } from "drizzle-orm";
 
 export const companiesRepository = {
+  deleteByNit(nit: number) {
+    return db.delete(companies).where(eq(companies.nit, nit));
+  },
   upsertName(data: { nit: number; name: string }) {
     return db
       .insert(companies)

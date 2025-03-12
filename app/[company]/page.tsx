@@ -139,6 +139,9 @@ const getPageData = cache(async (company: string) => {
 
   const [mainRecord, ...remainingRecords] = response.data ?? [];
   if (!mainRecord) {
+    after(async () => {
+      await companiesRepository.deleteByNit(nit);
+    });
     notFound();
   }
 
