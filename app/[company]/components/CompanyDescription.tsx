@@ -61,8 +61,8 @@ export function CompanyDescription({ company }: { company: CompanyDto }) {
     { label: "Categoría de la matrícula", value: company.category },
     { label: "Fecha de matrícula", value: company.registrationDate },
     {
-      label: "Antigüedad",
-      value: company.isActive ? company.yearsDoingBusinesses : null,
+      label: company.isActive ? "Antigüedad" : "Tiempo activa",
+      value: null,
     },
     { label: "Último año renovado", value: company.lastRenewalYear },
     { label: "Fecha de renovación", value: company.renewalDate },

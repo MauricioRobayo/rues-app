@@ -134,7 +134,7 @@ export function BusinessEstablishments({
         },
         {
           label: "Antigüedad",
-          value: establishment.yearsDoingBusinesses,
+          value: null,
         },
         {
           label: "Fecha de cancelación",

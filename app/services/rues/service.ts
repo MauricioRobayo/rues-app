@@ -75,10 +75,13 @@ export const ruesService = {
                 if (a.isActive && !b.isActive) {
                   return -1;
                 }
-                if (a.isActive && b.isActive) {
-                  return 0;
+                if (!a.isActive && b.isActive) {
+                  return 1;
                 }
-                return 1;
+                return (a.rawRegistrationDate ?? 0) >=
+                  (b.rawRegistrationDate ?? 0)
+                  ? -1
+                  : 1;
               }),
             retrievedOn: Date.now(),
             status: "success",
@@ -135,6 +138,8 @@ export const ruesService = {
               `advancedSearch failed ${JSON.stringify(response)}`,
             );
           }
+
+          console.dir(response.data, { depth: Infinity });
 
           const data = processAdvancedSearchResults(
             response.data.registros ?? [],

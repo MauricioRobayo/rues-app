@@ -1,7 +1,6 @@
 import { formatDetailsDate } from "@/app/lib/formatDetailsDate";
 import { getPhoneNumbers } from "@/app/lib/getPhoneNumbers";
 import { parseEconomicActivities } from "@/app/lib/parseEconomicActivities";
-import { yearsDoingBusinesses } from "@/app/lib/yearsDoingBusinesses";
 import type { BusinessEstablishmentDto } from "@/app/types/BusinessEstablishmentDto";
 import type { TourismRegistryDto } from "@/app/types/TourismRegistryDto";
 import type { StoreFront, TourismRegistry } from "@mauriciorobayo/rues-api";
@@ -13,7 +12,6 @@ export function mapStoreFrontToEstablishmentDto(
     name: data.razon_social,
     registrationNumber: data.matricula,
     registrationDate: formatDetailsDate(data.fecha_matricula),
-    yearsDoingBusinesses: yearsDoingBusinesses(data.fecha_matricula),
     cancellationDate: formatDetailsDate(data.fecha_cancelacion),
     lastRenewalYear: Number(data.ultimo_ano_renovado),
     renewalDate: data.fecha_renovacion
