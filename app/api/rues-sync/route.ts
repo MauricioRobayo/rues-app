@@ -2,14 +2,13 @@ import { ruesSyncRepository } from "@/app/services/rues/repository";
 import { handler } from "@/app/api/rues-sync/handler";
 import { after } from "next/server";
 
-const syncToken = process.env.RUES_SYNC_TOKEN;
+const syncToken = process.env.CRON_SECRET;
 
 if (!syncToken) {
-  throw new Error("RUES_SYNC_TOKEN is required");
+  throw new Error("CRON_SECRET is required");
 }
 
 // TODO: Send email with report
-// TODO: cronjob
 
 export async function POST(request: Request) {
   const token = request.headers.get("Authorization")?.split("Bearer ")[1];
