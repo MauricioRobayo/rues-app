@@ -38,5 +38,5 @@ function buildSitemapIndex(totalSitemaps: number) {
 }
 
 const getTotalSitemapsCached = unstable_cache(getTotalSitemaps, undefined, {
-  revalidate: 24 * 60 * 60,
+  revalidate: 2 * 24 * 60 * 60,
 });
