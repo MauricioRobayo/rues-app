@@ -10,7 +10,7 @@ if (!syncToken) {
 
 // TODO: Send email with report
 
-export async function POST(request: Request) {
+export async function GET(request: Request) {
   const token = request.headers.get("Authorization")?.split("Bearer ")[1];
   if (token !== syncToken) {
     return new Response("Unauthorized", { status: 401 });
