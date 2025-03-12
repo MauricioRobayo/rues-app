@@ -1,5 +1,3 @@
-&nbsp;&nbsp;&nbsp;Cargo/Nombre&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Identificación<br />
-
 import { CompanyDetails } from "@/app/[company]/components/CompanyDetails";
 import { CompanyHeader } from "@/app/[company]/components/CompanyHeader";
 import {
