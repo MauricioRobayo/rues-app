@@ -1,4 +1,5 @@
 import csvParser from "csv-parser";
+import pRetry from "p-retry";
 import { Readable } from "stream";
 export const CompanySize = {
   "NO DETERMINADO": "00",
@@ -36,9 +37,13 @@ export type CompanyRecord = {
 export async function getFileUrl(filters: Filters) {
   const headers = new Headers();
   headers.append("Content-Type", "application/json");
-  const response = await fetch(
-    "https://3qdqz6yla2.execute-api.us-east-1.amazonaws.com/panel-beneficiarios/reporte-informacion-detallada",
-    { method: "POST", headers, body: getFilters(filters) },
+  const response = await pRetry(
+    () =>
+      fetch(
+        "https://3qdqz6yla2.execute-api.us-east-1.amazonaws.com/panel-beneficiarios/reporte-informacion-detallada",
+        { method: "POST", headers, body: getFilters(filters) },
+      ),
+    { retries: 5 },
   );
   return response.json() as Promise<string>;
 }
@@ -186,12 +191,16 @@ async function processStream({
 }
 
 export async function getTotal(filters: Filters) {
-  const response = await fetch(
-    "https://3qdqz6yla2.execute-api.us-east-1.amazonaws.com/panel-beneficiarios/total-registros",
-    {
-      method: "POST",
-      body: getFilters(filters),
-    },
+  const response = await pRetry(
+    () =>
+      fetch(
+        "https://3qdqz6yla2.execute-api.us-east-1.amazonaws.com/panel-beneficiarios/total-registros",
+        {
+          method: "POST",
+          body: getFilters(filters),
+        },
+      ),
+    { retries: 5 },
   );
   return response.json();
 }
