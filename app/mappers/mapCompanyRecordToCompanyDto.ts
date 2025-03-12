@@ -3,9 +3,9 @@ import { decodeBase64 } from "@/app/lib/decodeBase64";
 import { formatDetailsDate } from "@/app/lib/formatDetailsDate";
 import { formatNit } from "@/app/lib/formatNit";
 import { getPhoneNumbers } from "@/app/lib/getPhoneNumbers";
+import { isCompanyActive } from "@/app/lib/isCompanyActive";
 import { parseEconomicActivities } from "@/app/lib/parseEconomicActivities";
 import { slugifyCompanyName } from "@/app/lib/slugifyComponentName";
-import { yearsDoingBusinesses } from "@/app/lib/yearsDoingBusinesses";
 import { mapPenaltyToPenaltyDto } from "@/app/mappers/mapPenaltyToPenaltyDto";
 import { mapStoreFrontToEstablishmentDto } from "@/app/mappers/mapStoreFrontToBusinessEstablishmentDto";
 import type { CapitalInformationDto } from "@/app/types/CapitalDto";
@@ -25,12 +25,13 @@ export function mapCompanyRecordToCompanyDto(data: CompanyRecord): CompanyDto {
     verificationDigit: Number(data.digito_verificacion),
     registrationNumber: data.matricula,
     status: data.estado_matricula,
-    isActive: !/cancel/i.test(data.estado_matricula),
+    isActive: isCompanyActive(data.estado_matricula),
     type: data.tipo_sociedad,
     legalEntityType: data.organizacion_juridica,
     category: data.categoria_matricula,
     registrationDate: formatDetailsDate(data.fecha_matricula),
-    yearsDoingBusinesses: yearsDoingBusinesses(data.fecha_matricula),
+    rawRegistrationDate: data?.fecha_matricula ?? null,
+    rawCancellationDate: data?.fecha_cancelacion ?? null,
     bidderId: data.inscripcion_proponente ? data.inscripcion_proponente : null,
     lastRenewalYear: Number(data.ultimo_ano_renovado),
     renewalDate: formatDetailsDate(data.fecha_renovacion),

@@ -21,8 +21,12 @@ export function CompanyDetails({ company }: { company: CompanyDto }) {
         <CommerceChamber code={company.chamber.code} />
         {/* <FinancialDetails financialDetails={company.financialInformation} /> */}
         {/* <CapitalDetails capitalDetails={company.capitalInformation} /> */}
-        <BusinessEstablishments establishments={company.establishments} />
-        <NameChanges changes={company.nameChanges} />
+        {company.isActive && (
+          <>
+            <BusinessEstablishments establishments={company.establishments} />
+            <NameChanges changes={company.nameChanges} />
+          </>
+        )}
         <Penalties penalties={company.penalties} />
       </Box>
     </Grid>

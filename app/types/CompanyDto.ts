@@ -27,6 +27,8 @@ export interface CompanyDto {
   nit: number;
   phoneNumbers?: string[];
   registrationDate: string | null;
+  rawRegistrationDate: string | null;
+  rawCancellationDate: string | null;
   registrationNumber: string;
   renewalDate: string | null;
   scope?: string | null;
@@ -40,7 +42,6 @@ export interface CompanyDto {
   type?: string;
   updatedDate?: string | null;
   verificationDigit: number;
-  yearsDoingBusinesses: string | null;
   financialInformation?: FinancialInformationDto[];
   capitalInformation?: CapitalInformationDto[];
   nameChanges?: CompanyNameChangeDto[];

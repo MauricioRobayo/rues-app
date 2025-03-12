@@ -1,9 +1,9 @@
-import { mapBusinessEstablishmentToBusinessEstablishmentDto } from "@/app/mappers/mapBusinessEstablishmentToBusinessEstablishmentDto";
 import { formatDetailsDate } from "@/app/lib/formatDetailsDate";
 import { formatNit } from "@/app/lib/formatNit";
+import { isCompanyActive } from "@/app/lib/isCompanyActive";
 import { parseEconomicActivities } from "@/app/lib/parseEconomicActivities";
 import { slugifyCompanyName } from "@/app/lib/slugifyComponentName";
-import { yearsDoingBusinesses } from "@/app/lib/yearsDoingBusinesses";
+import { mapBusinessEstablishmentToBusinessEstablishmentDto } from "@/app/mappers/mapBusinessEstablishmentToBusinessEstablishmentDto";
 import type { ConsolidatedCompanyInfo as ConsolidatedCompany } from "@/app/services/rues/service";
 import type { CompanyDto } from "@/app/types/CompanyDto";
 
@@ -23,11 +23,12 @@ export function mapConsolidatedCompanyToCompanyDto({
     chamber: { name: rues.nom_camara, code: rues.cod_camara },
     registrationNumber: rues.matricula,
     status: rues.estado_matricula,
-    isActive: !/cancel/i.test(rues.estado_matricula),
+    isActive: isCompanyActive(rues.estado_matricula),
     legalEntityType: rues.organizacion_juridica,
     shortName: rues.sigla,
     registrationDate: formatDetailsDate(details?.fecha_matricula ?? ""),
-    yearsDoingBusinesses: yearsDoingBusinesses(details?.fecha_matricula ?? ""),
+    rawRegistrationDate: details?.fecha_matricula ?? null,
+    rawCancellationDate: details?.fecha_cancelacion ?? null,
     renewalDate: formatDetailsDate(details?.fecha_renovacion ?? ""),
     updatedDate: formatDetailsDate(details?.fecha_actualizacion ?? ""),
     cancellationDate: formatDetailsDate(details?.fecha_cancelacion ?? ""),

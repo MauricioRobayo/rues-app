@@ -46,8 +46,8 @@ export function companySummary(company: CompanyDto) {
     summary += ` y su teléfono de contacto es ${company.phoneNumbers[0]}`;
   }
 
-  if (company.isActive && company.yearsDoingBusinesses) {
-    summary += `. Fundada hace ${company.yearsDoingBusinesses}`;
+  if (company.isActive && company.registrationDate) {
+    summary += `. Fundada el ${company.registrationDate}`;
   }
 
   if (company.chamber?.name) {
