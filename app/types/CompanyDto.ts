@@ -28,6 +28,7 @@ export interface CompanyDto {
   phoneNumbers?: string[];
   registrationDate: string | null;
   rawRegistrationDate: string | null;
+  rawCancellationDate: string | null;
   registrationNumber: string;
   renewalDate: string | null;
   scope?: string | null;

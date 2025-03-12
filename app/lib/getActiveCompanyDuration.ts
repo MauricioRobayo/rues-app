@@ -1,23 +1,18 @@
 import { parseDetailsDate } from "@/app/lib/parseDetailsDate";
-import { formatDistanceStrict, formatDistanceToNowStrict } from "date-fns";
+import { formatDistanceStrict } from "date-fns";
 import { es } from "date-fns/locale";
 
 export function getActiveCompanyDuration({
   registrationDate,
   cancellationDate,
 }: {
-  registrationDate?: string;
-  cancellationDate?: string;
+  registrationDate: string | null;
+  cancellationDate?: string | null;
 }) {
-  const date1 = parseDetailsDate(registrationDate);
-  const date2 = parseDetailsDate(cancellationDate);
-  if (date1 && date2) {
-    return formatDistanceStrict(date1, date2, {
-      locale: es,
-    });
-  }
-  if (date1) {
-    return formatDistanceToNowStrict(date1, {
+  const startDate = parseDetailsDate(registrationDate);
+  const endDate = parseDetailsDate(cancellationDate) ?? new Date();
+  if (startDate && endDate) {
+    return formatDistanceStrict(startDate, endDate, {
       locale: es,
     });
   }

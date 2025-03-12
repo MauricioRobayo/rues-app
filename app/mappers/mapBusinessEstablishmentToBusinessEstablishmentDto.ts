@@ -14,6 +14,7 @@ export function mapBusinessEstablishmentToBusinessEstablishmentDto(
     category: data.CATEGORIA_MATRICULA,
     status: data.DESC_ESTADO_MATRICULA,
     registrationDate: formatDetailsDate(data.FECHA_MATRICULA),
+    rawRegistrationDate: data.FECHA_MATRICULA,
     renewalDate: formatDetailsDate(data.FECHA_RENOVACION),
     lastRenewalYear: Number(data.ULTIMO_ANO_RENOVADO),
   };

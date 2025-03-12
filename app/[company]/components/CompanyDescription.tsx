@@ -1,3 +1,4 @@
+import { ActiveDuration } from "@/app/[company]/components/ActiveDuration";
 import { Bidder } from "@/app/[company]/components/Bidder/Bidder";
 import { CopyButton } from "@/app/[company]/components/CopyButton";
 import { DataList } from "@/app/[company]/components/DataList";
@@ -60,13 +61,18 @@ export function CompanyDescription({ company }: { company: CompanyDto }) {
     { label: "Organización jurídica", value: company.legalEntityType },
     { label: "Categoría de la matrícula", value: company.category },
     { label: "Fecha de matrícula", value: company.registrationDate },
-    {
-      label: company.isActive ? "Antigüedad" : "Tiempo activa",
-      value: null,
-    },
-    { label: "Último año renovado", value: company.lastRenewalYear },
     { label: "Fecha de renovación", value: company.renewalDate },
     { label: "Fecha de cancelación", value: company.cancellationDate },
+    { label: "Último año renovado", value: company.lastRenewalYear },
+    {
+      label: company.isActive ? "Antigüedad" : "Tiempo activa",
+      value: (
+        <ActiveDuration
+          registrationDate={company.rawRegistrationDate}
+          cancellationDate={company.rawCancellationDate}
+        />
+      ),
+    },
     { label: "Tamaño de la empresa", value: company.size },
     { label: "Municipio", value: company.city },
     { label: "Departamento", value: company.state },

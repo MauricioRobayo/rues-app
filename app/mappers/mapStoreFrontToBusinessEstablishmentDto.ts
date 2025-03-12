@@ -13,6 +13,8 @@ export function mapStoreFrontToEstablishmentDto(
     registrationNumber: data.matricula,
     registrationDate: formatDetailsDate(data.fecha_matricula),
     cancellationDate: formatDetailsDate(data.fecha_cancelacion),
+    rawRegistrationDate: data.fecha_matricula ?? null,
+    rawCancellationDate: data.fecha_cancelacion,
     lastRenewalYear: Number(data.ultimo_ano_renovado),
     renewalDate: data.fecha_renovacion
       ? formatDetailsDate(data.fecha_renovacion)

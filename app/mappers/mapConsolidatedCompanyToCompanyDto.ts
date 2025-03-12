@@ -28,6 +28,7 @@ export function mapConsolidatedCompanyToCompanyDto({
     shortName: rues.sigla,
     registrationDate: formatDetailsDate(details?.fecha_matricula ?? ""),
     rawRegistrationDate: details?.fecha_matricula ?? null,
+    rawCancellationDate: details?.fecha_cancelacion ?? null,
     renewalDate: formatDetailsDate(details?.fecha_renovacion ?? ""),
     updatedDate: formatDetailsDate(details?.fecha_actualizacion ?? ""),
     cancellationDate: formatDetailsDate(details?.fecha_cancelacion ?? ""),

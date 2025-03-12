@@ -1,4 +1,4 @@
-export function parseDetailsDate(value?: string) {
+export function parseDetailsDate(value?: string | null) {
   if (!value?.trim() || value.length !== 8) {
     return null;
   }

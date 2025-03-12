@@ -1,3 +1,4 @@
+import { ActiveDuration } from "@/app/[company]/components/ActiveDuration";
 import { DataList } from "@/app/[company]/components/DataList";
 import { EconomicActivities } from "@/app/[company]/components/EconomicActivities";
 import { ExpandableList } from "@/app/[company]/components/ExpandableList";
@@ -133,8 +134,8 @@ export function BusinessEstablishments({
           value: establishment.registrationDate,
         },
         {
-          label: "Antigüedad",
-          value: null,
+          label: "Fecha de renovación",
+          value: establishment.renewalDate,
         },
         {
           label: "Fecha de cancelación",
@@ -145,9 +146,17 @@ export function BusinessEstablishments({
           value: establishment.lastRenewalYear,
         },
         {
-          label: "Fecha de renovación",
-          value: establishment.renewalDate,
+          label: establishment.rawCancellationDate
+            ? "Tiempo activo"
+            : "Antigüedad",
+          value: (
+            <ActiveDuration
+              registrationDate={establishment.rawRegistrationDate}
+              cancellationDate={establishment.rawCancellationDate}
+            />
+          ),
         },
+
         {
           label: "Teléfono",
           value:
