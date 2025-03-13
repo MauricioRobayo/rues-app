@@ -10,7 +10,6 @@ export function NameChanges({ changes }: { changes?: CompanyNameChangeDto[] }) {
     const chamber = getChamber(nameChange.chamberCode);
     return {
       name: nameChange.previousName,
-      registrationNumber: nameChange.registrationNumber,
       date: nameChange.date,
       details: [
         { label: "Razón Social", value: nameChange.previousName },
@@ -51,9 +50,7 @@ export function NameChanges({ changes }: { changes?: CompanyNameChangeDto[] }) {
               <li key={`${nameChange.name}-${nameChange.date}`}>
                 <details>
                   <Text truncate asChild>
-                    <summary>
-                      {nameChange.name || nameChange.registrationNumber}
-                    </summary>
+                    <summary>{nameChange.name}</summary>
                   </Text>
                   <Box my="4" pl="4">
                     <DataList items={nameChange.details} />
