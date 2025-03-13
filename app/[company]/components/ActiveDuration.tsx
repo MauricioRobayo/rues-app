@@ -14,7 +14,6 @@ export function ActiveDuration({
   if (!isClient) {
     return null;
   }
-  debugger;
   return getActiveCompanyDuration({
     registrationDate,
     cancellationDate,
