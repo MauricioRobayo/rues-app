@@ -1,10 +1,11 @@
 "use client";
 
 import { getRecaptchaToken } from "@/app/lib/getRecapchaToken";
-import { Button, Flex, Text, TextArea } from "@radix-ui/themes";
+import { Button, Callout, Flex, Text, TextArea } from "@radix-ui/themes";
 import { useActionState, useId, useState } from "react";
 import { Action } from "@/app/lib/getRecapchaToken";
 import { userReportAction } from "@/app/[company]/actions";
+import { CheckCircledIcon } from "@radix-ui/react-icons";
 
 type UserReportState = { status: "idle" | "success" | "error" };
 
@@ -54,10 +55,14 @@ function UserReportForm({ slug }: { slug: string }) {
   const descriptionId = `${formId}-description`;
   if (userReportState.status === "success") {
     return (
-      <Text color="green" className="contents">
-        <p>Hemos recibido exitosamente su mensaje.</p>
-        <p>Estamos trabajando en ello.</p>
-      </Text>
+      <Callout.Root color="green">
+        <Callout.Icon>
+          <CheckCircledIcon />
+        </Callout.Icon>
+        <Callout.Text>
+          Hemos recibido su mensaje. Estamos trabajando en ello.
+        </Callout.Text>
+      </Callout.Root>
     );
   }
 
