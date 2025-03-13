@@ -17,7 +17,7 @@ export function Penalties({ penalties }: { penalties?: PenaltyDto[] }) {
       {
         label: "Cámara de Comercio",
         value: getChamber(penalty.chamberCode)?.name.replace(
-          /cámara de comercio (de|del|de la)/gi,
+          /Cámara de comercio (de la|del|de) /i,
           "",
         ),
       },

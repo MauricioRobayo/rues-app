@@ -8,8 +8,10 @@ import { Box, Code, Flex, Heading, Section, Text } from "@radix-ui/themes";
 export function NameChanges({ changes }: { changes?: CompanyNameChangeDto[] }) {
   const nameChanges = (changes ?? []).map((nameChange) => {
     const chamber = getChamber(nameChange.chamberCode);
+    console.log(chamber?.name);
     return {
       name: nameChange.previousName,
+      registrationNumber: nameChange.registrationNumber,
       date: nameChange.date,
       details: [
         { label: "Razón Social", value: nameChange.previousName },
@@ -25,7 +27,10 @@ export function NameChanges({ changes }: { changes?: CompanyNameChangeDto[] }) {
         },
         {
           label: "Cámara de Comercio",
-          value: chamber?.name.replace(/Cámara de comercio (de|del|de la)/, ""),
+          value: chamber?.name.replace(
+            /Cámara de comercio (de la|del|de) /i,
+            "",
+          ),
         },
       ],
     };
@@ -47,7 +52,9 @@ export function NameChanges({ changes }: { changes?: CompanyNameChangeDto[] }) {
               <li key={`${nameChange.name}-${nameChange.date}`}>
                 <details>
                   <Text truncate asChild>
-                    <summary>{nameChange.name}</summary>
+                    <summary>
+                      {nameChange.name || nameChange.registrationNumber}
+                    </summary>
                   </Text>
                   <Box my="4" pl="4">
                     <DataList items={nameChange.details} />
