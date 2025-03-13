@@ -76,6 +76,7 @@ export function mapCompanyRecordToCompanyDto(data: CompanyRecord): CompanyDto {
       registrationNumber: nameChange.matricula ? nameChange.matricula : null,
     })).filter(
       (nameChange): nameChange is CompanyNameChangeDto =>
+        !!nameChange.previousName &&
         !!nameChange.date &&
         !!nameChange.chamberCode &&
         !!nameChange.registrationNumber,
