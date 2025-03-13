@@ -119,9 +119,12 @@ export function CompanyDescription({ company }: { company: CompanyDto }) {
     },
     {
       label: "Cantidad de establecimientos",
-      value: company.totalBusinessEstablishments,
+      value: company.isActive ? company.totalBusinessEstablishments : null,
     },
-    { label: "Número de empleados", value: company.totalEmployees },
+    {
+      label: "Número de empleados",
+      value: company.isActive ? company.totalEmployees : null,
+    },
     {
       label: "Registro proponente",
       value: company.bidderId ? <Bidder bidderId={company.bidderId} /> : null,
