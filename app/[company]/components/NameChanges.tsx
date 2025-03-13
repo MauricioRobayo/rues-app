@@ -8,7 +8,6 @@ import { Box, Code, Flex, Heading, Section, Text } from "@radix-ui/themes";
 export function NameChanges({ changes }: { changes?: CompanyNameChangeDto[] }) {
   const nameChanges = (changes ?? []).map((nameChange) => {
     const chamber = getChamber(nameChange.chamberCode);
-    console.log(chamber?.name);
     return {
       name: nameChange.previousName,
       registrationNumber: nameChange.registrationNumber,
