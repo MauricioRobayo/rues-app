@@ -30,7 +30,7 @@ export function mapOpenDataCompanyToCompanyDto(
     }),
     isActive: isCompanyActive(data.estado_matricula),
     lastRenewalYear: Number(data.ultimo_ano_renovado),
-    legalEntityType: data.tipo_sociedad,
+    type: data.tipo_sociedad,
     legalRepresentatives: getLegalRepresentative(data),
     cancellationDate: formatDetailsDate(data.fecha_cancelacion),
     registrationDate: formatDetailsDate(data.fecha_matricula),
