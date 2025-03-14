@@ -7,8 +7,8 @@ export interface BusinessEstablishmentDto {
   legalEntity?: string;
   category?: string;
   registrationNumber?: string;
-  registrationDate: string | null;
-  rawRegistrationDate: string | null;
+  registrationDate?: string | null;
+  rawRegistrationDate?: string | null;
   cancellationDate?: string | null;
   rawCancellationDate?: string | null;
   lastRenewalYear: number;
@@ -17,6 +17,6 @@ export interface BusinessEstablishmentDto {
   phoneNumbers?: string[];
   address?: string;
   economicActivityDescription?: string;
-  economicActivities?: { label: string; code: string; description: string }[];
+  economicActivities?: { label: string; code: string; description?: string }[];
   tourismRegistries?: TourismRegistryDto[];
 }

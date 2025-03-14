@@ -149,12 +149,12 @@ export function BusinessEstablishments({
           label: establishment.rawCancellationDate
             ? "Tiempo activo"
             : "Antigüedad",
-          value: (
+          value: establishment.rawRegistrationDate ? (
             <ActiveDuration
               registrationDate={establishment.rawRegistrationDate}
               cancellationDate={establishment.rawCancellationDate}
             />
-          ),
+          ) : null,
         },
 
         {

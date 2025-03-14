@@ -11,10 +11,10 @@ export function parseEconomicActivities(activities: {
   const economicActivities: {
     label: string;
     code: string;
-    description: string;
+    description?: string;
   }[] = [];
 
-  if (activities.ciiu1 && activities.descCiiu1) {
+  if (activities.ciiu1) {
     economicActivities.push({
       label: "ciiu1",
       code: activities.ciiu1,
@@ -22,7 +22,7 @@ export function parseEconomicActivities(activities: {
     });
   }
 
-  if (activities.ciiu2 && activities.descCiiu2) {
+  if (activities.ciiu2) {
     economicActivities.push({
       label: "ciiu2",
       code: activities.ciiu2,
@@ -30,7 +30,7 @@ export function parseEconomicActivities(activities: {
     });
   }
 
-  if (activities.ciiu3 && activities.descCiiu3) {
+  if (activities.ciiu3) {
     economicActivities.push({
       label: "ciiu3",
       code: activities.ciiu3,
@@ -38,7 +38,7 @@ export function parseEconomicActivities(activities: {
     });
   }
 
-  if (activities.ciiu4 && activities.descCiiu4) {
+  if (activities.ciiu4) {
     economicActivities.push({
       label: "ciiu4",
       code: activities.ciiu4,

@@ -1,4 +1,6 @@
+// import { LegalRepresentativePowers } from "@/app/[company]/components/LegalRepresentatives/LegalRepresentativePowers";
 import { LegalRepresentativePowers } from "@/app/[company]/components/LegalRepresentatives/LegalRepresentativePowers";
+import { OPEN_DATA_ENABLED } from "@/app/lib/constants";
 import { Flex, Text } from "@radix-ui/themes";
 
 export async function LegalRepresentatives({
@@ -6,10 +8,29 @@ export async function LegalRepresentatives({
   chamberCode,
   registrationNumber,
 }: {
-  legalRepresentatives: { name: string; type: string }[];
+  legalRepresentatives: {
+    name: string;
+    type: string;
+    id?: string;
+    idType?: string;
+  }[];
   chamberCode: string;
   registrationNumber: string;
 }) {
+  if (OPEN_DATA_ENABLED) {
+    const legalRepresentative = legalRepresentatives[0];
+    return (
+      <Flex direction="column" gap="0">
+        <Text>{legalRepresentative.name}</Text>
+        {legalRepresentative.id ? (
+          <Text size="1" color="gray">
+            {legalRepresentative.idType} {legalRepresentative.id}
+          </Text>
+        ) : null}
+      </Flex>
+    );
+  }
+
   return (
     <Flex direction="column" gap="2">
       <Flex asChild direction="column" gap={{ initial: "2", sm: "0" }}>
@@ -32,10 +53,12 @@ export async function LegalRepresentatives({
           ))}
         </ol>
       </Flex>
-      <LegalRepresentativePowers
-        chamberCode={chamberCode}
-        registrationNumber={registrationNumber}
-      />
+      {OPEN_DATA_ENABLED && (
+        <LegalRepresentativePowers
+          chamberCode={chamberCode}
+          registrationNumber={registrationNumber}
+        />
+      )}
     </Flex>
   );
 }
