@@ -1,3 +1,5 @@
+import { ciiuDict } from "@/app/lib/ciiuDict";
+
 export function parseEconomicActivities(activities: {
   ciiu1?: string;
   ciiu2?: string;
@@ -11,14 +13,14 @@ export function parseEconomicActivities(activities: {
   const economicActivities: {
     label: string;
     code: string;
-    description?: string;
+    description: string;
   }[] = [];
 
   if (activities.ciiu1) {
     economicActivities.push({
       label: "ciiu1",
       code: activities.ciiu1,
-      description: activities.descCiiu1,
+      description: activities.descCiiu1 ?? ciiuDict[activities.ciiu1],
     });
   }
 
@@ -26,7 +28,7 @@ export function parseEconomicActivities(activities: {
     economicActivities.push({
       label: "ciiu2",
       code: activities.ciiu2,
-      description: activities.descCiiu2,
+      description: activities.descCiiu2 ?? ciiuDict[activities.ciiu2],
     });
   }
 
@@ -34,7 +36,7 @@ export function parseEconomicActivities(activities: {
     economicActivities.push({
       label: "ciiu3",
       code: activities.ciiu3,
-      description: activities.descCiiu3,
+      description: activities.descCiiu3 ?? ciiuDict[activities.ciiu3],
     });
   }
 
@@ -42,7 +44,7 @@ export function parseEconomicActivities(activities: {
     economicActivities.push({
       label: "ciiu4",
       code: activities.ciiu4,
-      description: activities.descCiiu4,
+      description: activities.descCiiu4 ?? ciiuDict[activities.ciiu4],
     });
   }
 

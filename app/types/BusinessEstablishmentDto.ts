@@ -17,6 +17,6 @@ export interface BusinessEstablishmentDto {
   phoneNumbers?: string[];
   address?: string;
   economicActivityDescription?: string;
-  economicActivities?: { label: string; code: string; description?: string }[];
+  economicActivities?: { label: string; code: string; description: string }[];
   tourismRegistries?: TourismRegistryDto[];
 }

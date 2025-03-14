@@ -14,7 +14,7 @@ export interface CompanyDto {
   chamber: { name: string; code: string };
   idType?: string;
   city?: string;
-  economicActivities: { label: string; code: string; description?: string }[];
+  economicActivities: { label: string; code: string; description: string }[];
   email?: string;
   establishments?: BusinessEstablishmentDto[];
   fullNit: string;
@@ -22,7 +22,7 @@ export interface CompanyDto {
   industry?: string;
   isActive: boolean;
   lastRenewalYear: number | null;
-  legalEntityType: string;
+  legalEntityType?: string;
   legalRepresentatives?: {
     type: "principal" | "suplente";
     name: string;
