@@ -1,6 +1,6 @@
 import { mapOpenDataCompanyToCompanyDto } from "@/app/mappers/mapOpenDataCompanyToCompanyDto";
 import { mapOpenDataEstablishmentToBusinessEstablishmentDto } from "@/app/mappers/mapOpenDataEstablishmentToBusinessEstablishmentDto";
-import { openDataApi } from "@/app/services/openData/api";
+import { openDataRepository } from "@/app/services/openData/repository";
 import type { CompanyDto } from "@/app/types/CompanyDto";
 import pRetry from "p-retry";
 
@@ -73,7 +73,7 @@ export const openDataService = {
 
 async function fetchCompany(nit: string) {
   const signal = AbortSignal.timeout(3_000);
-  const companyResponse = await openDataApi.getCompanyByNit(nit, {
+  const companyResponse = await openDataRepository.getCompanyByNit(nit, {
     signal,
   });
 
@@ -104,7 +104,7 @@ async function fetchEstablishments({
   registrationNumber: string;
 }) {
   const signal = AbortSignal.timeout(3_000);
-  const companyResponse = await openDataApi.getEstablishments(
+  const companyResponse = await openDataRepository.getEstablishments(
     { chamberCode, registrationNumber },
     {
       signal,
