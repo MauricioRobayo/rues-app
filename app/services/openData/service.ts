@@ -5,75 +5,116 @@ import type { CompanyDto } from "@/app/types/CompanyDto";
 import pRetry from "p-retry";
 
 export const openDataService = {
-  async getCompany(
-    nit: string,
-  ): Promise<
-    | { status: "success"; data: CompanyDto[] | null; retrievedOn: number }
-    | { status: "error"; statusCode?: number; error?: unknown }
-  > {
-    const retrievedOn = Date.now();
-    try {
-      const companyResponse = await pRetry(() => fetchCompany(nit), {
-        retries: 3,
-      });
-      if (!companyResponse.data) {
+  companies: {
+    async get(
+      nit: string,
+    ): Promise<
+      | { status: "success"; data: CompanyDto[] | null; retrievedOn: number }
+      | { status: "error"; statusCode?: number; error?: unknown }
+    > {
+      const retrievedOn = Date.now();
+      try {
+        const companyResponse = await pRetry(() => fetchCompany(nit), {
+          retries: 3,
+          onFailedAttempt: (error) => {
+            console.log(
+              `Attempt ${error.attemptNumber} failed. There are ${error.retriesLeft} retries left.`,
+            );
+          },
+        });
+        if (!companyResponse.data) {
+          return {
+            ...companyResponse,
+            retrievedOn,
+          };
+        }
+        const companyData = companyResponse.data
+          .map(mapOpenDataCompanyToCompanyDto)
+          .filter(
+            (record) =>
+              !!record.registrationDate &&
+              !!record.name &&
+              !!record.registrationNumber &&
+              !!record.status,
+          )
+          .toSorted((a, b) => {
+            if (a.isActive && !b.isActive) {
+              return -1;
+            }
+            if (!a.isActive && b.isActive) {
+              return 1;
+            }
+            return (a.rawRegistrationDate ?? 0) >= (b.rawRegistrationDate ?? 0)
+              ? -1
+              : 1;
+          });
+        const [mainRecord, ...remainingRecords] = companyData;
+        if (!mainRecord) {
+          return {
+            status: "success",
+            retrievedOn,
+            data: null,
+          };
+        }
+        const establishmentResponse = await pRetry(
+          () =>
+            fetchEstablishments({
+              chamberCode: mainRecord.chamber.code,
+              registrationNumber: mainRecord.registrationNumber,
+            }),
+          {
+            retries: 3,
+            onFailedAttempt: (error) => {
+              console.log(
+                `Attempt ${error.attemptNumber} failed. There are ${error.retriesLeft} retries left.`,
+              );
+            },
+          },
+        );
+        mainRecord.establishments = (establishmentResponse.data ?? []).map(
+          mapOpenDataEstablishmentToBusinessEstablishmentDto,
+        );
         return {
           ...companyResponse,
           retrievedOn,
+          data: [mainRecord, ...remainingRecords],
         };
+      } catch (error) {
+        console.error(error);
+        return { error, status: "error" } as const;
       }
-      const companyData = companyResponse.data
-        .map(mapOpenDataCompanyToCompanyDto)
-        .filter(
-          (record) =>
-            !!record.registrationDate &&
-            !!record.name &&
-            !!record.registrationNumber &&
-            !!record.status,
-        )
-        .toSorted((a, b) => {
-          if (a.isActive && !b.isActive) {
-            return -1;
+    },
+    count() {
+      return pRetry(
+        async () => {
+          const response = await openDataRepository.companies.count();
+          if (response.status === "error") {
+            console.error(response);
+            throw new Error("Fetch company count failed");
           }
-          if (!a.isActive && b.isActive) {
-            return 1;
+          const count = response.data.at(0)?.COUNT;
+          if (!count) {
+            console.warn("Could not get companies count");
+            return null;
           }
-          return (a.rawRegistrationDate ?? 0) >= (b.rawRegistrationDate ?? 0)
-            ? -1
-            : 1;
-        });
-      const [mainRecord, ...remainingRecords] = companyData;
-      if (!mainRecord) {
-        return {
-          status: "success",
-          retrievedOn,
-          data: null,
-        };
-      }
-      const establishmentResponse = await pRetry(() =>
-        fetchEstablishments({
-          chamberCode: mainRecord.chamber.code,
-          registrationNumber: mainRecord.registrationNumber,
-        }),
+          return Number(count);
+        },
+        {
+          retries: 3,
+          onFailedAttempt: (error) => {
+            console.log(
+              `Attempt ${error.attemptNumber} failed. There are ${error.retriesLeft} retries left.`,
+            );
+          },
+        },
       );
-      mainRecord.establishments = (establishmentResponse.data ?? []).map(
-        mapOpenDataEstablishmentToBusinessEstablishmentDto,
-      );
-      return {
-        ...companyResponse,
-        retrievedOn,
-        data: [mainRecord, ...remainingRecords],
-      };
-    } catch (error) {
-      console.error(error);
-      return { error, status: "error" } as const;
-    }
+    },
   },
 };
 
 async function fetchCompany(nit: string) {
   const signal = AbortSignal.timeout(3_000);
-  const companyResponse = await openDataRepository.getCompanyByNit(nit, {
+  const companyResponse = await openDataRepository.companies.get(nit, {
     signal,
   });
 
@@ -104,7 +145,7 @@ async function fetchEstablishments({
   registrationNumber: string;
 }) {
   const signal = AbortSignal.timeout(3_000);
-  const companyResponse = await openDataRepository.getEstablishments(
+  const companyResponse = await openDataRepository.establishments.get(
     { chamberCode, registrationNumber },
     {
       signal,

@@ -199,7 +199,7 @@ function responseStatus(status: "success" | "error") {
 }
 
 const getCompanyByNitCached = unstable_cache(
-  openDataService.getCompany,
+  openDataService.companies.get,
   undefined,
   {
     revalidate: COMPANY_REVALIDATION_TIME,

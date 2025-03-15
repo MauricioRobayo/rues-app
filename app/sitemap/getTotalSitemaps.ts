@@ -1,8 +1,8 @@
-import { companiesRepository } from "@/app/services/companies/repository";
 import { MAX_URLS_PER_SITEMAP } from "@/app/lib/constants";
+import { openDataService } from "@/app/services/openData/service";
 
 export const getTotalSitemaps = async () => {
-  const total = await companiesRepository.count();
+  const total = await openDataService.companies.count();
   if (!total) {
     return 0;
   }

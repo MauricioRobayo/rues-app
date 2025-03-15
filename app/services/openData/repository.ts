@@ -72,39 +72,43 @@ const openDataFields = {
 };
 
 export const openDataRepository = {
-  getCompanyByNit(nit: string, { signal }: { signal?: AbortSignal } = {}) {
-    return openDataClient.companies<OpenDataCompany[]>({
-      query: new URLSearchParams({
-        numero_identificacion: nit,
-        $select: openDataFields.companies.join(","),
-      }),
-      signal,
-    });
-  },
-  getEstablishments(
-    {
-      registrationNumber,
-      chamberCode,
-    }: {
-      registrationNumber: string;
-      chamberCode: string;
+  companies: {
+    get(nit: string, { signal }: { signal?: AbortSignal } = {}) {
+      return openDataClient.companies<OpenDataCompany[]>({
+        query: new URLSearchParams({
+          numero_identificacion: nit,
+          $select: openDataFields.companies.join(","),
+        }),
+        signal,
+      });
     },
-    { signal }: { signal?: AbortSignal } = {},
-  ) {
-    return openDataClient.establishments<OpenDataEstablishment[]>({
-      query: new URLSearchParams({
-        matr_cula_propietario: registrationNumber,
-        codigo_camara_propietario: chamberCode,
-        $select: openDataFields.establishments.join(","),
-      }),
-      signal,
-    });
+    count() {
+      return openDataClient.companies<{ COUNT: string }[]>({
+        query: new URLSearchParams({
+          $query: "SELECT COUNT(*)",
+        }),
+      });
+    },
   },
-  getCount() {
-    return openDataClient.companies<{ COUNT: string }>({
-      query: new URLSearchParams({
-        $query: "SELECT COUNT(*)",
-      }),
-    });
+  establishments: {
+    get(
+      {
+        registrationNumber,
+        chamberCode,
+      }: {
+        registrationNumber: string;
+        chamberCode: string;
+      },
+      { signal }: { signal?: AbortSignal } = {},
+    ) {
+      return openDataClient.establishments<OpenDataEstablishment[]>({
+        query: new URLSearchParams({
+          matr_cula_propietario: registrationNumber,
+          codigo_camara_propietario: chamberCode,
+          $select: openDataFields.establishments.join(","),
+        }),
+        signal,
+      });
+    },
   },
 };
