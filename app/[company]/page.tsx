@@ -17,14 +17,12 @@ import {
 import { parseCompanyPathSegment } from "@/app/lib/parseCompanyPathSegment";
 import { slugifyCompanyName } from "@/app/lib/slugifyComponentName";
 import { validateNit } from "@/app/lib/validateNit";
-import { companiesRepository } from "@/app/services/companies/repository";
 import { openDataService } from "@/app/services/openData/service";
 import { ruesService } from "@/app/services/rues/service";
 import { Box, Flex, Heading } from "@radix-ui/themes";
 import type { Metadata } from "next";
 import { unstable_cache } from "next/cache";
 import { notFound, permanentRedirect } from "next/navigation";
-import { after } from "next/server";
 import { cache } from "react";
 
 interface PageProps {
@@ -146,9 +144,6 @@ const getPageData = cache(async (company: string) => {
 
   const [mainRecord, ...remainingRecords] = response.data ?? [];
   if (!mainRecord) {
-    after(async () => {
-      await companiesRepository.deleteByNit(nit);
-    });
     notFound();
   }
 
@@ -158,17 +153,6 @@ const getPageData = cache(async (company: string) => {
   if (slug !== companySlug) {
     permanentRedirect(`/${companySlug}-${nit}`);
   }
-
-  after(async () => {
-    // This record might not be in the db.
-    // If it is we always want to update it
-    // so the "lastmod" in the sitemap is
-    // also updated.
-    await companiesRepository.upsertName({
-      nit,
-      name,
-    });
-  });
 
   return {
     nit,
