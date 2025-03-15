@@ -3,7 +3,7 @@ const OpenDataSet = {
   ESTABLISHMENTS: "nb3d-v3n7",
 } as const;
 
-export const openDataApi = {
+export const openDataClient = {
   companies: openDataFetchFactory(OpenDataSet.COMPANIES),
   establishments: openDataFetchFactory(OpenDataSet.ESTABLISHMENTS),
 };

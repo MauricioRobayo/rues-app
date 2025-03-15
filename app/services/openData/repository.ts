@@ -1,4 +1,4 @@
-import { openDataApi } from "@/app/services/openData/api";
+import { openDataClient } from "@/app/services/openData/client";
 import type {
   OpenDataCompany,
   OpenDataEstablishment,
@@ -73,7 +73,7 @@ const openDataFields = {
 
 export const openDataRepository = {
   getCompanyByNit(nit: string, { signal }: { signal?: AbortSignal } = {}) {
-    return openDataApi.companies<OpenDataCompany[]>({
+    return openDataClient.companies<OpenDataCompany[]>({
       query: new URLSearchParams({
         numero_identificacion: nit,
         $select: openDataFields.companies.join(","),
@@ -91,7 +91,7 @@ export const openDataRepository = {
     },
     { signal }: { signal?: AbortSignal } = {},
   ) {
-    return openDataApi.establishments<OpenDataEstablishment[]>({
+    return openDataClient.establishments<OpenDataEstablishment[]>({
       query: new URLSearchParams({
         matr_cula_propietario: registrationNumber,
         codigo_camara_propietario: chamberCode,
@@ -101,7 +101,7 @@ export const openDataRepository = {
     });
   },
   getCount() {
-    return openDataApi.companies<{ COUNT: string }>({
+    return openDataClient.companies<{ COUNT: string }>({
       query: new URLSearchParams({
         $query: "SELECT COUNT(*)",
       }),
