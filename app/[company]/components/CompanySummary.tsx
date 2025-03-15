@@ -6,7 +6,12 @@ export function CompanySummary({ company }: { company: CompanyDto }) {
 }
 
 export function companySummary(company: CompanyDto) {
-  let summary = `${company.name} NIT ${company.fullNit}`;
+  let summary = "";
+  if (company.isLegalEntity) {
+    summary += "La empresa";
+  }
+
+  summary += ` ${company.name} NIT ${company.fullNit}`;
 
   if (company.shortName) {
     summary += ` (${company.shortName})`;
@@ -19,15 +24,13 @@ export function companySummary(company: CompanyDto) {
     } else {
       summary += ` es una ${companySize} EMPRESA`;
     }
-  } else {
-    summary += ` es una empresa`;
+  } else if (company.type) {
+    summary += ` es una ${company.type}`;
   }
 
-  if (!company.isActive) {
-    summary += ` ${company.status}`;
-    if (company.cancellationDate) {
-      summary += ` que operó hasta el ${company.cancellationDate},`;
-    }
+  summary += ` ${company.status}`;
+  if (company.cancellationDate) {
+    summary += ` que operó hasta el ${company.cancellationDate}`;
   }
 
   if (company.city) {
@@ -47,7 +50,7 @@ export function companySummary(company: CompanyDto) {
   }
 
   if (company.isActive && company.registrationDate) {
-    summary += `. Fundada el ${company.registrationDate}`;
+    summary += `. Fue fundada el ${company.registrationDate}`;
   }
 
   if (company.chamber?.name) {
@@ -64,7 +67,9 @@ export function companySummary(company: CompanyDto) {
     summary += `. Su principal actividad económica corresponde al código CIIU ${mainEconomicActivity.code}: ${mainEconomicActivity.description}`;
   }
 
-  if (company.totalEmployees || company.totalBusinessEstablishments) {
+  const establishments = company.establishments ?? [];
+
+  if (company.totalEmployees || establishments.length > 0) {
     summary += ". Cuenta con";
     const totals: string[] = [];
     if (company.totalEmployees) {
@@ -72,9 +77,9 @@ export function companySummary(company: CompanyDto) {
         ` ${company.totalEmployees} empleado${company.totalEmployees === 1 ? "" : "s"}`,
       );
     }
-    if (company.totalBusinessEstablishments) {
+    if (establishments.length > 0) {
       totals.push(
-        ` ${company.totalBusinessEstablishments} establecimiento${company.totalBusinessEstablishments === 1 ? "" : "s"} comercial${company.totalBusinessEstablishments === 1 ? "" : "es"}`,
+        ` ${establishments.length} establecimiento${establishments.length === 1 ? "" : "s"} comercial${establishments.length === 1 ? "" : "es"}`,
       );
     }
     summary += totals.join(" y");

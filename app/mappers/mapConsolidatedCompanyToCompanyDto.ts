@@ -29,6 +29,8 @@ export function mapConsolidatedCompanyToCompanyDto({
     registrationDate: formatDetailsDate(details?.fecha_matricula ?? ""),
     rawRegistrationDate: details?.fecha_matricula ?? null,
     rawCancellationDate: details?.fecha_cancelacion ?? null,
+    isLegalEntity:
+      rues.organizacion_juridica?.toLowerCase().trim() !== "persona natural",
     renewalDate: formatDetailsDate(details?.fecha_renovacion ?? ""),
     updatedDate: formatDetailsDate(details?.fecha_actualizacion ?? ""),
     cancellationDate: formatDetailsDate(details?.fecha_cancelacion ?? ""),

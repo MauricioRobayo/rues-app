@@ -7,8 +7,8 @@ export interface BusinessEstablishmentDto {
   legalEntity?: string;
   category?: string;
   registrationNumber?: string;
-  registrationDate: string | null;
-  rawRegistrationDate: string | null;
+  registrationDate?: string | null;
+  rawRegistrationDate?: string | null;
   cancellationDate?: string | null;
   rawCancellationDate?: string | null;
   lastRenewalYear: number;

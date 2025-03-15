@@ -10,3 +10,4 @@ export const COMPANY_SIZE = {
   "04": "Gran empresa",
 } as const;
 export const COMPANY_REVALIDATION_TIME = 3 * 30 * 24 * 60 * 60;
+export const OPEN_DATA_ENABLED = !!process.env.FEATURE_DATOS_ABIERTOS_ENABLED;

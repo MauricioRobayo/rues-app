@@ -2,8 +2,7 @@
 
 import { Action } from "@/app/lib/getRecapchaToken";
 import { verifyRecaptcha } from "@/app/lib/verifyRecaptcha";
-import { mapConsolidatedCompanyToCompanyDto } from "@/app/mappers/mapConsolidatedCompanyToCompanyDto";
-import { ruesService } from "@/app/services/rues/service";
+import { openDataService } from "@/app/services/openData/service";
 import { unstable_cache } from "next/cache";
 
 export async function searchByCompanyNameAction({
@@ -25,18 +24,13 @@ export async function searchByCompanyNameAction({
     return null;
   }
 
-  const response = await getSearchResultsByCompanyNameCached({
-    search: { name: companyName },
-  });
-  return (response?.data ?? []).map((hit) =>
-    mapConsolidatedCompanyToCompanyDto({ rues: hit }),
-  );
+  return getSearchResultsByCompanyNameCached(companyName);
 }
 
 const getSearchResultsByCompanyNameCached = unstable_cache(
-  ruesService.advancedSearch,
+  openDataService.companies.search,
   undefined,
   {
-    revalidate: 7 * 24 * 60 * 60,
+    revalidate: false,
   },
 );
