@@ -137,6 +137,26 @@ export const openDataService = {
         },
       );
     },
+    search(query: string) {
+      return pRetry(
+        async () => {
+          const response = await openDataRepository.companies.search(query);
+          if (response.status === "error") {
+            console.error(response);
+            throw new Error("openDataService.companies.search failed");
+          }
+          return response.data.map(mapOpenDataCompanyToCompanyDto);
+        },
+        {
+          retries: 3,
+          onFailedAttempt: (error) => {
+            console.log(
+              `Attempt ${error.attemptNumber} failed. There are ${error.retriesLeft} retries left.`,
+            );
+          },
+        },
+      );
+    },
   },
 };
 

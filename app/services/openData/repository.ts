@@ -109,6 +109,14 @@ export const openDataRepository = {
         }),
       });
     },
+    search(query: string, { limit = 25 }: { limit?: number } = {}) {
+      return openDataClient.companies<OpenDataCompany[]>({
+        query: new URLSearchParams({
+          $q: query,
+          $limit: String(limit),
+        }),
+      });
+    },
   },
   establishments: {
     get(

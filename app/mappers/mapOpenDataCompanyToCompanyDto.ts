@@ -1,4 +1,5 @@
 import { formatDetailsDate } from "@/app/lib/formatDetailsDate";
+import { formatNit } from "@/app/lib/formatNit";
 import { isCompanyActive } from "@/app/lib/isCompanyActive";
 import { parseEconomicActivities } from "@/app/lib/parseEconomicActivities";
 import { slugifyCompanyName } from "@/app/lib/slugifyComponentName";
@@ -12,7 +13,7 @@ export function mapOpenDataCompanyToCompanyDto(
   return {
     name: data.razon_social,
     nit: Number(data.numero_identificacion),
-    fullNit: `${data.numero_identificacion}-${data.digito_verificacion || ""}`,
+    fullNit: formatNit(data.numero_identificacion),
     slug: `${slugifyCompanyName(data.razon_social)}-${data.numero_identificacion}`,
     bidderId: Number(data.inscripcion_proponente)
       ? String(Number(data.inscripcion_proponente))
@@ -38,6 +39,8 @@ export function mapOpenDataCompanyToCompanyDto(
     updatedDate: data.fecha_actualizacion,
     rawRegistrationDate: data.fecha_matricula,
     rawCancellationDate: data.fecha_cancelacion,
+    isLegalEntity:
+      data.organizacion_juridica?.toLowerCase().trim() !== "persona natural",
     registrationNumber: data.matricula || "",
     shortName: data.sigla,
     status: data.estado_matricula,

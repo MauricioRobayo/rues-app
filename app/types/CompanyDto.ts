@@ -52,4 +52,5 @@ export interface CompanyDto {
   capitalInformation?: CapitalInformationDto[];
   nameChanges?: CompanyNameChangeDto[];
   penalties?: PenaltyDto[];
+  isLegalEntity?: boolean;
 }

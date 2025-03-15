@@ -27,6 +27,8 @@ export function mapCompanyRecordToCompanyDto(data: CompanyRecord): CompanyDto {
     status: data.estado_matricula,
     isActive: isCompanyActive(data.estado_matricula),
     type: data.tipo_sociedad,
+    isLegalEntity:
+      data.organizacion_juridica?.toLowerCase().trim() !== "persona natural",
     legalEntityType: data.organizacion_juridica,
     category: data.categoria_matricula,
     registrationDate: formatDetailsDate(data.fecha_matricula),
