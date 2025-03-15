@@ -42,7 +42,7 @@ const openDataFields = {
     "num_identificacion_representante_legal",
     "representante_legal",
     "fecha_actualizacion",
-  ],
+  ] as const,
   establishments: [
     "codigo_camara",
     "camara_comercio",
@@ -68,8 +68,8 @@ const openDataFields = {
     "codigo_tipo_propietario",
     "tipo_propietario",
     "categoria_matricula",
-  ],
-};
+  ] as const,
+} as const;
 
 export const openDataRepository = {
   companies: {
@@ -80,6 +80,26 @@ export const openDataRepository = {
           $select: openDataFields.companies.join(","),
         }),
         signal,
+      });
+    },
+    getAll<T extends (typeof openDataFields.companies)[number][]>({
+      limit,
+      offset,
+      fields,
+    }: {
+      limit: number;
+      offset: number;
+      fields?: T;
+    }) {
+      const query = new URLSearchParams({
+        $limit: String(limit),
+        $offset: String(offset),
+      });
+      if (fields) {
+        query.set("$select", fields.join(","));
+      }
+      return openDataClient.companies<Record<T[number], string>[]>({
+        query,
       });
     },
     count() {

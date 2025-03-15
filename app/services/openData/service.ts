@@ -109,6 +109,34 @@ export const openDataService = {
         },
       );
     },
+    getAll({
+      offset,
+      limit,
+      fields,
+    }: Parameters<typeof openDataRepository.companies.getAll>[0]) {
+      return pRetry(
+        async () => {
+          const response = await openDataRepository.companies.getAll({
+            offset,
+            limit,
+            fields,
+          });
+          if (response.status === "error") {
+            console.error(response);
+            throw new Error("openDataRepository.companies.getAll failed");
+          }
+          return response.data.map(mapOpenDataCompanyToCompanyDto);
+        },
+        {
+          retries: 5,
+          onFailedAttempt: (error) => {
+            console.log(
+              `Attempt ${error.attemptNumber} failed. There are ${error.retriesLeft} retries left.`,
+            );
+          },
+        },
+      );
+    },
   },
 };
 
