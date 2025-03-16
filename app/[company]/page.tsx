@@ -9,22 +9,22 @@ import { RetrievedOn } from "@/app/[company]/components/RetrievedOn";
 import { UserReport } from "@/app/[company]/components/UserReport";
 import { CompanyStatusBadge } from "@/app/components/CompanyStatusBadge";
 import { PageContainer } from "@/app/components/PageContainer";
-import { BASE_URL, COMPANY_REVALIDATION_TIME } from "@/app/lib/constants";
+import { BASE_URL } from "@/app/lib/constants";
 import { parseCompanyPathSegment } from "@/app/lib/parseCompanyPathSegment";
 import { slugifyCompanyName } from "@/app/lib/slugifyComponentName";
 import { validateNit } from "@/app/lib/validateNit";
 import { openDataService } from "@/app/services/openData/service";
 import { Box, Flex, Heading } from "@radix-ui/themes";
 import type { Metadata } from "next";
-import { unstable_cache } from "next/cache";
 import { notFound, permanentRedirect } from "next/navigation";
 import { cache } from "react";
+
+export const dynamic = "force-static";
+export const revalidate = false;
 
 interface PageProps {
   params: Promise<{ company: string }>;
 }
-
-export const dynamic = "force-static";
 
 export async function generateMetadata({
   params,
@@ -125,7 +125,7 @@ const getPageData = cache(async (company: string) => {
     notFound();
   }
 
-  const response = await getCompanyByNitCached(String(nit));
+  const response = await openDataService.companies.get(String(nit));
 
   if (response.status === "error") {
     return {
@@ -174,11 +174,3 @@ function responseStatus(status: "success" | "error") {
     isError: status === "error",
   };
 }
-
-const getCompanyByNitCached = unstable_cache(
-  openDataService.companies.get,
-  undefined,
-  {
-    revalidate: COMPANY_REVALIDATION_TIME,
-  },
-);
