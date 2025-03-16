@@ -1,8 +1,4 @@
 import type { BusinessEstablishmentDto } from "@/app/types/BusinessEstablishmentDto";
-import type { CapitalInformationDto } from "@/app/types/CapitalDto";
-import type { CompanyNameChangeDto } from "@/app/types/CompanyNameChangeDto";
-import type { FinancialInformationDto } from "@/app/types/FinancialInformationDto";
-import type { PenaltyDto } from "@/app/types/PenaltyDto";
 
 export interface CompanyDto {
   address?: string | null;
@@ -43,14 +39,8 @@ export interface CompanyDto {
   slug: string;
   state?: string;
   status: string;
-  totalBusinessEstablishments?: number | null;
-  totalEmployees?: number | null;
   type?: string;
   updatedDate?: string | null;
   verificationDigit: number;
-  financialInformation?: FinancialInformationDto[];
-  capitalInformation?: CapitalInformationDto[];
-  nameChanges?: CompanyNameChangeDto[];
-  penalties?: PenaltyDto[];
   isLegalEntity?: boolean;
 }

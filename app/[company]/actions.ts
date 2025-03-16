@@ -1,12 +1,11 @@
 "use server";
 
+import { BASE_URL } from "@/app/lib/constants";
 import { Action } from "@/app/lib/getRecapchaToken";
 import { verifyRecaptcha } from "@/app/lib/verifyRecaptcha";
-import { revalidatePath, revalidateTag, unstable_cache } from "next/cache";
-import { BASE_URL, COMPANY_REVALIDATION_TIME } from "@/app/lib/constants";
 import { Octokit } from "@octokit/rest";
+import { revalidatePath, revalidateTag } from "next/cache";
 import { z } from "zod";
-import { ccbService } from "@/app/services/ccb/service";
 
 const ghToken = process.env.GITHUB_TOKEN ?? "";
 const ghRepoOwner = process.env.GITHUB_OWNER ?? "";
@@ -136,26 +135,6 @@ export async function userReportAction({
   }
 }
 
-export async function getBidderRecordsAction({
-  bidderId,
-  recaptchaToken,
-}: {
-  bidderId: string;
-  recaptchaToken: string;
-}) {
-  if (
-    !(await verifyRecaptcha({
-      token: recaptchaToken,
-      action: Action.BIDDER_RECORDS,
-    }))
-  ) {
-    return {
-      status: "error",
-    } as const;
-  }
-  return getBidderRecordsCache(bidderId);
-}
-
 async function findOpenIssue({
   title,
   label,
@@ -180,11 +159,3 @@ async function findOpenIssue({
     return null;
   }
 }
-
-const getBidderRecordsCache = unstable_cache(
-  ccbService.getBidderRecords,
-  undefined,
-  {
-    revalidate: COMPANY_REVALIDATION_TIME,
-  },
-);
