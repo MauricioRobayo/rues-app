@@ -81,7 +81,7 @@ export const openDataService = {
             console.error(response);
             throw new Error("Fetch company count failed");
           }
-          const count = response.data.at(0)?.COUNT;
+          const count = response.data.at(0)?.count;
           if (!count) {
             console.warn("Could not get companies count");
             return null;

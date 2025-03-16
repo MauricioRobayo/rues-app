@@ -107,9 +107,9 @@ export const openDataRepository = {
       });
     },
     count() {
-      return openDataClient.companies<{ COUNT: string }[]>({
+      return openDataClient.companies<{ count: string }[]>({
         query: new URLSearchParams({
-          $select: "COUNT(DISTINCT nit)",
+          $select: "COUNT(DISTINCT nit) as count",
         }),
       });
     },
