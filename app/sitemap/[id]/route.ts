@@ -34,7 +34,7 @@ export async function GET(
     const data = await openDataService.companies.getAll({
       offset: sitemapId * MAX_URLS_PER_SITEMAP,
       limit: MAX_URLS_PER_SITEMAP,
-      fields: ["numero_identificacion", "razon_social"],
+      fields: ["nit", "razon_social"],
     });
 
     const companies = data.map((company) => {

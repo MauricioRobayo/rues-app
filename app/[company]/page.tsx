@@ -17,7 +17,6 @@ import {
 import { parseCompanyPathSegment } from "@/app/lib/parseCompanyPathSegment";
 import { slugifyCompanyName } from "@/app/lib/slugifyComponentName";
 import { validateNit } from "@/app/lib/validateNit";
-import { companiesRepository } from "@/app/services/companies/repository";
 import { openDataService } from "@/app/services/openData/service";
 import { ruesService } from "@/app/services/rues/service";
 import { Box, Flex, Heading } from "@radix-ui/themes";

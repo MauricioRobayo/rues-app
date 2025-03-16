@@ -36,18 +36,7 @@ export const openDataService = {
               !!record.name &&
               !!record.registrationNumber &&
               !!record.status,
-          )
-          .toSorted((a, b) => {
-            if (a.isActive && !b.isActive) {
-              return -1;
-            }
-            if (!a.isActive && b.isActive) {
-              return 1;
-            }
-            return (a.rawRegistrationDate ?? 0) >= (b.rawRegistrationDate ?? 0)
-              ? -1
-              : 1;
-          });
+          );
         const [mainRecord, ...remainingRecords] = companyData;
         if (!mainRecord) {
           return {
