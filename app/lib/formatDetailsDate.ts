@@ -1,9 +1,5 @@
+import { dateFormatter } from "@/app/lib/formatters";
 import { parseDetailsDate } from "@/app/lib/parseDetailsDate";
-
-export const dateFormatter = new Intl.DateTimeFormat("es-CO", {
-  dateStyle: "long",
-  timeZone: "America/Bogota",
-});
 
 export function formatDetailsDate(value?: string) {
   if (!value) return null;
