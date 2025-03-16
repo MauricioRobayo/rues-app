@@ -9,16 +9,11 @@ import { RetrievedOn } from "@/app/[company]/components/RetrievedOn";
 import { UserReport } from "@/app/[company]/components/UserReport";
 import { CompanyStatusBadge } from "@/app/components/CompanyStatusBadge";
 import { PageContainer } from "@/app/components/PageContainer";
-import {
-  BASE_URL,
-  COMPANY_REVALIDATION_TIME,
-  OPEN_DATA_ENABLED,
-} from "@/app/lib/constants";
+import { BASE_URL, COMPANY_REVALIDATION_TIME } from "@/app/lib/constants";
 import { parseCompanyPathSegment } from "@/app/lib/parseCompanyPathSegment";
 import { slugifyCompanyName } from "@/app/lib/slugifyComponentName";
 import { validateNit } from "@/app/lib/validateNit";
 import { openDataService } from "@/app/services/openData/service";
-import { ruesService } from "@/app/services/rues/service";
 import { Box, Flex, Heading } from "@radix-ui/themes";
 import type { Metadata } from "next";
 import { unstable_cache } from "next/cache";
@@ -130,9 +125,7 @@ const getPageData = cache(async (company: string) => {
     notFound();
   }
 
-  const response = OPEN_DATA_ENABLED
-    ? await getCompanyByNitCached(String(nit))
-    : await queryNitCached(nit);
+  const response = await getCompanyByNitCached(String(nit));
 
   if (response.status === "error") {
     return {
@@ -189,7 +182,3 @@ const getCompanyByNitCached = unstable_cache(
     revalidate: COMPANY_REVALIDATION_TIME,
   },
 );
-
-const queryNitCached = unstable_cache(ruesService.queryNit, undefined, {
-  revalidate: COMPANY_REVALIDATION_TIME,
-});

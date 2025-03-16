@@ -3,7 +3,7 @@ import { Bidder } from "@/app/[company]/components/Bidder/Bidder";
 import { CopyButton } from "@/app/[company]/components/CopyButton";
 import { DataList } from "@/app/[company]/components/DataList";
 import { EconomicActivities } from "@/app/[company]/components/EconomicActivities";
-import { LegalRepresentatives } from "@/app/[company]/components/LegalRepresentatives/LegalRepresentatives";
+import { LegalRepresentatives } from "@/app/[company]/components/LegalRepresentatives";
 // import { LegalRepresentatives } from "@/app/[company]/components/LegalRepresentatives/LegalRepresentatives";
 import PhoneNumbers from "@/app/[company]/components/PhoneNumbers";
 import { ReadMore } from "@/app/[company]/components/ReadMore";
@@ -154,8 +154,6 @@ export function CompanyDescription({ company }: { company: CompanyDto }) {
         company.legalRepresentatives.length > 0 ? (
           <LegalRepresentatives
             legalRepresentatives={company.legalRepresentatives}
-            chamberCode={company.chamber.code}
-            registrationNumber={company.registrationNumber}
           />
         ) : null,
     },
