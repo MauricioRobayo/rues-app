@@ -36,18 +36,7 @@ export const openDataService = {
               !!record.name &&
               !!record.registrationNumber &&
               !!record.status,
-          )
-          .toSorted((a, b) => {
-            if (a.isActive && !b.isActive) {
-              return -1;
-            }
-            if (!a.isActive && b.isActive) {
-              return 1;
-            }
-            return (a.rawRegistrationDate ?? 0) >= (b.rawRegistrationDate ?? 0)
-              ? -1
-              : 1;
-          });
+          );
         const [mainRecord, ...remainingRecords] = companyData;
         if (!mainRecord) {
           return {
@@ -92,7 +81,7 @@ export const openDataService = {
             console.error(response);
             throw new Error("Fetch company count failed");
           }
-          const count = response.data.at(0)?.COUNT;
+          const count = response.data.at(0)?.count;
           if (!count) {
             console.warn("Could not get companies count");
             return null;

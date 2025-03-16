@@ -6,16 +6,13 @@ export function CompanySummary({ company }: { company: CompanyDto }) {
 }
 
 export function companySummary(company: CompanyDto) {
-  let summary = "";
-  if (company.isLegalEntity) {
-    summary += "La empresa";
-  }
-
-  summary += ` ${company.name} NIT ${company.fullNit}`;
+  let summary = company.name;
 
   if (company.shortName) {
     summary += ` (${company.shortName})`;
   }
+
+  summary += ` NIT ${company.fullNit}`;
 
   if (company.size) {
     const companySize = company.size.toLocaleUpperCase();
@@ -28,7 +25,7 @@ export function companySummary(company: CompanyDto) {
     summary += ` es una ${company.type}`;
   }
 
-  summary += ` ${company.status}`;
+  summary += ` que se encuentra ${company.status}`;
   if (company.cancellationDate) {
     summary += ` que operó hasta el ${company.cancellationDate}`;
   }

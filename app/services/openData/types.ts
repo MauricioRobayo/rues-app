@@ -22,9 +22,8 @@ export interface OpenDataCompany {
   fecha_vigencia?: string;
   inscripcion_proponente: string;
   matricula: string;
-  nit?: string;
+  nit: string; // filter not null on queries
   num_identificacion_representante_legal?: string;
-  numero_identificacion: string;
   organizacion_juridica: string;
   primer_apellido?: string;
   primer_nombre?: string;

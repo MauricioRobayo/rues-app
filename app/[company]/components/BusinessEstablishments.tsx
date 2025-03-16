@@ -194,7 +194,7 @@ export function BusinessEstablishments({
   return (
     <Section size="2" id="establecimientos-comerciales">
       <Heading as="h3" size="4" mb="4">
-        Establecimientos Comerciales
+        Establecimientos Comerciales ({businessEstablishments.length})
       </Heading>
       <Flex asChild direction="column" gap="2">
         <ul>

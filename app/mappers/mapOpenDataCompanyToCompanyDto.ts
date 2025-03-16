@@ -12,9 +12,9 @@ export function mapOpenDataCompanyToCompanyDto(
 ): CompanyDto {
   return {
     name: data.razon_social,
-    nit: Number(data.numero_identificacion),
-    fullNit: formatNit(data.numero_identificacion),
-    slug: `${slugifyCompanyName(data.razon_social)}-${data.numero_identificacion}`,
+    nit: Number(data.nit),
+    fullNit: formatNit(data.nit),
+    slug: `${slugifyCompanyName(data.razon_social)}-${data.nit}`,
     bidderId: Number(data.inscripcion_proponente)
       ? String(Number(data.inscripcion_proponente))
       : null,
@@ -44,7 +44,7 @@ export function mapOpenDataCompanyToCompanyDto(
     registrationNumber: data.matricula || "",
     shortName: data.sigla,
     status: data.estado_matricula,
-    verificationDigit: getVerificationDigit(data.numero_identificacion),
+    verificationDigit: getVerificationDigit(data.nit),
     idType: data.clase_identificacion,
   };
 }

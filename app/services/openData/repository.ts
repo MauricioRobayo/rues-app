@@ -18,7 +18,6 @@ const openDataFields = {
     "sigla",
     "codigo_clase_identificacion",
     "clase_identificacion",
-    "numero_identificacion",
     "nit",
     "digito_verificacion",
     "cod_ciiu_act_econ_pri",
@@ -76,8 +75,9 @@ export const openDataRepository = {
     get(nit: string, { signal }: { signal?: AbortSignal } = {}) {
       return openDataClient.companies<OpenDataCompany[]>({
         query: new URLSearchParams({
-          numero_identificacion: nit,
+          nit,
           $select: openDataFields.companies.join(","),
+          $order: "fecha_matricula DESC",
         }),
         signal,
       });
@@ -86,26 +86,30 @@ export const openDataRepository = {
       limit,
       offset,
       fields,
+      signal,
     }: {
       limit: number;
       offset: number;
       fields?: T;
+      signal?: AbortSignal;
     }) {
       const query = new URLSearchParams({
         $limit: String(limit),
         $offset: String(offset),
+        $group: "nit",
       });
       if (fields) {
         query.set("$select", fields.join(","));
       }
       return openDataClient.companies<Record<T[number], string>[]>({
         query,
+        signal,
       });
     },
     count() {
-      return openDataClient.companies<{ COUNT: string }[]>({
+      return openDataClient.companies<{ count: string }[]>({
         query: new URLSearchParams({
-          $query: "SELECT COUNT(*)",
+          $select: "COUNT(DISTINCT nit) as count",
         }),
       });
     },
