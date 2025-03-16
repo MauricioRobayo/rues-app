@@ -19,7 +19,7 @@ export function RetrievedOn({ retrievedOn }: { retrievedOn: number }) {
     locale: es,
     addSuffix: true,
   });
-  if (!isClient) {
+  if (!isClient || !shouldShowRevalidateButton) {
     return null;
   }
   return (
@@ -29,17 +29,15 @@ export function RetrievedOn({ retrievedOn }: { retrievedOn: number }) {
           ? "Actualizando información…"
           : `Información actualizada ${distanceToNow}.`}
       </Text>
-      {shouldShowRevalidateButton ? (
-        <IconButton
-          aria-label="Actualizar"
-          loading={isPending}
-          onClick={onClickHandler}
-          variant="ghost"
-          size="1"
-        >
-          <SymbolIcon />
-        </IconButton>
-      ) : null}
+      <IconButton
+        aria-label="Actualizar"
+        loading={isPending}
+        onClick={onClickHandler}
+        variant="ghost"
+        size="1"
+      >
+        <SymbolIcon />
+      </IconButton>
     </Flex>
   );
 }
