@@ -66,20 +66,8 @@ export function companySummary(company: CompanyDto) {
 
   const establishments = company.establishments ?? [];
 
-  if (company.totalEmployees || establishments.length > 0) {
-    summary += ". Cuenta con";
-    const totals: string[] = [];
-    if (company.totalEmployees) {
-      totals.push(
-        ` ${company.totalEmployees} empleado${company.totalEmployees === 1 ? "" : "s"}`,
-      );
-    }
-    if (establishments.length > 0) {
-      totals.push(
-        ` ${establishments.length} establecimiento${establishments.length === 1 ? "" : "s"} comercial${establishments.length === 1 ? "" : "es"}`,
-      );
-    }
-    summary += totals.join(" y");
+  if (establishments.length > 0) {
+    summary += `. Cuenta con ${establishments.length} establecimiento${establishments.length === 1 ? "" : "s"} comercial${establishments.length === 1 ? "" : "es"}`;
   }
 
   return `${summary}.`;

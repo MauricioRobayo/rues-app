@@ -1,10 +1,9 @@
 import { ActiveDuration } from "@/app/[company]/components/ActiveDuration";
-import { Bidder } from "@/app/[company]/components/Bidder/Bidder";
+import { Bidder } from "@/app/[company]/components/Bidder";
 import { CopyButton } from "@/app/[company]/components/CopyButton";
 import { DataList } from "@/app/[company]/components/DataList";
 import { EconomicActivities } from "@/app/[company]/components/EconomicActivities";
-import { LegalRepresentatives } from "@/app/[company]/components/LegalRepresentatives/LegalRepresentatives";
-// import { LegalRepresentatives } from "@/app/[company]/components/LegalRepresentatives/LegalRepresentatives";
+import { LegalRepresentatives } from "@/app/[company]/components/LegalRepresentatives";
 import PhoneNumbers from "@/app/[company]/components/PhoneNumbers";
 import { ReadMore } from "@/app/[company]/components/ReadMore";
 import { ToggleContent } from "@/app/[company]/components/ToogleContent";
@@ -119,14 +118,6 @@ export function CompanyDescription({ company }: { company: CompanyDto }) {
       ) : null,
     },
     {
-      label: "Cantidad de establecimientos",
-      value: company.isActive ? company.totalBusinessEstablishments : null,
-    },
-    {
-      label: "Número de empleados",
-      value: company.isActive ? company.totalEmployees : null,
-    },
-    {
       label: "Registro proponente",
       value: company.bidderId ? <Bidder bidderId={company.bidderId} /> : null,
     },
@@ -154,8 +145,6 @@ export function CompanyDescription({ company }: { company: CompanyDto }) {
         company.legalRepresentatives.length > 0 ? (
           <LegalRepresentatives
             legalRepresentatives={company.legalRepresentatives}
-            chamberCode={company.chamber.code}
-            registrationNumber={company.registrationNumber}
           />
         ) : null,
     },

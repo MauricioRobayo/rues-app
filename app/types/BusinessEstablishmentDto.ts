@@ -1,5 +1,3 @@
-import type { TourismRegistryDto } from "@/app/types/TourismRegistryDto";
-
 export interface BusinessEstablishmentDto {
   name?: string;
   shortName?: string;
@@ -18,5 +16,4 @@ export interface BusinessEstablishmentDto {
   address?: string;
   economicActivityDescription?: string;
   economicActivities?: { label: string; code: string; description: string }[];
-  tourismRegistries?: TourismRegistryDto[];
 }
