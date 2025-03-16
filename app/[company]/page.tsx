@@ -53,7 +53,9 @@ export default async function page({ params }: PageProps) {
   const { isError, data } = await getPageData(company);
 
   if (isError) {
-    return <ErrorRecovery />;
+    // Trigger error page and properly
+    // respond with 500 for error logs
+    throw new Error("Data fetch failed.");
   }
 
   return (
