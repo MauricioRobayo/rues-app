@@ -110,6 +110,7 @@ async function openDataFetch<T>({
       data,
     };
   } catch (error) {
+    console.error(error);
     return {
       status: "error",
       error,
