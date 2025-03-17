@@ -59,62 +59,54 @@ export default async function page({ params }: PageProps) {
 
   return (
     <Box>
-      <article itemScope itemType="https://schema.org/Organization">
-        <CompanyHeader company={data.mainRecord} />
-        <PageContainer wide mt={{ initial: "6", sm: "8" }}>
-          <CompanySummary company={data.mainRecord} />
-          <CompanyDetails company={data.mainRecord} />
-          {data.mainRecord.updatedDate && (
-            <Text size="1" color="gray">
-              Registro del {data.mainRecord.updatedDate}
-            </Text>
-          )}
+      <Box mb="8">
+        <article itemScope itemType="https://schema.org/Organization">
+          <CompanyHeader company={data.mainRecord} />
+          <PageContainer wide mt={{ initial: "6", sm: "8" }}>
+            <CompanySummary company={data.mainRecord} />
+            <CompanyDetails company={data.mainRecord} />
+          </PageContainer>
+        </article>
+        {data.remainingRecords.length > 0 && (
+          <PageContainer wide>
+            <Separator size="4" my="4" />
+            <Heading as="h4" mb="4">
+              Registros Anteriores ({data.remainingRecords.length})
+            </Heading>
+            <Flex direction="column" gap="2">
+              {data.remainingRecords.map((companyRecord) => (
+                <details key={companyRecord.registrationNumber}>
+                  <summary>
+                    <Flex gap="2" display="inline-flex">
+                      {companyRecord.registrationNumber}
+                      <CompanyStatusBadge
+                        isActive={companyRecord.isActive}
+                        variant="long"
+                      />
+                    </Flex>
+                  </summary>
+                  <Box
+                    px="4"
+                    pb="4"
+                    my="2"
+                    className="rounded-[var(--radius-2)] bg-[var(--gray-2)]"
+                    asChild
+                  >
+                    <article>
+                      <CompanyDetails company={companyRecord} />
+                    </article>
+                  </Box>
+                </details>
+              ))}
+            </Flex>
+          </PageContainer>
+        )}
+        <PageContainer wide>
+          <Box my="4">
+            <RetrievedOn retrievedOn={data.retrievedOn} />
+          </Box>
         </PageContainer>
-      </article>
-      {data.remainingRecords.length > 0 && (
-        <PageContainer wide mb="8">
-          <Separator size="4" my="4" />
-          <Heading as="h4" mb="4">
-            Registros Anteriores ({data.remainingRecords.length})
-          </Heading>
-          <Flex direction="column" gap="2">
-            {data.remainingRecords.map((companyRecord) => (
-              <details key={companyRecord.registrationNumber}>
-                <summary>
-                  <Flex gap="2" display="inline-flex">
-                    {companyRecord.registrationNumber}
-                    <CompanyStatusBadge
-                      isActive={companyRecord.isActive}
-                      variant="long"
-                    />
-                  </Flex>
-                </summary>
-                <Box
-                  px="4"
-                  pb="4"
-                  my="2"
-                  className="rounded-[var(--radius-2)] bg-[var(--gray-2)]"
-                  asChild
-                >
-                  <article>
-                    <CompanyDetails company={companyRecord} />
-                    {data.mainRecord.updatedDate && (
-                      <Text size="1" color="gray">
-                        Registro del {data.mainRecord.updatedDate}
-                      </Text>
-                    )}
-                  </article>
-                </Box>
-              </details>
-            ))}
-          </Flex>
-        </PageContainer>
-      )}
-      <PageContainer wide>
-        <Box my="4">
-          <RetrievedOn retrievedOn={data.retrievedOn} />
-        </Box>
-      </PageContainer>
+      </Box>
       <aside>
         <Box style={{ background: "var(--blue-a2)" }} py="6">
           <PageContainer wide>
