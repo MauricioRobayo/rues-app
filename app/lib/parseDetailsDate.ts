@@ -1,5 +1,5 @@
 export function parseDetailsDate(value?: string | null) {
-  if (!value?.trim() || value.length !== 8) {
+  if (!value?.trim() || value.length < 8) {
     return null;
   }
 
@@ -8,5 +8,5 @@ export function parseDetailsDate(value?: string | null) {
       ? `${value.slice(0, 4)}-${value.slice(4, 6)}-${value.slice(6, 8)}`
       : value,
   );
-  return Number.isNaN(date) ? null : date;
+  return Number.isNaN(date) || date <= 0 ? null : date;
 }
