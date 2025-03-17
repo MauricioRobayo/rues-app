@@ -1,4 +1,4 @@
-import type { CompanyDto } from "@/app/types/CompanyDto";
+import type { CompanyDto } from "@/app/types/CompanyRecordDto";
 import { Text } from "@radix-ui/themes";
 
 export function CompanySummary({ company }: { company: CompanyDto }) {

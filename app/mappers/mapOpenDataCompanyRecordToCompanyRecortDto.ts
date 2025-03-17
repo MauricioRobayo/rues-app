@@ -4,12 +4,12 @@ import { parseEconomicActivities } from "@/app/lib/parseEconomicActivities";
 import { slugifyCompanyName } from "@/app/lib/slugifyComponentName";
 import { legalEntity } from "@/app/services/openData/constants";
 import type { OpenDataCompanyRecord } from "@/app/services/openData/types";
-import type { CompanyDto } from "@/app/types/CompanyDto";
+import type { CompanyDto as CompanyRecordDto } from "@/app/types/CompanyRecordDto";
 import { getVerificationDigit } from "nit-verifier";
 
-export function mapOpenDataCompanyToCompanyDto(
+export function mapOpenDataCompanyRecordToCompanyRecordDto(
   data: OpenDataCompanyRecord,
-): CompanyDto {
+): CompanyRecordDto {
   return {
     name: data.razon_social,
     nit: Number(data.nit),

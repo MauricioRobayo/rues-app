@@ -1,12 +1,12 @@
-import { mapOpenDataCompanyToCompanyDto } from "@/app/mappers/mapOpenDataCompanyToCompanyDto";
+import { mapOpenDataCompanyRecordToCompanyRecordDto } from "@/app/mappers/mapOpenDataCompanyRecordToCompanyRecortDto";
 import { mapOpenDataEstablishmentToBusinessEstablishmentDto } from "@/app/mappers/mapOpenDataEstablishmentToBusinessEstablishmentDto";
 import { openDataRepository } from "@/app/services/openData/repository";
-import type { CompanyDto } from "@/app/types/CompanyDto";
+import type { CompanyDto } from "@/app/types/CompanyRecordDto";
 import pRetry from "p-retry";
 
 export const openDataService = {
   companies: {
-    async get(
+    async getRecords(
       nit: string,
     ): Promise<
       | { status: "success"; data: CompanyDto[] | null; retrievedOn: number }
@@ -29,7 +29,7 @@ export const openDataService = {
           };
         }
         const companyData = companyResponse.data.map(
-          mapOpenDataCompanyToCompanyDto,
+          mapOpenDataCompanyRecordToCompanyRecordDto,
         );
         const [mainRecord, ...remainingRecords] = companyData;
         if (!mainRecord) {
@@ -92,7 +92,7 @@ export const openDataService = {
         },
       );
     },
-    getAll({
+    getAllRecords({
       offset,
       limit,
       fields,
@@ -108,7 +108,7 @@ export const openDataService = {
             console.error(response);
             throw new Error("openDataRepository.companies.getAll failed");
           }
-          return response.data.map(mapOpenDataCompanyToCompanyDto);
+          return response.data.map(mapOpenDataCompanyRecordToCompanyRecordDto);
         },
         {
           retries: 5,
@@ -128,7 +128,7 @@ export const openDataService = {
             console.error(response);
             throw new Error("openDataService.companies.search failed");
           }
-          return response.data.map(mapOpenDataCompanyToCompanyDto);
+          return response.data.map(mapOpenDataCompanyRecordToCompanyRecordDto);
         },
         {
           retries: 3,

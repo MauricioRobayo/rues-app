@@ -5,10 +5,10 @@ import { DataList } from "@/app/[company]/components/DataList";
 import { EconomicActivities } from "@/app/[company]/components/EconomicActivities";
 import { LegalRepresentatives } from "@/app/[company]/components/LegalRepresentatives";
 import { CompanyStatusBadge } from "@/app/components/CompanyStatusBadge";
-import type { CompanyDto } from "@/app/types/CompanyDto";
+import type { CompanyDto } from "@/app/types/CompanyRecordDto";
 import { Code, Flex, Heading, Section } from "@radix-ui/themes";
 
-export function CompanyDescription({ company }: { company: CompanyDto }) {
+export function CompanyRecordDescription({ company }: { company: CompanyDto }) {
   const details = [
     {
       label: "Razón social",
