@@ -18,7 +18,7 @@ export function companySummary(company: CompanyDto) {
     summary += ` es una ${company.type}`;
   }
 
-  summary += ` que se encuentra ${company.status}`;
+  summary += ` en estado ${company.status}`;
   if (company.cancellationDate) {
     summary += ` que operó hasta el ${company.cancellationDate}`;
   }
