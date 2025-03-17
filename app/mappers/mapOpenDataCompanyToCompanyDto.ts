@@ -1,14 +1,14 @@
 import { formatDetailsDate } from "@/app/lib/formatDetailsDate";
 import { formatNit } from "@/app/lib/formatNit";
-import { isCompanyActive } from "@/app/lib/isCompanyActive";
 import { parseEconomicActivities } from "@/app/lib/parseEconomicActivities";
 import { slugifyCompanyName } from "@/app/lib/slugifyComponentName";
-import type { OpenDataCompany } from "@/app/services/openData/types";
+import { legalEntity } from "@/app/services/openData/constants";
+import type { OpenDataCompanyRecord } from "@/app/services/openData/types";
 import type { CompanyDto } from "@/app/types/CompanyDto";
 import { getVerificationDigit } from "nit-verifier";
 
 export function mapOpenDataCompanyToCompanyDto(
-  data: OpenDataCompany,
+  data: OpenDataCompanyRecord,
 ): CompanyDto {
   return {
     name: data.razon_social,
@@ -29,7 +29,7 @@ export function mapOpenDataCompanyToCompanyDto(
       ciiu3: data.ciiu3,
       ciiu4: data.ciiu4,
     }),
-    isActive: isCompanyActive(data.estado_matricula),
+    isActive: !data.fecha_cancelacion,
     lastRenewalYear: Number(data.ultimo_ano_renovado),
     type: data.tipo_sociedad,
     legalRepresentatives: getLegalRepresentative(data),
@@ -40,7 +40,7 @@ export function mapOpenDataCompanyToCompanyDto(
     rawRegistrationDate: data.fecha_matricula,
     rawCancellationDate: data.fecha_cancelacion,
     isLegalEntity:
-      data.organizacion_juridica?.toLowerCase().trim() !== "persona natural",
+      data.codigo_organizacion_juridica !== legalEntity.PERSONA_NATURAL,
     registrationNumber: data.matricula || "",
     shortName: data.sigla,
     status: data.estado_matricula,
@@ -49,7 +49,7 @@ export function mapOpenDataCompanyToCompanyDto(
   };
 }
 
-function getLegalRepresentative(data: OpenDataCompany) {
+function getLegalRepresentative(data: OpenDataCompanyRecord) {
   return data.representante_legal
     ? [
         {

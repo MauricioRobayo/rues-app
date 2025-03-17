@@ -1,23 +1,18 @@
+import {
+  companyStatus,
+  companyType,
+  idType,
+} from "@/app/services/openData/constants";
+
 const OpenDataSet = {
   COMPANIES: "c82u-588k",
   ESTABLISHMENTS: "nb3d-v3n7",
 } as const;
 
-/*
-.filter(
-  (record) =>
-    !!record.registrationDate &&
-    !!record.name &&
-    !!record.registrationNumber &&
-    !!record.status,
-);
-
-*/
-
 const companiesExcludeSQL = [
-  "codigo_clase_identificacion!='06'", // SIN IDENTIFICACION
-  "codigo_tipo_sociedad!='00'", // NO APLICA
-  "codigo_estado_matricula!='05'", // NO ASIGNADO
+  `codigo_clase_identificacion!='${idType.SIN_IDENTIFICACION}'`,
+  `codigo_tipo_sociedad!='${companyType.NO_APLICA}'`,
+  `codigo_estado_matricula!='${companyStatus.NO_ASIGNADO}'`,
   // No regex allowed, this is the best I could thought of
   // at the moment to get only valid NITs
   "nit IS NOT NULL",
