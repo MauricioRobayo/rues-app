@@ -77,7 +77,7 @@ export const openDataRepository = {
         query: new URLSearchParams({
           nit,
           $select: openDataFields.companies.join(","),
-          $order: "fecha_matricula DESC",
+          $order: "fecha_matricula,fecha_renovacion DESC",
         }),
         signal,
       });
