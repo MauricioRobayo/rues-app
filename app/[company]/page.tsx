@@ -1,4 +1,4 @@
-import { CompanyDetails } from "@/app/[company]/components/CompanyDetails";
+import { CompanyRecordDetails } from "@/app/[company]/components/CompanyRecordDetails";
 import { CompanyHeader } from "@/app/[company]/components/CompanyHeader";
 import {
   companySummary,
@@ -64,7 +64,7 @@ export default async function page({ params }: PageProps) {
           <CompanyHeader company={data.mainRecord} />
           <PageContainer wide mt={{ initial: "6", sm: "8" }}>
             <CompanySummary company={data.mainRecord} />
-            <CompanyDetails company={data.mainRecord} />
+            <CompanyRecordDetails company={data.mainRecord} />
           </PageContainer>
         </article>
         {data.remainingRecords.length > 0 && (
@@ -93,7 +93,7 @@ export default async function page({ params }: PageProps) {
                     asChild
                   >
                     <article>
-                      <CompanyDetails company={companyRecord} />
+                      <CompanyRecordDetails company={companyRecord} />
                     </article>
                   </Box>
                 </details>
@@ -127,7 +127,7 @@ const getPageData = cache(async (company: string) => {
     notFound();
   }
 
-  const response = await openDataService.companies.get(String(nit));
+  const response = await openDataService.companyRecords.get(String(nit));
 
   if (response.status === "error") {
     return {

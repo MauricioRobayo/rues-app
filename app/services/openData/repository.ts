@@ -1,6 +1,6 @@
 import { openDataClient } from "@/app/services/openData/client";
 import type {
-  OpenDataCompany,
+  OpenDataCompanyRecord,
   OpenDataEstablishment,
 } from "@/app/services/openData/types";
 
@@ -71,9 +71,9 @@ const openDataFields = {
 } as const;
 
 export const openDataRepository = {
-  companies: {
+  companyRecords: {
     get(nit: string, { signal }: { signal?: AbortSignal } = {}) {
-      return openDataClient.companies<OpenDataCompany[]>({
+      return openDataClient.companies<OpenDataCompanyRecord[]>({
         query: new URLSearchParams({
           nit,
           $select: openDataFields.companies.join(","),
@@ -114,7 +114,7 @@ export const openDataRepository = {
       });
     },
     search(query: string, { limit = 25 }: { limit?: number } = {}) {
-      return openDataClient.companies<OpenDataCompany[]>({
+      return openDataClient.companies<OpenDataCompanyRecord[]>({
         query: new URLSearchParams({
           $q: query,
           $limit: String(limit),

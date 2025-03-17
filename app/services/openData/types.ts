@@ -1,4 +1,4 @@
-export interface OpenDataCompany {
+export interface OpenDataCompanyRecord {
   camara_comercio: string;
   categoria_matricula: string;
   ciiu3?: string;

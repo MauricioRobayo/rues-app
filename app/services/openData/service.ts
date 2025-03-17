@@ -1,11 +1,11 @@
-import { mapOpenDataCompanyToCompanyDto } from "@/app/mappers/mapOpenDataCompanyToCompanyDto";
+import { mapOpenDataCompanyRecordToCompanyRecordDto } from "@/app/mappers/mapOpenDataCompanyRecordToCompanyRecortDto";
 import { mapOpenDataEstablishmentToBusinessEstablishmentDto } from "@/app/mappers/mapOpenDataEstablishmentToBusinessEstablishmentDto";
 import { openDataRepository } from "@/app/services/openData/repository";
-import type { CompanyDto } from "@/app/types/CompanyDto";
+import type { CompanyDto } from "@/app/types/CompanyRecordDto";
 import pRetry from "p-retry";
 
 export const openDataService = {
-  companies: {
+  companyRecords: {
     async get(
       nit: string,
     ): Promise<
@@ -14,7 +14,7 @@ export const openDataService = {
     > {
       const retrievedOn = Date.now();
       try {
-        const companyResponse = await pRetry(() => fetchCompany(nit), {
+        const companyResponse = await pRetry(() => fetchCompanyRecords(nit), {
           retries: 3,
           onFailedAttempt: (error) => {
             console.log(
@@ -28,15 +28,9 @@ export const openDataService = {
             retrievedOn,
           };
         }
-        const companyData = companyResponse.data
-          .map(mapOpenDataCompanyToCompanyDto)
-          .filter(
-            (record) =>
-              !!record.registrationDate &&
-              !!record.name &&
-              !!record.registrationNumber &&
-              !!record.status,
-          );
+        const companyData = companyResponse.data.map(
+          mapOpenDataCompanyRecordToCompanyRecordDto,
+        );
         const [mainRecord, ...remainingRecords] = companyData;
         if (!mainRecord) {
           return {
@@ -76,7 +70,7 @@ export const openDataService = {
     count() {
       return pRetry(
         async () => {
-          const response = await openDataRepository.companies.count();
+          const response = await openDataRepository.companyRecords.count();
           if (response.status === "error") {
             console.error(response);
             throw new Error("Fetch company count failed");
@@ -102,10 +96,10 @@ export const openDataService = {
       offset,
       limit,
       fields,
-    }: Parameters<typeof openDataRepository.companies.getAll>[0]) {
+    }: Parameters<typeof openDataRepository.companyRecords.getAll>[0]) {
       return pRetry(
         async () => {
-          const response = await openDataRepository.companies.getAll({
+          const response = await openDataRepository.companyRecords.getAll({
             offset,
             limit,
             fields,
@@ -114,7 +108,7 @@ export const openDataService = {
             console.error(response);
             throw new Error("openDataRepository.companies.getAll failed");
           }
-          return response.data.map(mapOpenDataCompanyToCompanyDto);
+          return response.data.map(mapOpenDataCompanyRecordToCompanyRecordDto);
         },
         {
           retries: 5,
@@ -129,12 +123,13 @@ export const openDataService = {
     search(query: string) {
       return pRetry(
         async () => {
-          const response = await openDataRepository.companies.search(query);
+          const response =
+            await openDataRepository.companyRecords.search(query);
           if (response.status === "error") {
             console.error(response);
             throw new Error("openDataService.companies.search failed");
           }
-          return response.data.map(mapOpenDataCompanyToCompanyDto);
+          return response.data.map(mapOpenDataCompanyRecordToCompanyRecordDto);
         },
         {
           retries: 3,
@@ -149,9 +144,9 @@ export const openDataService = {
   },
 };
 
-async function fetchCompany(nit: string) {
+async function fetchCompanyRecords(nit: string) {
   const signal = AbortSignal.timeout(3_000);
-  const companyResponse = await openDataRepository.companies.get(nit, {
+  const companyResponse = await openDataRepository.companyRecords.get(nit, {
     signal,
   });
 

@@ -1,10 +1,10 @@
 import { BusinessEstablishments } from "@/app/[company]/components/BusinessEstablishments";
 import { CommerceChamber } from "@/app/[company]/components/Chamber";
-import { CompanyDescription } from "@/app/[company]/components/CompanyDescription";
-import type { CompanyDto } from "@/app/types/CompanyDto";
+import { CompanyRecordDescription } from "@/app/[company]/components/CompanyRecordDescription";
+import type { CompanyDto } from "@/app/types/CompanyRecordDto";
 import { Text, Box, Grid } from "@radix-ui/themes";
 
-export function CompanyDetails({ company }: { company: CompanyDto }) {
+export function CompanyRecordDetails({ company }: { company: CompanyDto }) {
   return (
     <Box>
       <Grid
@@ -13,7 +13,7 @@ export function CompanyDetails({ company }: { company: CompanyDto }) {
         width="auto"
         flow="row-dense"
       >
-        <CompanyDescription company={company} />
+        <CompanyRecordDescription company={company} />
         <Box>
           <CommerceChamber code={company.chamber.code} />
           {company.isActive && (
