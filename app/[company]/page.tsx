@@ -4,7 +4,6 @@ import {
   companySummary,
   CompanySummary,
 } from "@/app/[company]/components/CompanySummary";
-import { ErrorRecovery } from "@/app/[company]/components/ErrorRecovery";
 import { RetrievedOn } from "@/app/[company]/components/RetrievedOn";
 import { UserReport } from "@/app/[company]/components/UserReport";
 import { CompanyStatusBadge } from "@/app/components/CompanyStatusBadge";
