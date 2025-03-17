@@ -5,8 +5,8 @@ import type { CompanyDto } from "@/app/types/CompanyRecordDto";
 import pRetry from "p-retry";
 
 export const openDataService = {
-  companies: {
-    async getRecords(
+  companyRecords: {
+    async get(
       nit: string,
     ): Promise<
       | { status: "success"; data: CompanyDto[] | null; retrievedOn: number }
@@ -14,7 +14,7 @@ export const openDataService = {
     > {
       const retrievedOn = Date.now();
       try {
-        const companyResponse = await pRetry(() => fetchCompany(nit), {
+        const companyResponse = await pRetry(() => fetchCompanyRecords(nit), {
           retries: 3,
           onFailedAttempt: (error) => {
             console.log(
@@ -70,7 +70,7 @@ export const openDataService = {
     count() {
       return pRetry(
         async () => {
-          const response = await openDataRepository.companies.count();
+          const response = await openDataRepository.companyRecords.count();
           if (response.status === "error") {
             console.error(response);
             throw new Error("Fetch company count failed");
@@ -92,14 +92,14 @@ export const openDataService = {
         },
       );
     },
-    getAllRecords({
+    getAll({
       offset,
       limit,
       fields,
-    }: Parameters<typeof openDataRepository.companies.getAll>[0]) {
+    }: Parameters<typeof openDataRepository.companyRecords.getAll>[0]) {
       return pRetry(
         async () => {
-          const response = await openDataRepository.companies.getAll({
+          const response = await openDataRepository.companyRecords.getAll({
             offset,
             limit,
             fields,
@@ -123,7 +123,8 @@ export const openDataService = {
     search(query: string) {
       return pRetry(
         async () => {
-          const response = await openDataRepository.companies.search(query);
+          const response =
+            await openDataRepository.companyRecords.search(query);
           if (response.status === "error") {
             console.error(response);
             throw new Error("openDataService.companies.search failed");
@@ -143,9 +144,9 @@ export const openDataService = {
   },
 };
 
-async function fetchCompany(nit: string) {
+async function fetchCompanyRecords(nit: string) {
   const signal = AbortSignal.timeout(3_000);
-  const companyResponse = await openDataRepository.companies.get(nit, {
+  const companyResponse = await openDataRepository.companyRecords.get(nit, {
     signal,
   });
 

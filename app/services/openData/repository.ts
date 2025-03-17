@@ -71,7 +71,7 @@ const openDataFields = {
 } as const;
 
 export const openDataRepository = {
-  companies: {
+  companyRecords: {
     get(nit: string, { signal }: { signal?: AbortSignal } = {}) {
       return openDataClient.companies<OpenDataCompanyRecord[]>({
         query: new URLSearchParams({

@@ -127,7 +127,7 @@ const getPageData = cache(async (company: string) => {
     notFound();
   }
 
-  const response = await openDataService.companies.getRecords(String(nit));
+  const response = await openDataService.companyRecords.get(String(nit));
 
   if (response.status === "error") {
     return {

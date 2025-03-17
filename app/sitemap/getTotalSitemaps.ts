@@ -4,7 +4,7 @@ import { unstable_cache } from "next/cache";
 
 export const getTotalSitemaps = unstable_cache(
   async () => {
-    const total = await openDataService.companies.count();
+    const total = await openDataService.companyRecords.count();
     if (!total) {
       return 0;
     }

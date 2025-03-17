@@ -28,7 +28,7 @@ export async function searchByCompanyNameAction({
 }
 
 const getSearchResultsByCompanyNameCached = unstable_cache(
-  openDataService.companies.search,
+  openDataService.companyRecords.search,
   undefined,
   {
     revalidate: false,
