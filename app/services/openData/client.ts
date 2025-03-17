@@ -3,6 +3,17 @@ const OpenDataSet = {
   ESTABLISHMENTS: "nb3d-v3n7",
 } as const;
 
+/*
+.filter(
+  (record) =>
+    !!record.registrationDate &&
+    !!record.name &&
+    !!record.registrationNumber &&
+    !!record.status,
+);
+
+*/
+
 const companiesExcludeSQL = [
   "codigo_clase_identificacion!='06'", // SIN IDENTIFICACION
   "codigo_tipo_sociedad!='00'", // NO APLICA
