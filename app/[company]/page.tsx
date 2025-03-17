@@ -4,7 +4,6 @@ import {
   companySummary,
   CompanySummary,
 } from "@/app/[company]/components/CompanySummary";
-import { ErrorRecovery } from "@/app/[company]/components/ErrorRecovery";
 import { RetrievedOn } from "@/app/[company]/components/RetrievedOn";
 import { UserReport } from "@/app/[company]/components/UserReport";
 import { CompanyStatusBadge } from "@/app/components/CompanyStatusBadge";
@@ -14,7 +13,7 @@ import { parseCompanyPathSegment } from "@/app/lib/parseCompanyPathSegment";
 import { slugifyCompanyName } from "@/app/lib/slugifyComponentName";
 import { validateNit } from "@/app/lib/validateNit";
 import { openDataService } from "@/app/services/openData/service";
-import { Box, Flex, Heading } from "@radix-ui/themes";
+import { Box, Flex, Heading, Separator, Text } from "@radix-ui/themes";
 import type { Metadata } from "next";
 import { notFound, permanentRedirect } from "next/navigation";
 import { cache } from "react";
@@ -53,7 +52,9 @@ export default async function page({ params }: PageProps) {
   const { isError, data } = await getPageData(company);
 
   if (isError) {
-    return <ErrorRecovery />;
+    // Trigger error page and properly
+    // respond with 500 for error logs
+    throw new Error("Data fetch failed.");
   }
 
   return (
@@ -63,19 +64,22 @@ export default async function page({ params }: PageProps) {
         <PageContainer wide mt={{ initial: "6", sm: "8" }}>
           <CompanySummary company={data.mainRecord} />
           <CompanyDetails company={data.mainRecord} />
+          {data.mainRecord.updatedDate && (
+            <Text size="1" color="gray">
+              Registro del {data.mainRecord.updatedDate}
+            </Text>
+          )}
         </PageContainer>
       </article>
       {data.remainingRecords.length > 0 && (
-        <PageContainer wide>
+        <PageContainer wide mb="8">
+          <Separator size="4" my="4" />
           <Heading as="h4" mb="4">
             Registros Anteriores ({data.remainingRecords.length})
           </Heading>
           <Flex direction="column" gap="2">
             {data.remainingRecords.map((companyRecord) => (
-              <details
-                key={companyRecord.registrationNumber}
-                name="matricula-mercantil"
-              >
+              <details key={companyRecord.registrationNumber}>
                 <summary>
                   <Flex gap="2" display="inline-flex">
                     {companyRecord.registrationNumber}
@@ -87,12 +91,18 @@ export default async function page({ params }: PageProps) {
                 </summary>
                 <Box
                   px="4"
+                  pb="4"
                   my="2"
                   className="rounded-[var(--radius-2)] bg-[var(--gray-2)]"
                   asChild
                 >
                   <article>
                     <CompanyDetails company={companyRecord} />
+                    {data.mainRecord.updatedDate && (
+                      <Text size="1" color="gray">
+                        Registro del {data.mainRecord.updatedDate}
+                      </Text>
+                    )}
                   </article>
                 </Box>
               </details>

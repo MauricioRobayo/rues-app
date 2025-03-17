@@ -2,7 +2,6 @@ import { ActiveDuration } from "@/app/[company]/components/ActiveDuration";
 import { DataList } from "@/app/[company]/components/DataList";
 import { EconomicActivities } from "@/app/[company]/components/EconomicActivities";
 import { ExpandableList } from "@/app/[company]/components/ExpandableList";
-import PhoneNumbers from "@/app/[company]/components/PhoneNumbers";
 import type { BusinessEstablishmentDto } from "@/app/types/BusinessEstablishmentDto";
 import { Flex, Heading, Section, Text } from "@radix-ui/themes";
 
@@ -50,15 +49,6 @@ export function BusinessEstablishments({
               cancellationDate={establishment.rawCancellationDate}
             />
           ) : null,
-        },
-
-        {
-          label: "Teléfono",
-          value:
-            establishment.phoneNumbers &&
-            establishment.phoneNumbers.length > 0 ? (
-              <PhoneNumbers phoneNumbers={establishment.phoneNumbers} />
-            ) : null,
         },
         {
           label: "Dirección comercial",

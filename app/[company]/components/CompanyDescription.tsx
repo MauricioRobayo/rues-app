@@ -4,13 +4,9 @@ import { CopyButton } from "@/app/[company]/components/CopyButton";
 import { DataList } from "@/app/[company]/components/DataList";
 import { EconomicActivities } from "@/app/[company]/components/EconomicActivities";
 import { LegalRepresentatives } from "@/app/[company]/components/LegalRepresentatives";
-import PhoneNumbers from "@/app/[company]/components/PhoneNumbers";
-import { ReadMore } from "@/app/[company]/components/ReadMore";
-import { ToggleContent } from "@/app/[company]/components/ToogleContent";
 import { CompanyStatusBadge } from "@/app/components/CompanyStatusBadge";
 import type { CompanyDto } from "@/app/types/CompanyDto";
-import { GoogleMapsEmbed } from "@next/third-parties/google";
-import { Box, Code, Flex, Heading, Link, Section } from "@radix-ui/themes";
+import { Code, Flex, Heading, Section } from "@radix-ui/themes";
 
 export function CompanyDescription({ company }: { company: CompanyDto }) {
   const details = [
@@ -58,11 +54,11 @@ export function CompanyDescription({ company }: { company: CompanyDto }) {
       value: company.shortName,
     },
     { label: "Tipo de sociedad", value: company.type },
-    { label: "Organización jurídica", value: company.legalEntityType },
     { label: "Categoría de la matrícula", value: company.category },
     { label: "Fecha de matrícula", value: company.registrationDate },
     { label: "Fecha de renovación", value: company.renewalDate },
     { label: "Fecha de cancelación", value: company.cancellationDate },
+    { label: "Fecha de actualización", value: company.updatedDate },
     { label: "Último año renovado", value: company.lastRenewalYear },
     {
       label: company.isActive ? "Antigüedad" : "Tiempo activa",
@@ -73,57 +69,9 @@ export function CompanyDescription({ company }: { company: CompanyDto }) {
         />
       ),
     },
-    { label: "Tamaño de la empresa", value: company.size },
-    { label: "Municipio", value: company.city },
-    { label: "Departamento", value: company.state },
-    {
-      label: "Dirección",
-      value:
-        company.address &&
-        company.city &&
-        company.state &&
-        process.env.GOOGLE_MAPS_API_KEY ? (
-          <Flex direction="column" gap="2" width="100%">
-            {company.address}
-            <Box>
-              <ToggleContent label="Ver mapa">
-                <GoogleMapsEmbed
-                  apiKey={process.env.GOOGLE_MAPS_API_KEY}
-                  height={400}
-                  width="100%"
-                  mode="place"
-                  q={`${company.address},${company.city},${company.state},Colombia`}
-                />
-              </ToggleContent>
-            </Box>
-          </Flex>
-        ) : null,
-    },
-    { label: "Zona comercial", value: company.area },
-    {
-      label: "Teléfono",
-      value:
-        company.phoneNumbers && company.phoneNumbers.length > 0 ? (
-          <PhoneNumbers phoneNumbers={company.phoneNumbers} />
-        ) : null,
-    },
-    {
-      label: "Corre electrónico",
-      value: company.email ? (
-        <Box>
-          <ToggleContent label="Ver correo electrónico">
-            <Link href={`mailto:${company.email}`}>{company.email}</Link>
-          </ToggleContent>
-        </Box>
-      ) : null,
-    },
     {
       label: "Registro proponente",
       value: company.bidderId ? <Bidder bidderId={company.bidderId} /> : null,
-    },
-    {
-      label: "Objecto social",
-      value: company.scope ? <ReadMore text={company.scope} /> : null,
     },
     {
       label: "Actividad económica",
@@ -131,12 +79,6 @@ export function CompanyDescription({ company }: { company: CompanyDto }) {
         company.economicActivities.length > 0 ? (
           <EconomicActivities activities={company.economicActivities} />
         ) : null,
-    },
-    {
-      label: "Actividad económica de mayores ingresos",
-      value: company.highestRevenueEconomicActivityCode ? (
-        <Code size="2">{company.highestRevenueEconomicActivityCode}</Code>
-      ) : null,
     },
     {
       label: "Representante legal",
