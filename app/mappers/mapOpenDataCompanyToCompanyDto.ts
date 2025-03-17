@@ -36,7 +36,7 @@ export function mapOpenDataCompanyToCompanyDto(
     cancellationDate: formatDetailsDate(data.fecha_cancelacion),
     registrationDate: formatDetailsDate(data.fecha_matricula),
     renewalDate: formatDetailsDate(data.fecha_renovacion),
-    updatedDate: data.fecha_actualizacion,
+    updatedDate: formatDetailsDate(data.fecha_actualizacion),
     rawRegistrationDate: data.fecha_matricula,
     rawCancellationDate: data.fecha_cancelacion,
     isLegalEntity:

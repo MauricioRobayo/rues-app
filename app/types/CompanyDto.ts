@@ -1,3 +1,5 @@
+import type { BusinessEstablishmentDto } from "@/app/types/BusinessEstablishmentDto";
+
 export interface CompanyDto {
   name: string;
   nit: number;
@@ -28,4 +30,5 @@ export interface CompanyDto {
   status: string;
   verificationDigit: number;
   idType?: string;
+  establishments?: BusinessEstablishmentDto[];
 }
