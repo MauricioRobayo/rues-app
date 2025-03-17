@@ -28,15 +28,9 @@ export const openDataService = {
             retrievedOn,
           };
         }
-        const companyData = companyResponse.data
-          .map(mapOpenDataCompanyToCompanyDto)
-          .filter(
-            (record) =>
-              !!record.registrationDate &&
-              !!record.name &&
-              !!record.registrationNumber &&
-              !!record.status,
-          );
+        const companyData = companyResponse.data.map(
+          mapOpenDataCompanyToCompanyDto,
+        );
         const [mainRecord, ...remainingRecords] = companyData;
         if (!mainRecord) {
           return {
