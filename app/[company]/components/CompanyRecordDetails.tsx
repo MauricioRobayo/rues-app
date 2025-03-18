@@ -4,6 +4,8 @@ import { CompanyRecordDescription } from "@/app/[company]/components/CompanyReco
 import type { CompanyRecordDto } from "@/app/types/CompanyRecordDto";
 import { Text, Box, Grid } from "@radix-ui/themes";
 
+export const revalidate = false;
+
 export function CompanyRecordDetails({
   company,
 }: {
