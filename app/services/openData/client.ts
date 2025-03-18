@@ -3,6 +3,10 @@ import {
   companyType,
   idType,
 } from "@/app/services/openData/constants";
+import type {
+  OpenDataCompanyRecord,
+  OpenDataEstablishment,
+} from "@/app/services/openData/types";
 
 const OpenDataSet = {
   COMPANIES: "c82u-588k",
@@ -23,7 +27,7 @@ const companiesExcludeSQL = [
 ].join(" AND ");
 
 export const openDataClient = {
-  companies: openDataFetchFactory(
+  companyRecords: openDataFetchFactory(
     OpenDataSet.COMPANIES,
     new URLSearchParams({
       $where: companiesExcludeSQL,
@@ -38,6 +42,18 @@ interface OpenDataOptions {
   signal?: AbortSignal;
 }
 
+function openDataFetchFactory(
+  dataSetId: (typeof OpenDataSet)["COMPANIES"],
+  defaultQuery?: URLSearchParams,
+): <T = OpenDataCompanyRecord[]>(
+  options: Omit<OpenDataOptions, "dataSetId">,
+) => ReturnType<typeof openDataFetch<T>>;
+function openDataFetchFactory(
+  dataSetId: (typeof OpenDataSet)["ESTABLISHMENTS"],
+  defaultQuery?: URLSearchParams,
+): <T = OpenDataEstablishment[]>(
+  options: Omit<OpenDataOptions, "dataSetId">,
+) => ReturnType<typeof openDataFetch<T>>;
 function openDataFetchFactory(
   dataSetId: (typeof OpenDataSet)[keyof typeof OpenDataSet],
   defaultQuery?: URLSearchParams,
@@ -95,15 +111,17 @@ async function openDataFetch<T>({
       signal,
     });
 
+    const data: T = await response.json();
+
     if (!response.ok) {
-      console.error(`Failed to fetch Datos Abiertos ${dataSetId}`);
+      console.error(`Failed to fetch Datos Abiertos ${url}`);
       return {
         status: "error",
         code: response.status,
+        error: data,
       };
     }
 
-    const data: T = await response.json();
     return {
       status: "success",
       code: response.status,

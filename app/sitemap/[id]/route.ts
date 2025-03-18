@@ -35,7 +35,6 @@ export async function GET(
     const data = await openDataService.companyRecords.getAll({
       offset: sitemapId * MAX_URLS_PER_SITEMAP,
       limit: MAX_URLS_PER_SITEMAP,
-      fields: ["nit", "razon_social"],
     });
 
     const companies = data.map((company) => {
@@ -43,6 +42,7 @@ export async function GET(
       const url = `${BASE_URL}/${companySlug}-${company.nit}`;
       return {
         url,
+        lastModified: company.updatedDate ?? "",
       };
     });
 

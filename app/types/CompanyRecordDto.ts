@@ -1,6 +1,6 @@
 import type { BusinessEstablishmentDto } from "@/app/types/BusinessEstablishmentDto";
 
-export interface CompanyDto {
+export interface CompanyRecordDto {
   name: string;
   nit: number;
   fullNit: string;
