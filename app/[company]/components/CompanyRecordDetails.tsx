@@ -27,7 +27,7 @@ export function CompanyRecordDetails({
       </Grid>
       {company.updatedDate && (
         <Text size="1" color="gray">
-          Información del {company.updatedDate}
+          Actualizado el {company.updatedDate}
         </Text>
       )}
     </Box>
