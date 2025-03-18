@@ -21,13 +21,13 @@ export function CompanyRecordDetails({
       >
         <CompanyRecordDescription company={company} />
         <Box>
-          <CommerceChamber code={company.chamber.code} />
           {company.isActive && (
             <BusinessEstablishments
               chamberCode={company.chamber.code}
               registrationNumber={company.registrationNumber}
             />
           )}
+          <CommerceChamber code={company.chamber.code} />
         </Box>
       </Grid>
       {company.updatedDate && (
