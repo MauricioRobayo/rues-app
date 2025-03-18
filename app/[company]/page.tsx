@@ -1,5 +1,5 @@
-import { CompanyRecordDetails } from "@/app/[company]/components/CompanyRecordDetails";
 import { CompanyHeader } from "@/app/[company]/components/CompanyHeader";
+import { CompanyRecordDetails } from "@/app/[company]/components/CompanyRecordDetails";
 import {
   companySummary,
   CompanySummary,
@@ -37,9 +37,10 @@ export async function generateMetadata({
     };
   }
 
+  const description = await companySummary(data.mainRecord);
   return {
     title: `${data.mainRecord.name} NIT ${data.mainRecord.fullNit}`,
-    description: companySummary(data.mainRecord),
+    description,
     metadataBase: new URL(BASE_URL),
     alternates: {
       canonical: data.mainRecord.slug,

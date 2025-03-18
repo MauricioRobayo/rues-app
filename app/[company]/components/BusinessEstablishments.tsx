@@ -4,6 +4,7 @@ import { EconomicActivities } from "@/app/[company]/components/EconomicActivitie
 import { ExpandableList } from "@/app/[company]/components/ExpandableList";
 import { openDataService } from "@/app/services/openData/service";
 import { Flex, Heading, Section, Text } from "@radix-ui/themes";
+import { cache } from "react";
 
 export async function BusinessEstablishments({
   chamberCode,
@@ -12,10 +13,10 @@ export async function BusinessEstablishments({
   chamberCode: string;
   registrationNumber: string;
 }) {
-  const establishments = await openDataService.establishments.get({
+  const establishments = await getBusinessEstablishmentsCached(
     chamberCode,
     registrationNumber,
-  });
+  );
 
   const businessEstablishments = establishments.map((establishment) => ({
     id: establishment.registrationNumber,
@@ -108,3 +109,11 @@ export async function BusinessEstablishments({
     </Section>
   );
 }
+
+export const getBusinessEstablishmentsCached = cache(
+  (chamberCode: string, registrationNumber: string) =>
+    openDataService.establishments.get({
+      chamberCode,
+      registrationNumber,
+    }),
+);

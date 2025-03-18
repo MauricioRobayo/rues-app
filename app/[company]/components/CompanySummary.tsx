@@ -1,11 +1,23 @@
+import { getBusinessEstablishmentsCached } from "@/app/[company]/components/BusinessEstablishments";
 import type { CompanyRecordDto } from "@/app/types/CompanyRecordDto";
 import { Text } from "@radix-ui/themes";
 
-export function CompanySummary({ company }: { company: CompanyRecordDto }) {
-  return <Text>{companySummary(company)}</Text>;
+export async function CompanySummary({
+  company,
+}: {
+  company: CompanyRecordDto;
+}) {
+  const summary = await companySummary(company);
+  return <Text>{summary}</Text>;
 }
 
-export function companySummary(company: CompanyRecordDto) {
+export async function companySummary(company: CompanyRecordDto) {
+  const establishments = await getBusinessEstablishmentsCached(
+    company.chamber.code,
+    company.registrationNumber,
+  );
+  const establishmentsCount = establishments.length;
+
   let summary = company.name;
 
   if (company.shortName) {
@@ -41,10 +53,8 @@ export function companySummary(company: CompanyRecordDto) {
     summary += `. Su principal actividad económica corresponde al código CIIU ${mainEconomicActivity.code}: ${mainEconomicActivity.description}`;
   }
 
-  const establishments = company.establishments ?? [];
-
-  if (establishments.length > 0) {
-    summary += `. Cuenta con ${establishments.length} establecimiento${establishments.length === 1 ? "" : "s"} comercial${establishments.length === 1 ? "" : "es"}`;
+  if (establishmentsCount > 0) {
+    summary += `. Cuenta con ${establishmentsCount} establecimiento${establishmentsCount === 1 ? "" : "s"} comercial${establishmentsCount === 1 ? "" : "es"}`;
   }
 
   return `${summary}.`;
