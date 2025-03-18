@@ -1,10 +1,14 @@
 import { BusinessEstablishments } from "@/app/[company]/components/BusinessEstablishments";
 import { CommerceChamber } from "@/app/[company]/components/Chamber";
 import { CompanyRecordDescription } from "@/app/[company]/components/CompanyRecordDescription";
-import type { CompanyDto } from "@/app/types/CompanyRecordDto";
+import type { CompanyRecordDto } from "@/app/types/CompanyRecordDto";
 import { Text, Box, Grid } from "@radix-ui/themes";
 
-export function CompanyRecordDetails({ company }: { company: CompanyDto }) {
+export function CompanyRecordDetails({
+  company,
+}: {
+  company: CompanyRecordDto;
+}) {
   return (
     <Box>
       <Grid

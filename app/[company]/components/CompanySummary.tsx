@@ -1,11 +1,11 @@
-import type { CompanyDto } from "@/app/types/CompanyRecordDto";
+import type { CompanyRecordDto } from "@/app/types/CompanyRecordDto";
 import { Text } from "@radix-ui/themes";
 
-export function CompanySummary({ company }: { company: CompanyDto }) {
+export function CompanySummary({ company }: { company: CompanyRecordDto }) {
   return <Text>{companySummary(company)}</Text>;
 }
 
-export function companySummary(company: CompanyDto) {
+export function companySummary(company: CompanyRecordDto) {
   let summary = company.name;
 
   if (company.shortName) {

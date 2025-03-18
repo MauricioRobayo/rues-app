@@ -2,10 +2,10 @@
 
 import { CompanyStatusBadge } from "@/app/components/CompanyStatusBadge";
 import { Link } from "@/app/components/Link";
-import type { CompanyDto } from "@/app/types/CompanyRecordDto";
+import type { CompanyRecordDto } from "@/app/types/CompanyRecordDto";
 import { Box, Card, Flex, Heading, Separator, Text } from "@radix-ui/themes";
 
-export function SearchResults({ results }: { results: CompanyDto[] }) {
+export function SearchResults({ results }: { results: CompanyRecordDto[] }) {
   if (results.length === 0) {
     return <div>No se encontraron resultados.</div>;
   }

@@ -1,10 +1,10 @@
 import { CopyButton } from "@/app/[company]/components/CopyButton";
 import { CompanyStatusBadge } from "@/app/components/CompanyStatusBadge";
 import { PageContainer } from "@/app/components/PageContainer";
-import type { CompanyDto } from "@/app/types/CompanyRecordDto";
+import type { CompanyRecordDto } from "@/app/types/CompanyRecordDto";
 import { Box, Card, Flex, Heading, Separator } from "@radix-ui/themes";
 
-export function CompanyHeader({ company }: { company: CompanyDto }) {
+export function CompanyHeader({ company }: { company: CompanyRecordDto }) {
   return (
     <Box asChild style={{ position: "sticky", top: 0, background: "white" }}>
       <header>

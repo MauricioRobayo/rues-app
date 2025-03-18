@@ -4,7 +4,7 @@ import { parseEconomicActivities } from "@/app/lib/parseEconomicActivities";
 import { slugifyCompanyName } from "@/app/lib/slugifyComponentName";
 import { legalEntity } from "@/app/services/openData/constants";
 import type { OpenDataCompanyRecord } from "@/app/services/openData/types";
-import type { CompanyDto as CompanyRecordDto } from "@/app/types/CompanyRecordDto";
+import type { CompanyRecordDto as CompanyRecordDto } from "@/app/types/CompanyRecordDto";
 import { getVerificationDigit } from "nit-verifier";
 
 export function mapOpenDataCompanyRecordToCompanyRecordDto(

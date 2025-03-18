@@ -1,15 +1,17 @@
 import { mapOpenDataCompanyRecordToCompanyRecordDto } from "@/app/mappers/mapOpenDataCompanyRecordToCompanyRecortDto";
 import { mapOpenDataEstablishmentToBusinessEstablishmentDto } from "@/app/mappers/mapOpenDataEstablishmentToBusinessEstablishmentDto";
 import { openDataRepository } from "@/app/services/openData/repository";
-import type { CompanyDto } from "@/app/types/CompanyRecordDto";
+import type { CompanyRecordDto } from "@/app/types/CompanyRecordDto";
 import pRetry from "p-retry";
 
 export const openDataService = {
   companyRecords: {
-    async get(
-      nit: string,
-    ): Promise<
-      | { status: "success"; data: CompanyDto[] | null; retrievedOn: number }
+    async get(nit: string): Promise<
+      | {
+          status: "success";
+          data: CompanyRecordDto[] | null;
+          retrievedOn: number;
+        }
       | { status: "error"; statusCode?: number; error?: unknown }
     > {
       const retrievedOn = Date.now();
@@ -92,23 +94,22 @@ export const openDataService = {
         },
       );
     },
-    getAll({
-      offset,
-      limit,
-      fields,
-    }: Parameters<typeof openDataRepository.companyRecords.getAll>[0]) {
+    getAll(
+      options: Parameters<typeof openDataRepository.companyRecords.getAll>[0],
+    ) {
       return pRetry(
         async () => {
-          const response = await openDataRepository.companyRecords.getAll({
-            offset,
-            limit,
-            fields,
-          });
+          const response =
+            await openDataRepository.companyRecords.getAll(options);
           if (response.status === "error") {
-            console.error(response);
+            console.error(JSON.stringify(response, null, 2));
             throw new Error("openDataRepository.companies.getAll failed");
           }
-          return response.data.map(mapOpenDataCompanyRecordToCompanyRecordDto);
+          return response.data.map((record) => ({
+            nit: record.nit,
+            name: record.MAX_razon_social,
+            updatedDate: record.MAX_fecha_actualizacion,
+          }));
         },
         {
           retries: 5,
