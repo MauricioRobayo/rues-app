@@ -124,6 +124,33 @@ export const openDataService = {
         },
       );
     },
+    async getRelated({
+      chamberCode,
+      economicActivity,
+      limit = 25,
+    }: {
+      chamberCode: string;
+      economicActivity: string;
+      limit?: number;
+    }) {
+      const response = await pRetry(
+        () =>
+          fetchRelatedCompanies({
+            chamberCode,
+            economicActivity,
+            limit,
+          }),
+        {
+          retries: 3,
+          onFailedAttempt: (error) => {
+            console.log(
+              `Attempt ${error.attemptNumber} failed. There are ${error.retriesLeft} retries left.`,
+            );
+          },
+        },
+      );
+      return (response ?? []).map(mapOpenDataCompanyRecordToCompanyRecordDto);
+    },
   },
   establishments: {
     async get({
@@ -206,4 +233,27 @@ async function fetchEstablishments({
   }
 
   return companyResponse.data;
+}
+
+async function fetchRelatedCompanies(options: {
+  chamberCode: string;
+  economicActivity: string;
+  limit: number;
+}) {
+  const signal = AbortSignal.timeout(3_000);
+  const response = await openDataRepository.companyRecords.getRelated(options, {
+    signal,
+  });
+
+  if (response.code === 404) {
+    return null;
+  }
+
+  if (response.status === "error") {
+    throw new Error(
+      `openDataService.fetchEstablishments failed ${JSON.stringify(response)}`,
+    );
+  }
+
+  return response.data;
 }

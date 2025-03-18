@@ -30,11 +30,6 @@ export function CompanyRecordDetails({
           <CommerceChamber code={company.chamber.code} />
         </Box>
       </Grid>
-      {company.updatedDate && (
-        <Text size="1" color="gray">
-          Actualizado el {company.updatedDate}
-        </Text>
-      )}
     </Box>
   );
 }
