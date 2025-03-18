@@ -13,6 +13,9 @@ const OpenDataSet = {
   ESTABLISHMENTS: "nb3d-v3n7",
 } as const;
 
+// If you change this where clause, please make sure to recompute the
+// companies count on the openDataRepository:
+// app/services/openData/repository.ts:48
 const companiesExcludeSQL = [
   `codigo_clase_identificacion!='${idType.SIN_IDENTIFICACION}'`,
   `codigo_tipo_sociedad!='${companyType.NO_APLICA}'`,
@@ -25,6 +28,8 @@ const companiesExcludeSQL = [
   "nit<='999999999'",
   "razon_social IS NOT NULL",
   "estado_matricula IS NOT NULL",
+  // Changes here will most likely change the count which is hardcoded
+  // Don't forget to update the count on the openDataRepository
 ].join(" AND ");
 
 export const openDataClient = {

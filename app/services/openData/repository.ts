@@ -39,12 +39,12 @@ export const openDataRepository = {
     },
     count() {
       // This timeouts every time and it is called for each
-      // sitemap id, so all sitemaps fail with timeouts
+      // sitemap id, so all (2K+) sitemaps fail with timeouts
       return {
         status: "success",
         data: [
           {
-            // manually recompute if something changes.
+            // manually recompute if something changes
             count: "4955942",
           },
         ],
