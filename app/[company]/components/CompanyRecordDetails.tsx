@@ -4,6 +4,8 @@ import { CompanyRecordDescription } from "@/app/[company]/components/CompanyReco
 import type { CompanyRecordDto } from "@/app/types/CompanyRecordDto";
 import { Text, Box, Grid } from "@radix-ui/themes";
 
+export const revalidate = false;
+
 export function CompanyRecordDetails({
   company,
 }: {
@@ -21,7 +23,10 @@ export function CompanyRecordDetails({
         <Box>
           <CommerceChamber code={company.chamber.code} />
           {company.isActive && (
-            <BusinessEstablishments establishments={company.establishments} />
+            <BusinessEstablishments
+              chamberCode={company.chamber.code}
+              registrationNumber={company.registrationNumber}
+            />
           )}
         </Box>
       </Grid>
