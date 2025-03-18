@@ -17,34 +17,44 @@ export function parseEconomicActivities(activities: {
   }[] = [];
 
   if (activities.ciiu1) {
-    economicActivities.push({
-      label: "ciiu1",
-      code: activities.ciiu1,
-      description: activities.descCiiu1 ?? ciiuDict[activities.ciiu1],
-    });
+    const description = ciiuDict[activities.ciiu1];
+    if (description) {
+      economicActivities.push({
+        label: "ciiu1",
+        code: activities.ciiu1,
+        description,
+      });
+    }
   }
 
   if (activities.ciiu2) {
-    economicActivities.push({
-      label: "ciiu2",
-      code: activities.ciiu2,
-      description: activities.descCiiu2 ?? ciiuDict[activities.ciiu2],
-    });
+    const description = ciiuDict[activities.ciiu2];
+    if (description) {
+      economicActivities.push({
+        label: "ciiu2",
+        code: activities.ciiu2,
+        description,
+      });
+    }
   }
 
   if (activities.ciiu3) {
-    economicActivities.push({
-      label: "ciiu3",
-      code: activities.ciiu3,
-      description: activities.descCiiu3 ?? ciiuDict[activities.ciiu3],
-    });
+    const description = ciiuDict[activities.ciiu3];
+    if (description) {
+      economicActivities.push({
+        label: "ciiu3",
+        code: activities.ciiu3,
+        description,
+      });
+    }
   }
 
   if (activities.ciiu4) {
+    const description = ciiuDict[activities.ciiu4];
     economicActivities.push({
       label: "ciiu4",
       code: activities.ciiu4,
-      description: activities.descCiiu4 ?? ciiuDict[activities.ciiu4],
+      description,
     });
   }
 

@@ -17,6 +17,7 @@ const companiesExcludeSQL = [
   `codigo_clase_identificacion!='${idType.SIN_IDENTIFICACION}'`,
   `codigo_tipo_sociedad!='${companyType.NO_APLICA}'`,
   `codigo_estado_matricula!='${companyStatus.NO_ASIGNADO}'`,
+  `codigo_estado_matricula!='${companyStatus.NO_MATRICULADO}'`,
   // No regex allowed, this is the best I could thought of
   // at the moment to get only valid NITs
   "nit IS NOT NULL",
