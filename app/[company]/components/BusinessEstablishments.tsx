@@ -2,75 +2,78 @@ import { ActiveDuration } from "@/app/[company]/components/ActiveDuration";
 import { DataList } from "@/app/[company]/components/DataList";
 import { EconomicActivities } from "@/app/[company]/components/EconomicActivities";
 import { ExpandableList } from "@/app/[company]/components/ExpandableList";
-import type { BusinessEstablishmentDto } from "@/app/types/BusinessEstablishmentDto";
+import { openDataService } from "@/app/services/openData/service";
 import { Flex, Heading, Section, Text } from "@radix-ui/themes";
 
-export function BusinessEstablishments({
-  establishments,
+export async function BusinessEstablishments({
+  chamberCode,
+  registrationNumber,
 }: {
-  establishments?: BusinessEstablishmentDto[];
+  chamberCode: string;
+  registrationNumber: string;
 }) {
-  const businessEstablishments = (establishments ?? []).map(
-    (establishment) => ({
-      id: establishment.registrationNumber,
-      name: establishment.name,
-      details: [
-        {
-          label: "Razón social",
-          value: establishment.name,
-        },
-        {
-          label: "Matrícula",
-          value: establishment.registrationNumber,
-        },
-        {
-          label: "Fecha de matrícula",
-          value: establishment.registrationDate,
-        },
-        {
-          label: "Fecha de renovación",
-          value: establishment.renewalDate,
-        },
-        {
-          label: "Fecha de cancelación",
-          value: establishment.cancellationDate,
-        },
-        {
-          label: "Último año renovado",
-          value: establishment.lastRenewalYear,
-        },
-        {
-          label: establishment.rawCancellationDate
-            ? "Tiempo activo"
-            : "Antigüedad",
-          value: establishment.rawRegistrationDate ? (
-            <ActiveDuration
-              registrationDate={establishment.rawRegistrationDate}
-              cancellationDate={establishment.rawCancellationDate}
-            />
+  const establishments = await openDataService.establishments.get({
+    chamberCode,
+    registrationNumber,
+  });
+
+  const businessEstablishments = establishments.map((establishment) => ({
+    id: establishment.registrationNumber,
+    name: establishment.name,
+    details: [
+      {
+        label: "Razón social",
+        value: establishment.name,
+      },
+      {
+        label: "Matrícula",
+        value: establishment.registrationNumber,
+      },
+      {
+        label: "Fecha de matrícula",
+        value: establishment.registrationDate,
+      },
+      {
+        label: "Fecha de renovación",
+        value: establishment.renewalDate,
+      },
+      {
+        label: "Fecha de cancelación",
+        value: establishment.cancellationDate,
+      },
+      {
+        label: "Último año renovado",
+        value: establishment.lastRenewalYear,
+      },
+      {
+        label: establishment.rawCancellationDate
+          ? "Tiempo activo"
+          : "Antigüedad",
+        value: establishment.rawRegistrationDate ? (
+          <ActiveDuration
+            registrationDate={establishment.rawRegistrationDate}
+            cancellationDate={establishment.rawCancellationDate}
+          />
+        ) : null,
+      },
+      {
+        label: "Dirección comercial",
+        value: establishment.address,
+      },
+      {
+        label: "Descripción actividad económica",
+        value: establishment.economicActivityDescription,
+      },
+      {
+        label: "Actividad económica",
+        value:
+          establishment.economicActivities &&
+          establishment.economicActivities.length > 0 ? (
+            <EconomicActivities activities={establishment.economicActivities} />
           ) : null,
-        },
-        {
-          label: "Dirección comercial",
-          value: establishment.address,
-        },
-        {
-          label: "Descripción actividad económica",
-          value: establishment.economicActivityDescription,
-        },
-        {
-          label: "Actividad económica",
-          value:
-            establishment.economicActivities &&
-            establishment.economicActivities.length > 0 ? (
-              <EconomicActivities
-                activities={establishment.economicActivities}
-              />
-            ) : null,
-        },
-      ],
-    }),
-  );
+      },
+    ],
+  }));
 
   if (businessEstablishments.length === 0) {
     return null;

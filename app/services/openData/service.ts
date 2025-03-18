@@ -41,24 +41,6 @@ export const openDataService = {
             data: null,
           };
         }
-        const establishmentResponse = await pRetry(
-          () =>
-            fetchEstablishments({
-              chamberCode: mainRecord.chamber.code,
-              registrationNumber: mainRecord.registrationNumber,
-            }),
-          {
-            retries: 3,
-            onFailedAttempt: (error) => {
-              console.log(
-                `Attempt ${error.attemptNumber} failed. There are ${error.retriesLeft} retries left.`,
-              );
-            },
-          },
-        );
-        mainRecord.establishments = (establishmentResponse.data ?? []).map(
-          mapOpenDataEstablishmentToBusinessEstablishmentDto,
-        );
         return {
           ...companyResponse,
           retrievedOn,
@@ -143,6 +125,34 @@ export const openDataService = {
       );
     },
   },
+  establishments: {
+    async get({
+      chamberCode,
+      registrationNumber,
+    }: {
+      chamberCode: string;
+      registrationNumber: string;
+    }) {
+      const establishments = await pRetry(
+        () =>
+          fetchEstablishments({
+            chamberCode: chamberCode,
+            registrationNumber: registrationNumber,
+          }),
+        {
+          retries: 3,
+          onFailedAttempt: (error) => {
+            console.log(
+              `Attempt ${error.attemptNumber} failed. There are ${error.retriesLeft} retries left.`,
+            );
+          },
+        },
+      );
+      return (establishments ?? []).map(
+        mapOpenDataEstablishmentToBusinessEstablishmentDto,
+      );
+    },
+  },
 };
 
 async function fetchCompanyRecords(nit: string) {
@@ -186,10 +196,7 @@ async function fetchEstablishments({
   );
 
   if (companyResponse.code === 404) {
-    return {
-      status: "success",
-      data: null,
-    } as const;
+    return null;
   }
 
   if (companyResponse.status === "error") {
@@ -198,8 +205,5 @@ async function fetchEstablishments({
     );
   }
 
-  return {
-    data: companyResponse.data,
-    status: "success",
-  } as const;
+  return companyResponse.data;
 }
