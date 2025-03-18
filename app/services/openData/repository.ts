@@ -1,7 +1,31 @@
 import { openDataClient } from "@/app/services/openData/client";
+import { companyStatus } from "@/app/services/openData/constants";
 
 export const openDataRepository = {
   companyRecords: {
+    getRelated(
+      {
+        chamberCode,
+        economicActivity,
+        limit = 25,
+      }: {
+        chamberCode: string;
+        economicActivity: string;
+        limit?: number;
+      },
+      { signal }: { signal?: AbortSignal } = {},
+    ) {
+      return openDataClient.companyRecords({
+        query: new URLSearchParams({
+          $limit: String(limit),
+          $order: "fecha_actualizacion DESC",
+          codigo_estado_matricula: companyStatus.ACTIVA,
+          codigo_camara: chamberCode,
+          cod_ciiu_act_econ_pri: economicActivity,
+        }),
+        signal,
+      });
+    },
     get(nit: string, { signal }: { signal?: AbortSignal } = {}) {
       return openDataClient.companyRecords({
         query: new URLSearchParams({

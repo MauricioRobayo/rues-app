@@ -4,6 +4,7 @@ import {
   companySummary,
   CompanySummary,
 } from "@/app/[company]/components/CompanySummary";
+import { RelatedCompanyRecords } from "@/app/[company]/components/RelatedCompanyRecords";
 import { RetrievedOn } from "@/app/[company]/components/RetrievedOn";
 import { UserReport } from "@/app/[company]/components/UserReport";
 import { CompanyStatusBadge } from "@/app/components/CompanyStatusBadge";
@@ -102,6 +103,14 @@ export default async function page({ params }: PageProps) {
             </Flex>
           </PageContainer>
         )}
+        <PageContainer wide>
+          {data.mainRecord.economicActivities[0].code && (
+            <RelatedCompanyRecords
+              chamber={data.mainRecord.chamber}
+              economicActivity={data.mainRecord.economicActivities[0]}
+            />
+          )}
+        </PageContainer>
         <PageContainer wide>
           <Box my="4">
             <RetrievedOn retrievedOn={data.retrievedOn} />
