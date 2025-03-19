@@ -15,7 +15,10 @@ export function SearchResults({ results }: { results: CompanyRecordDto[] }) {
       <ul>
         {results.map((result) => {
           return (
-            <Box key={`${result.nit}`} asChild>
+            <Box
+              key={`${result.chamber.code}-${result.registrationNumber}`}
+              asChild
+            >
               <li>
                 <Card
                   size="4"

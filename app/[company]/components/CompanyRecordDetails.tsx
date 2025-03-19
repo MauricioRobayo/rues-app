@@ -20,19 +20,21 @@ export function CompanyRecordDetails({
         width="auto"
         flow="row-dense"
       >
-        <CompanyRecordDescription company={company} />
+        <Box>
+          <CompanyRecordDescription company={company} />
+          {company.isActive && (
+            <BusinessEstablishments
+              chamberCode={company.chamber.code}
+              registrationNumber={company.registrationNumber}
+            />
+          )}
+        </Box>
         <Box>
           {company.isActive && (
-            <>
-              <AdditionalRecordInformation
-                chamberCode={company.chamber.code}
-                registrationNumber={company.registrationNumber}
-              />
-              <BusinessEstablishments
-                chamberCode={company.chamber.code}
-                registrationNumber={company.registrationNumber}
-              />
-            </>
+            <AdditionalRecordInformation
+              chamberCode={company.chamber.code}
+              registrationNumber={company.registrationNumber}
+            />
           )}
           <CommerceChamber code={company.chamber.code} />
         </Box>

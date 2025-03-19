@@ -114,7 +114,6 @@ async function openDataFetch<T>({
   try {
     const response = await fetch(url, {
       headers,
-      redirect: "follow",
       signal,
     });
 

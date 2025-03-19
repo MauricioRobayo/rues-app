@@ -33,9 +33,27 @@ export const openDataService = {
         return null;
       }
       return {
-        assets: record.activo_total,
-        email: record.email_comercial,
-        phoneNumber: record.tel_com_1,
+        assets: record.activo_total ?? record.total_activos,
+        email:
+          record.email_comercial ??
+          record.correo_comercial ??
+          record.emailcomercial,
+        phoneNumbers: [
+          record.tel_com_1 ?? record.tel_comercial ?? record.telcom1,
+          record.tel_com_2,
+          record.tel_com_2,
+        ].filter((tel): tel is string => !!tel),
+        city:
+          record.mun_comercial ??
+          record.municipio ??
+          record.municipio_comercial ??
+          record.muncomercial,
+        address:
+          record.dir_comercial ??
+          record.direccion ??
+          record.direccion_comercial ??
+          record.dircomercial,
+        zone: record.barrio_comercial,
         size: record.tam_empresa,
       };
     },

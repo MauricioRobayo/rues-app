@@ -64,18 +64,24 @@ export interface OpenDataEstablishment {
 }
 
 export interface OpenDataChamberRecord {
-  activo_total: string;
-  ciiu_1: string;
-  ciiu_2: string;
-  email_comercial: string;
-  est_matricula: string;
-  fec_matricula: string;
-  fec_renovacion: string;
-  matricula: string;
-  mun_comercial: string;
-  organizacion: string;
-  razon_social: string;
-  tam_empresa: string;
+  activo_total?: string;
+  total_activos?: string;
+  email_comercial?: string;
+  emailcomercial?: string;
+  correo_comercial?: string;
+  barrio_comercial?: string;
+  dir_comercial?: string;
+  direccion?: string;
+  direccion_comercial?: string;
+  dircomercial?: string;
+  mun_comercial?: string;
+  municipio_comercial?: string;
+  muncomercial?: string;
+  municipio?: string;
+  tam_empresa?: string;
   tel_com_1: string;
-  ult_ano_ren: string;
+  tel_com_2?: string;
+  tel_com_3?: string;
+  telcom1?: string;
+  tel_comercial?: string;
 }

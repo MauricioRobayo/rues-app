@@ -10,7 +10,7 @@ export const chambers = {
     certificateUrl:
       "https://sii.confecamaras.co/vista/plantilla/certificados.php?empresa=10",
     url: "http://www.camaracartago.org/",
-    openDataSetId: "",
+    openDataSetId: "2rd9-kmzf",
   },
   "11": {
     code: "11",
@@ -101,7 +101,7 @@ export const chambers = {
     certificateUrl:
       "https://sii.confecamaras.co/vista/plantilla/certificados.php?empresa=17",
     url: "http://www.ccipiales.org.co/",
-    openDataSetId: "",
+    openDataSetId: "kcck-53z5",
   },
   "18": {
     code: "18",
@@ -114,7 +114,8 @@ export const chambers = {
     certificateUrl:
       "https://sii.confecamaras.co/vista/plantilla/certificados.php?empresa=18",
     url: "http://www.camaradorada.org.co/",
-    openDataSetId: "",
+    // TODO: tiene matricula
+    openDataSetId: "", // "4g2z-f9xs",
   },
   "19": {
     code: "19",
@@ -230,7 +231,7 @@ export const chambers = {
     certificateUrl:
       "https://sii.confecamaras.co/vista/plantilla/certificados.php?empresa=27",
     url: "https://www.camarapereira.org.co",
-    openDataSetId: "",
+    openDataSetId: "c35x-mutb",
   },
   "28": {
     code: "28",
@@ -256,7 +257,7 @@ export const chambers = {
     certificateUrl:
       "https://virtuales.camarachoco.org.co/certificadoselectronicos/",
     url: "https://camarachoco.org.co/",
-    openDataSetId: "",
+    openDataSetId: "drwf-rmb8",
   },
   "30": {
     code: "30",
@@ -412,7 +413,7 @@ export const chambers = {
     certificateUrl:
       "https://sii.confecamaras.co/vista/plantilla/certificados.php?empresa=41",
     url: "http://www.ccflorencia.org.co/",
-    openDataSetId: "",
+    openDataSetId: "tgjm-ux96",
   },
   "42": {
     code: "42",
@@ -581,7 +582,7 @@ export const chambers = {
     certificateUrl:
       "https://sii.confecamaras.co/vista/plantilla/certificados.php?empresa=54",
     url: "http://www.camado.org.co/",
-    openDataSetId: "",
+    openDataSetId: "f9nk-qw9u",
   },
   "55": {
     code: "55",
@@ -633,7 +634,7 @@ export const chambers = {
     certificateUrl:
       "https://sii.confecamaras.co/vista/plantilla/certificados.php?empresa=01",
     url: "http://www.camaraarmenia.org.co/",
-    openDataSetId: "",
+    openDataSetId: "rptq-q4rd",
   },
   "02": {
     code: "02",
