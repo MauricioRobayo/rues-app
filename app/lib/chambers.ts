@@ -23,7 +23,7 @@ export const chambers = {
     certificateUrl:
       "https://sii.confecamaras.co/vista/plantilla/certificados.php?empresa=11",
     url: "https://cindoccc@cccucuta.org.co",
-    openDataSetId: "",
+    openDataSetId: "w98a-ssvz",
   },
   "12": {
     code: "12",
