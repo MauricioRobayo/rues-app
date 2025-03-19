@@ -9,8 +9,10 @@ import { getVerificationDigit } from "nit-verifier";
 
 export function mapOpenDataCompanyRecordToCompanyRecordDto(
   data: OpenDataCompanyRecord,
+  index: number,
 ): CompanyRecordDto {
   return {
+    isMain: index === 0,
     name: data.razon_social,
     nit: Number(data.nit),
     formattedFullNit: formatNit(data.nit, { showDecimalSeparator: true }),

@@ -82,9 +82,11 @@ export interface OpenDataChamberRecord {
   ciudad?: string;
   tam_empresa?: string;
   tama_o_empresa?: string;
+  tama_o?: string;
   tel_com_1: string;
   tel_com_2?: string;
   tel_com_3?: string;
   telcom1?: string;
   tel_comercial?: string;
+  telefono_comercial?: string;
 }

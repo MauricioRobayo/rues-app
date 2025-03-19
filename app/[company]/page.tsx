@@ -65,7 +65,7 @@ export default async function page({ params }: PageProps) {
           <CompanyHeader company={data.mainRecord} />
           <PageContainer wide mt={{ initial: "6", sm: "8" }}>
             <CompanySummary company={data.mainRecord} />
-            <CompanyRecordDetails company={data.mainRecord} />
+            <CompanyRecordDetails record={data.mainRecord} />
           </PageContainer>
         </article>
         {data.remainingRecords.length > 0 && (
@@ -94,7 +94,7 @@ export default async function page({ params }: PageProps) {
                     asChild
                   >
                     <article>
-                      <CompanyRecordDetails company={companyRecord} />
+                      <CompanyRecordDetails record={companyRecord} />
                     </article>
                   </Box>
                 </details>
