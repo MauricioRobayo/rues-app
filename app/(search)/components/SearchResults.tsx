@@ -38,7 +38,8 @@ export function SearchResults({ results }: { results: CompanyRecordDto[] }) {
                       direction={{ initial: "column", sm: "row" }}
                     >
                       <Heading as="h3" size="3" weight="regular">
-                        NIT: <span itemProp="taxID">{result.fullNit}</span>
+                        NIT:{" "}
+                        <span itemProp="taxID">{result.formattedFullNit}</span>
                       </Heading>
                       <CompanyStatusBadge
                         isActive={result.isActive}

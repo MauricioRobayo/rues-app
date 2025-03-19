@@ -4,21 +4,16 @@ import { ToggleContent } from "@/app/[company]/components/ToogleContent";
 import { Link } from "@/app/components/Link";
 import { currencyFormatter } from "@/app/lib/formatters";
 import { openDataService } from "@/app/services/openData/service";
+import type { CompanyRecordDto } from "@/app/types/CompanyRecordDto";
 import { GoogleMapsEmbed } from "@next/third-parties/google";
 import { Box, Flex, Heading, Section } from "@radix-ui/themes";
-import { cache } from "react";
 
 export async function AdditionalRecordInformation({
-  chamberCode,
-  registrationNumber,
+  company,
 }: {
-  chamberCode: string;
-  registrationNumber: string;
+  company: CompanyRecordDto;
 }) {
-  const record = await getChamberCompanyRecordCached(
-    chamberCode,
-    registrationNumber,
-  );
+  const record = await openDataService.chamber.getChamberRecord(company);
 
   if (!record) {
     return null;
@@ -106,11 +101,3 @@ export async function AdditionalRecordInformation({
     </>
   );
 }
-
-export const getChamberCompanyRecordCached = cache(
-  (chamberCode: string, registrationNumber: string) =>
-    openDataService.chamber.getChamberRecord({
-      chamberCode,
-      registrationNumber,
-    }),
-);

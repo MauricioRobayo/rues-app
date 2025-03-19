@@ -24,7 +24,7 @@ export async function companySummary(company: CompanyRecordDto) {
     summary += ` (${company.shortName})`;
   }
 
-  summary += ` NIT ${company.fullNit}`;
+  summary += ` NIT ${company.formattedFullNit}`;
 
   if (company.type) {
     summary += ` es una ${company.type}`;

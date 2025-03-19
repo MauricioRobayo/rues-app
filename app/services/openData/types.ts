@@ -69,6 +69,7 @@ export interface OpenDataChamberRecord {
   email_comercial?: string;
   emailcomercial?: string;
   correo_comercial?: string;
+  correo_electronico?: string;
   barrio_comercial?: string;
   dir_comercial?: string;
   direccion?: string;
@@ -78,6 +79,7 @@ export interface OpenDataChamberRecord {
   municipio_comercial?: string;
   muncomercial?: string;
   municipio?: string;
+  ciudad?: string;
   tam_empresa?: string;
   tama_o_empresa?: string;
   tel_com_1: string;
