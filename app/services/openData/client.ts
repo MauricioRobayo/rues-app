@@ -40,6 +40,7 @@ export const openDataClient = {
     }),
   ),
   establishments: openDataFetchFactory(OpenDataSet.ESTABLISHMENTS),
+  api: openDataFetch,
 };
 
 interface OpenDataOptions {

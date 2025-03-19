@@ -62,3 +62,20 @@ export interface OpenDataEstablishment {
   tipo_propietario: string;
   categoria_matricula: string;
 }
+
+export interface OpenDataChamberRecord {
+  activo_total: string;
+  ciiu_1: string;
+  ciiu_2: string;
+  email_comercial: string;
+  est_matricula: string;
+  fec_matricula: string;
+  fec_renovacion: string;
+  matricula: string;
+  mun_comercial: string;
+  organizacion: string;
+  razon_social: string;
+  tam_empresa: string;
+  tel_com_1: string;
+  ult_ano_ren: string;
+}

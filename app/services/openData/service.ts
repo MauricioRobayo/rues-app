@@ -1,3 +1,4 @@
+import { getChamber } from "@/app/lib/chambers";
 import { mapOpenDataCompanyRecordToCompanyRecordDto } from "@/app/mappers/mapOpenDataCompanyRecordToCompanyRecortDto";
 import { mapOpenDataEstablishmentToBusinessEstablishmentDto } from "@/app/mappers/mapOpenDataEstablishmentToBusinessEstablishmentDto";
 import { openDataRepository } from "@/app/services/openData/repository";
@@ -5,6 +6,40 @@ import type { CompanyRecordDto } from "@/app/types/CompanyRecordDto";
 import pRetry from "p-retry";
 
 export const openDataService = {
+  chamber: {
+    async getChamberRecord({
+      chamberCode,
+      registrationNumber,
+    }: {
+      chamberCode: string;
+      registrationNumber: string;
+    }) {
+      const signal = AbortSignal.timeout(3_000);
+      const chamber = getChamber(chamberCode);
+      if (!chamber || !chamber.openDataSetId) {
+        return null;
+      }
+      const response = await pRetry(() =>
+        openDataRepository.chambers.getRecord(
+          {
+            dataSetId: chamber.openDataSetId,
+            registrationNumber,
+          },
+          { signal },
+        ),
+      );
+      const record = response.data?.at(0);
+      if (!record) {
+        return null;
+      }
+      return {
+        assets: record.activo_total,
+        email: record.email_comercial,
+        phoneNumber: record.tel_com_1,
+        size: record.tam_empresa,
+      };
+    },
+  },
   companyRecords: {
     async get(nit: string): Promise<
       | {

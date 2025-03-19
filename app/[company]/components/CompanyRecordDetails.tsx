@@ -1,8 +1,9 @@
+import { AdditionalRecordInformation } from "@/app/[company]/components/AdditionalRecordInformation";
 import { BusinessEstablishments } from "@/app/[company]/components/BusinessEstablishments";
 import { CommerceChamber } from "@/app/[company]/components/Chamber";
 import { CompanyRecordDescription } from "@/app/[company]/components/CompanyRecordDescription";
 import type { CompanyRecordDto } from "@/app/types/CompanyRecordDto";
-import { Text, Box, Grid } from "@radix-ui/themes";
+import { Box, Grid } from "@radix-ui/themes";
 
 export const revalidate = false;
 
@@ -22,19 +23,20 @@ export function CompanyRecordDetails({
         <CompanyRecordDescription company={company} />
         <Box>
           {company.isActive && (
-            <BusinessEstablishments
-              chamberCode={company.chamber.code}
-              registrationNumber={company.registrationNumber}
-            />
+            <>
+              <AdditionalRecordInformation
+                chamberCode={company.chamber.code}
+                registrationNumber={company.registrationNumber}
+              />
+              <BusinessEstablishments
+                chamberCode={company.chamber.code}
+                registrationNumber={company.registrationNumber}
+              />
+            </>
           )}
           <CommerceChamber code={company.chamber.code} />
         </Box>
       </Grid>
-      {company.updatedDate && (
-        <Text size="1" color="gray">
-          Actualizado el {company.updatedDate}
-        </Text>
-      )}
     </Box>
   );
 }
