@@ -33,6 +33,7 @@ export const openDataService = {
         record.municipio ??
         record.municipio_comercial ??
         record.muncomercial;
+      const size = record.tam_empresa ?? record.tama_o_empresa;
       return {
         assets: record.activo_total ?? record.total_activos,
         email:
@@ -52,7 +53,7 @@ export const openDataService = {
           record.direccion_comercial ??
           record.dircomercial,
         zone: record.barrio_comercial?.replace(/^\d+\W+/, ""),
-        size: record.tam_empresa ?? record.tama_o_empresa,
+        size: size?.toLocaleUpperCase(),
       };
     },
   },

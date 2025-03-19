@@ -65,7 +65,7 @@ export async function AdditionalRecordInformation({
   ];
 
   const financialDetails = [
-    { label: "Tamaño de la empresa", value: record.size?.toLocaleUpperCase() },
+    { label: "Tamaño de la empresa", value: record.size },
     {
       label: "Total activos",
       value: Number.isNaN(Number(record.assets))

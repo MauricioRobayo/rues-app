@@ -60,7 +60,7 @@ export async function companySummary(company: CompanyRecordDto) {
   }
 
   if (chamberInfo?.address) {
-    summary += " .Su dirección comercial";
+    summary += ". Su dirección comercial";
     if (chamberInfo?.city) {
       summary += ` en la ciudad de ${chamberInfo?.city}`;
     }
