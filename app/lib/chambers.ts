@@ -10,6 +10,7 @@ export const chambers = {
     certificateUrl:
       "https://sii.confecamaras.co/vista/plantilla/certificados.php?empresa=10",
     url: "http://www.camaracartago.org/",
+    openDataSetId: "2rd9-kmzf",
   },
   "11": {
     code: "11",
@@ -22,6 +23,7 @@ export const chambers = {
     certificateUrl:
       "https://sii.confecamaras.co/vista/plantilla/certificados.php?empresa=11",
     url: "https://cindoccc@cccucuta.org.co",
+    openDataSetId: "w98a-ssvz",
   },
   "12": {
     code: "12",
@@ -34,6 +36,7 @@ export const chambers = {
     certificateUrl:
       "https://sii.confecamaras.co/vista/plantilla/certificados.php?empresa=12",
     url: "http://www.camaracomerciochinchina.org/",
+    openDataSetId: "",
   },
   "13": {
     code: "13",
@@ -46,6 +49,7 @@ export const chambers = {
     certificateUrl:
       "https://sii.confecamaras.co/vista/plantilla/certificados.php?empresa=13",
     url: "http://www.ccduitama.org.co/",
+    openDataSetId: "",
   },
   "14": {
     code: "14",
@@ -58,6 +62,7 @@ export const chambers = {
     certificateUrl:
       "https://sii.confecamaras.co/vista/plantilla/certificados.php?empresa=14",
     url: "http://www.ccgirardot.org/",
+    openDataSetId: "",
   },
   "15": {
     code: "15",
@@ -70,6 +75,7 @@ export const chambers = {
     certificateUrl:
       "https://sii.confecamaras.co/vista/plantilla/certificados.php?empresa=15",
     url: "http://www.camarahonda.org.co/",
+    openDataSetId: "",
   },
   "16": {
     code: "16",
@@ -82,6 +88,7 @@ export const chambers = {
     certificateUrl:
       "https://sii.confecamaras.co/vista/plantilla/certificados.php?empresa=16",
     url: "http://www.ccibague.org/",
+    openDataSetId: "gwqv-sqvs",
   },
   "17": {
     code: "17",
@@ -94,6 +101,7 @@ export const chambers = {
     certificateUrl:
       "https://sii.confecamaras.co/vista/plantilla/certificados.php?empresa=17",
     url: "http://www.ccipiales.org.co/",
+    openDataSetId: "kcck-53z5",
   },
   "18": {
     code: "18",
@@ -106,6 +114,8 @@ export const chambers = {
     certificateUrl:
       "https://sii.confecamaras.co/vista/plantilla/certificados.php?empresa=18",
     url: "http://www.camaradorada.org.co/",
+    // TODO: tiene matricula
+    openDataSetId: "", // "4g2z-f9xs",
   },
   "19": {
     code: "19",
@@ -118,6 +128,7 @@ export const chambers = {
     certificateUrl:
       "https://sii.confecamaras.co/vista/plantilla/certificados.php?empresa=19",
     url: "http://www.ccmagangue.org.co/",
+    openDataSetId: "",
   },
   "20": {
     code: "20",
@@ -130,6 +141,7 @@ export const chambers = {
     certificateUrl:
       "https://sii.confecamaras.co/vista/plantilla/certificados.php?empresa=20",
     url: "http://www.ccmpc.org.co/",
+    openDataSetId: "",
   },
   "21": {
     code: "21",
@@ -141,6 +153,7 @@ export const chambers = {
     phoneNumber: "(604) 444 9758",
     certificateUrl: "http://virtuales.camaramedellin.com.co/e-cer/",
     url: "https://www.camaramedellin.com.co/",
+    openDataSetId: "",
   },
   "22": {
     code: "22",
@@ -153,6 +166,7 @@ export const chambers = {
     certificateUrl:
       "https://sii.confecamaras.co/vista/plantilla/certificados.php?empresa=22",
     url: "http://www.ccmonteria.org.co/",
+    openDataSetId: "",
   },
   "23": {
     code: "23",
@@ -165,6 +179,7 @@ export const chambers = {
     certificateUrl:
       "https://sii.confecamaras.co/vista/plantilla/certificados.php?empresa=23",
     url: "https://www.cchuila.org/",
+    openDataSetId: "",
   },
   "24": {
     code: "24",
@@ -177,6 +192,7 @@ export const chambers = {
     certificateUrl:
       "https://sii.confecamaras.co/vista/plantilla/certificados.php?empresa=24",
     url: "https://www.ccpalmira.org.co/",
+    openDataSetId: "ijer-xd9k",
   },
   "25": {
     code: "25",
@@ -189,6 +205,7 @@ export const chambers = {
     certificateUrl:
       "https://sii.confecamaras.co/vista/plantilla/certificados.php?empresa=25",
     url: "http://www.camarapamplona.org.co",
+    openDataSetId: "",
   },
   "26": {
     code: "26",
@@ -201,6 +218,7 @@ export const chambers = {
     certificateUrl:
       "https://sii.confecamaras.co/vista/plantilla/certificados.php?empresa=26",
     url: "http://www.ccpasto.org.co/",
+    openDataSetId: "",
   },
   "27": {
     code: "27",
@@ -213,6 +231,7 @@ export const chambers = {
     certificateUrl:
       "https://sii.confecamaras.co/vista/plantilla/certificados.php?empresa=27",
     url: "https://www.camarapereira.org.co",
+    openDataSetId: "c35x-mutb",
   },
   "28": {
     code: "28",
@@ -225,6 +244,7 @@ export const chambers = {
     certificateUrl:
       "https://sii.confecamaras.co/vista/plantilla/certificados.php?empresa=28",
     url: "http://www.cccauca.org.co/",
+    openDataSetId: "",
   },
   "29": {
     code: "29",
@@ -237,6 +257,7 @@ export const chambers = {
     certificateUrl:
       "https://virtuales.camarachoco.org.co/certificadoselectronicos/",
     url: "https://camarachoco.org.co/",
+    openDataSetId: "drwf-rmb8",
   },
   "30": {
     code: "30",
@@ -249,6 +270,7 @@ export const chambers = {
     certificateUrl:
       "https://sii.confecamaras.co/vista/plantilla/certificados.php?empresa=30",
     url: "https://www.camaraguajira.org/",
+    openDataSetId: "",
   },
   "31": {
     code: "31",
@@ -261,6 +283,7 @@ export const chambers = {
     certificateUrl:
       "https://sii.confecamaras.co/vista/plantilla/certificados.php?empresa=31",
     url: "http://www.camarasai.org/",
+    openDataSetId: "",
   },
   "32": {
     code: "32",
@@ -273,6 +296,7 @@ export const chambers = {
     certificateUrl:
       "https://sii.confecamaras.co/vista/plantilla/certificados.php?empresa=32",
     url: "http://www.ccsm.org.co/",
+    openDataSetId: "",
   },
   "33": {
     code: "33",
@@ -285,6 +309,7 @@ export const chambers = {
     certificateUrl:
       "https://sii.confecamaras.co/vista/plantilla/certificados.php?empresa=33",
     url: "https://www.camarapereira.org.co",
+    openDataSetId: "",
   },
   "34": {
     code: "34",
@@ -297,6 +322,7 @@ export const chambers = {
     certificateUrl:
       "https://sii.confecamaras.co/vista/plantilla/certificados.php?empresa=34",
     url: "http://ccsincelejo.org/",
+    openDataSetId: "",
   },
   "35": {
     code: "35",
@@ -309,6 +335,7 @@ export const chambers = {
     certificateUrl:
       "https://sii.confecamaras.co/vista/plantilla/certificados.php?empresa=35",
     url: "http://camarasogamoso.org/",
+    openDataSetId: "",
   },
   "36": {
     code: "36",
@@ -321,6 +348,7 @@ export const chambers = {
     certificateUrl:
       "https://sii.confecamaras.co/vista/plantilla/certificados.php?empresa=36",
     url: "http://camaratulua.org/",
+    openDataSetId: "",
   },
   "37": {
     code: "37",
@@ -333,6 +361,7 @@ export const chambers = {
     certificateUrl:
       "https://sii.confecamaras.co/vista/plantilla/certificados.php?empresa=37",
     url: "http://cctumaco.org/",
+    openDataSetId: "",
   },
   "38": {
     code: "38",
@@ -345,6 +374,7 @@ export const chambers = {
     certificateUrl:
       "https://sii.confecamaras.co/vista/plantilla/certificados.php?empresa=38",
     url: "http://cctunja.org.co/",
+    openDataSetId: "",
   },
   "39": {
     code: "39",
@@ -357,6 +387,7 @@ export const chambers = {
     certificateUrl:
       "https://sii.confecamaras.co/vista/plantilla/certificados.php?empresa=39",
     url: "http://ccvalledupar.org.co/",
+    openDataSetId: "",
   },
   "40": {
     code: "40",
@@ -369,6 +400,7 @@ export const chambers = {
     certificateUrl:
       "https://sii.confecamaras.co/vista/plantilla/certificados.php?empresa=40",
     url: "http://ccv.org.co/",
+    openDataSetId: "",
   },
   "41": {
     code: "41",
@@ -381,6 +413,7 @@ export const chambers = {
     certificateUrl:
       "https://sii.confecamaras.co/vista/plantilla/certificados.php?empresa=41",
     url: "http://www.ccflorencia.org.co/",
+    openDataSetId: "tgjm-ux96",
   },
   "42": {
     code: "42",
@@ -393,6 +426,7 @@ export const chambers = {
     certificateUrl:
       "https://sii.confecamaras.co/vista/plantilla/certificados.php?empresa=42",
     url: "http://www.ccamazonas.org.co/actual/",
+    openDataSetId: "",
   },
   "43": {
     code: "43",
@@ -405,6 +439,7 @@ export const chambers = {
     certificateUrl:
       "https://sii.confecamaras.co/vista/plantilla/certificados.php?empresa=43",
     url: "https://camcciosevilla.org.co/",
+    openDataSetId: "",
   },
   "44": {
     code: "44",
@@ -417,6 +452,7 @@ export const chambers = {
     certificateUrl:
       "https://sii.confecamaras.co/vista/plantilla/certificados.php?empresa=44",
     url: "https://www.ccuraba.org.co/",
+    openDataSetId: "",
   },
   "45": {
     code: "45",
@@ -429,6 +465,7 @@ export const chambers = {
     certificateUrl:
       "https://sii.confecamaras.co/vista/plantilla/certificados.php?empresa=45",
     url: "https://www.ccsurortolima.org.co/",
+    openDataSetId: "",
   },
   "46": {
     code: "46",
@@ -441,6 +478,7 @@ export const chambers = {
     certificateUrl:
       "https://sii.confecamaras.co/vista/plantilla/certificados.php?empresa=46",
     url: "https://www.ccputumayo.org.co/",
+    openDataSetId: "",
   },
   "47": {
     code: "47",
@@ -453,6 +491,7 @@ export const chambers = {
     certificateUrl:
       "https://sii.confecamaras.co/vista/plantilla/certificados.php?empresa=47",
     url: "http://www.ccfacatativa.org.co/",
+    openDataSetId: "",
   },
   "48": {
     code: "48",
@@ -465,6 +504,7 @@ export const chambers = {
     certificateUrl:
       "https://sii.confecamaras.co/vista/plantilla/certificados.php?empresa=48",
     url: "https://ccarauca.org.co/",
+    openDataSetId: "",
   },
   "49": {
     code: "49",
@@ -477,6 +517,7 @@ export const chambers = {
     certificateUrl:
       "https://sii.confecamaras.co/vista/plantilla/certificados.php?empresa=49",
     url: "http://www.camaraocana.com/",
+    openDataSetId: "",
   },
   "50": {
     code: "50",
@@ -489,6 +530,7 @@ export const chambers = {
     certificateUrl:
       "https://sii.confecamaras.co/vista/plantilla/certificados.php?empresa=50",
     url: "http://www.cccasanare.co/",
+    openDataSetId: "",
   },
   "51": {
     code: "51",
@@ -501,6 +543,7 @@ export const chambers = {
     certificateUrl:
       "https://sii.confecamaras.co/vista/plantilla/certificados.php?empresa=51",
     url: "https://www.ccoa.org.co/",
+    openDataSetId: "",
   },
   "52": {
     code: "52",
@@ -513,6 +556,7 @@ export const chambers = {
     certificateUrl:
       "https://sii.confecamaras.co/vista/plantilla/certificados.php?empresa=52",
     url: "http://www.ccmmna.org.co/",
+    openDataSetId: "",
   },
   "53": {
     code: "53",
@@ -525,6 +569,7 @@ export const chambers = {
     certificateUrl:
       "https://sii.confecamaras.co/vista/plantilla/certificados.php?empresa=53",
     url: "https://camaraaguachica.org.co/",
+    openDataSetId: "",
   },
   "54": {
     code: "54",
@@ -537,6 +582,7 @@ export const chambers = {
     certificateUrl:
       "https://sii.confecamaras.co/vista/plantilla/certificados.php?empresa=54",
     url: "http://www.camado.org.co/",
+    openDataSetId: "f9nk-qw9u",
   },
   "55": {
     code: "55",
@@ -549,6 +595,7 @@ export const chambers = {
     certificateUrl:
       "https://sii.confecamaras.co/vista/plantilla/certificados.php?empresa=55",
     url: "http://www.ccas.org.co/",
+    openDataSetId: "",
   },
   "56": {
     code: "56",
@@ -561,6 +608,7 @@ export const chambers = {
     certificateUrl:
       "https://sii.confecamaras.co/vista/plantilla/certificados.php?empresa=56",
     url: "https://ccarauca.org.co/",
+    openDataSetId: "",
   },
   "57": {
     code: "57",
@@ -573,6 +621,7 @@ export const chambers = {
     certificateUrl:
       "https://sii.confecamaras.co/vista/plantilla/certificados.php?empresa=57",
     url: "http://camarasanjose.org.co/inicio",
+    openDataSetId: "",
   },
   "01": {
     code: "01",
@@ -585,6 +634,7 @@ export const chambers = {
     certificateUrl:
       "https://sii.confecamaras.co/vista/plantilla/certificados.php?empresa=01",
     url: "http://www.camaraarmenia.org.co/",
+    openDataSetId: "rptq-q4rd",
   },
   "02": {
     code: "02",
@@ -597,6 +647,7 @@ export const chambers = {
     certificateUrl:
       "https://sii.confecamaras.co/vista/plantilla/certificados.php?empresa=02",
     url: "http://www.ccbarranca.org.co/",
+    openDataSetId: "",
   },
   "03": {
     code: "03",
@@ -609,6 +660,7 @@ export const chambers = {
     certificateUrl:
       "https://www2.camarabaq.org.co/certificadoWeb/certificadospublico.jsf#no-back-button",
     url: "http://www.camarabaq.org.co/",
+    openDataSetId: "",
   },
   "04": {
     code: "04",
@@ -621,6 +673,7 @@ export const chambers = {
     certificateUrl:
       "https://www.ccb.org.co/Tramites-y-Consultas/Mas-informacion/Certificados-electronicos/",
     url: "http://www.ccb.org.co/",
+    openDataSetId: "",
   },
   "05": {
     code: "05",
@@ -633,6 +686,7 @@ export const chambers = {
     certificateUrl:
       "http://certificadoccb.camaradirecta.com:8080/certificadoWeb/certificadospublico.jsf#no-back-button",
     url: "http://www.camaradirecta.com/",
+    openDataSetId: "",
   },
   "06": {
     code: "06",
@@ -645,6 +699,7 @@ export const chambers = {
     certificateUrl:
       "https://sii.confecamaras.co/vista/plantilla/certificados.php?empresa=06",
     url: "http://www.ccbun.org/",
+    openDataSetId: "",
   },
   "07": {
     code: "07",
@@ -657,6 +712,7 @@ export const chambers = {
     certificateUrl:
       "https://sii.confecamaras.co/vista/plantilla/certificados.php?empresa=07",
     url: "http://www.ccbuga.org.co/",
+    openDataSetId: "",
   },
   "08": {
     code: "08",
@@ -669,6 +725,7 @@ export const chambers = {
     certificateUrl:
       "https://enlinea.ccc.org.co/certificadoElectronico/#/comprar-certificados",
     url: "http://www.ccc.org.co/",
+    openDataSetId: "",
   },
   "09": {
     code: "09",
@@ -680,6 +737,7 @@ export const chambers = {
     phoneNumber: "(605) 642 8999",
     certificateUrl: "http://serviciosvirtuales.cccartagena.org.co/e-cer/",
     url: "http://www.cccartagena.org.co/",
+    openDataSetId: "",
   },
 };
 

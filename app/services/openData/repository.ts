@@ -1,6 +1,22 @@
 import { openDataClient } from "@/app/services/openData/client";
+import type { OpenDataChamberRecord } from "@/app/services/openData/types";
 
 export const openDataRepository = {
+  chambers: {
+    getRecord(
+      {
+        dataSetId,
+        registrationNumber,
+      }: { dataSetId: string; registrationNumber: string },
+      { signal }: { signal?: AbortSignal } = {},
+    ) {
+      return openDataClient.api<OpenDataChamberRecord[]>({
+        dataSetId,
+        query: new URLSearchParams({ matricula: registrationNumber }),
+        signal,
+      });
+    },
+  },
   companyRecords: {
     get(nit: string, { signal }: { signal?: AbortSignal } = {}) {
       return openDataClient.companyRecords({

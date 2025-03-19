@@ -40,6 +40,7 @@ export const openDataClient = {
     }),
   ),
   establishments: openDataFetchFactory(OpenDataSet.ESTABLISHMENTS),
+  api: openDataFetch,
 };
 
 interface OpenDataOptions {
@@ -113,7 +114,6 @@ async function openDataFetch<T>({
   try {
     const response = await fetch(url, {
       headers,
-      redirect: "follow",
       signal,
     });
 
