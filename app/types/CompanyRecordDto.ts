@@ -1,6 +1,7 @@
 export interface CompanyRecordDto {
   name: string;
   nit: number;
+  formattedFullNit: string;
   fullNit: string;
   slug: string;
   bidderId?: string | null;

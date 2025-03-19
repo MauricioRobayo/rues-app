@@ -31,10 +31,7 @@ export function CompanyRecordDetails({
         </Box>
         <Box>
           {company.isActive && (
-            <AdditionalRecordInformation
-              chamberCode={company.chamber.code}
-              registrationNumber={company.registrationNumber}
-            />
+            <AdditionalRecordInformation company={company} />
           )}
           <CommerceChamber code={company.chamber.code} />
         </Box>

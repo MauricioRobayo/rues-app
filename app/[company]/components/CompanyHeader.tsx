@@ -21,7 +21,8 @@ export function CompanyHeader({ company }: { company: CompanyRecordDto }) {
               >
                 <Flex justify="center" align="center" gap="2">
                   <Heading as="h2" size="4" weight="regular">
-                    NIT: <span itemProp="taxID">{company.fullNit}</span>
+                    NIT:{" "}
+                    <span itemProp="taxID">{company.formattedFullNit}</span>
                   </Heading>
                   <CopyButton value={company.nit} />
                 </Flex>

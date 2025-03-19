@@ -4,33 +4,28 @@ import { ToggleContent } from "@/app/[company]/components/ToogleContent";
 import { Link } from "@/app/components/Link";
 import { currencyFormatter } from "@/app/lib/formatters";
 import { openDataService } from "@/app/services/openData/service";
+import type { CompanyRecordDto } from "@/app/types/CompanyRecordDto";
 import { GoogleMapsEmbed } from "@next/third-parties/google";
 import { Box, Flex, Heading, Section } from "@radix-ui/themes";
 import { cache } from "react";
 
 export async function AdditionalRecordInformation({
-  chamberCode,
-  registrationNumber,
+  company,
 }: {
-  chamberCode: string;
-  registrationNumber: string;
+  company: CompanyRecordDto;
 }) {
-  const record = await getChamberCompanyRecordCached(
-    chamberCode,
-    registrationNumber,
-  );
+  const record = await getChamberRecordCached(company);
 
   if (!record) {
     return null;
   }
 
-  const city = record.city?.replace(/^\d+\W+/, "");
   const contactDetails = [
     {
       label: "Municipio comercial",
-      value: city,
+      value: record.city,
     },
-    { label: "Barrio comercial", value: record.zone?.replace(/^\d+\W+/, "") },
+    { label: "Barrio comercial", value: record.zone },
     {
       label: "Dirección comercial",
       value:
@@ -44,7 +39,7 @@ export async function AdditionalRecordInformation({
                   height={400}
                   width="100%"
                   mode="place"
-                  q={`${record.address},${city},Colombia`}
+                  q={`${record.address},${record.city},Colombia`}
                 />
               </ToggleContent>
             </Box>
@@ -71,7 +66,7 @@ export async function AdditionalRecordInformation({
   ];
 
   const financialDetails = [
-    { label: "Tamaño de la empresa", value: record.size?.toLocaleUpperCase() },
+    { label: "Tamaño de la empresa", value: record.size },
     {
       label: "Total activos",
       value: Number.isNaN(Number(record.assets))
@@ -80,14 +75,14 @@ export async function AdditionalRecordInformation({
     },
   ];
 
-  const shouldShosContactDetails = contactDetails.some(({ value }) => !!value);
+  const shouldShowContactDetails = contactDetails.some(({ value }) => !!value);
   const shouldShowFinancialInformation = financialDetails.some(
     ({ value }) => !!value,
   );
 
   return (
     <>
-      {shouldShosContactDetails && (
+      {shouldShowContactDetails && (
         <Section size="2" id="informacion-de-contacto">
           <Heading as="h3" size="4" mb="4">
             Información de Contacto
@@ -107,10 +102,4 @@ export async function AdditionalRecordInformation({
   );
 }
 
-export const getChamberCompanyRecordCached = cache(
-  (chamberCode: string, registrationNumber: string) =>
-    openDataService.chamber.getChamberRecord({
-      chamberCode,
-      registrationNumber,
-    }),
-);
+export const getChamberRecordCached = cache(openDataService.chambers.getRecord);

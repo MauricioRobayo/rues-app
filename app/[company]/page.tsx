@@ -39,7 +39,7 @@ export async function generateMetadata({
 
   const description = await companySummary(data.mainRecord);
   return {
-    title: `${data.mainRecord.name} NIT ${data.mainRecord.fullNit}`,
+    title: `${data.mainRecord.name} NIT ${data.mainRecord.formattedFullNit}`,
     description,
     metadataBase: new URL(BASE_URL),
     alternates: {
