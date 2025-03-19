@@ -79,6 +79,7 @@ export interface OpenDataChamberRecord {
   muncomercial?: string;
   municipio?: string;
   tam_empresa?: string;
+  tama_o_empresa?: string;
   tel_com_1: string;
   tel_com_2?: string;
   tel_com_3?: string;

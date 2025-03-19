@@ -54,7 +54,7 @@ export const openDataService = {
           record.direccion_comercial ??
           record.dircomercial,
         zone: record.barrio_comercial,
-        size: record.tam_empresa,
+        size: record.tam_empresa ?? record.tama_o_empresa,
       };
     },
   },

@@ -88,7 +88,7 @@ export const chambers = {
     certificateUrl:
       "https://sii.confecamaras.co/vista/plantilla/certificados.php?empresa=16",
     url: "http://www.ccibague.org/",
-    openDataSetId: "",
+    openDataSetId: "gwqv-sqvs",
   },
   "17": {
     code: "17",
