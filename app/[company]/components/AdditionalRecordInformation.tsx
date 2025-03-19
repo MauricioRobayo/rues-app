@@ -7,13 +7,14 @@ import { openDataService } from "@/app/services/openData/service";
 import type { CompanyRecordDto } from "@/app/types/CompanyRecordDto";
 import { GoogleMapsEmbed } from "@next/third-parties/google";
 import { Box, Flex, Heading, Section } from "@radix-ui/themes";
+import { cache } from "react";
 
 export async function AdditionalRecordInformation({
   company,
 }: {
   company: CompanyRecordDto;
 }) {
-  const record = await openDataService.chambers.getRecord(company);
+  const record = await getChamberRecordCached(company);
 
   if (!record) {
     return null;
@@ -74,14 +75,14 @@ export async function AdditionalRecordInformation({
     },
   ];
 
-  const shouldShosContactDetails = contactDetails.some(({ value }) => !!value);
+  const shouldShowContactDetails = contactDetails.some(({ value }) => !!value);
   const shouldShowFinancialInformation = financialDetails.some(
     ({ value }) => !!value,
   );
 
   return (
     <>
-      {shouldShosContactDetails && (
+      {shouldShowContactDetails && (
         <Section size="2" id="informacion-de-contacto">
           <Heading as="h3" size="4" mb="4">
             Información de Contacto
@@ -100,3 +101,5 @@ export async function AdditionalRecordInformation({
     </>
   );
 }
+
+export const getChamberRecordCached = cache(openDataService.chambers.getRecord);

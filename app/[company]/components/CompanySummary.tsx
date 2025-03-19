@@ -1,6 +1,5 @@
+import { getChamberRecordCached } from "@/app/[company]/components/AdditionalRecordInformation";
 import { getBusinessEstablishmentsCached } from "@/app/[company]/components/BusinessEstablishments";
-import { openDataRepository } from "@/app/services/openData/repository";
-import { openDataService } from "@/app/services/openData/service";
 import type { CompanyRecordDto } from "@/app/types/CompanyRecordDto";
 import { Text } from "@radix-ui/themes";
 
@@ -18,7 +17,7 @@ export async function companySummary(company: CompanyRecordDto) {
     company.chamber.code,
     company.registrationNumber,
   );
-  const chamberInfo = await openDataService.chambers.getRecord(company);
+  const chamberInfo = await getChamberRecordCached(company);
 
   const establishmentsCount = establishments.length;
 
