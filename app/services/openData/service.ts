@@ -6,8 +6,8 @@ import type { CompanyRecordDto } from "@/app/types/CompanyRecordDto";
 import pRetry from "p-retry";
 
 export const openDataService = {
-  chamber: {
-    async getChamberRecord(company: CompanyRecordDto) {
+  chambers: {
+    async getRecord(company: CompanyRecordDto) {
       const response = await pRetry(() => {
         const signal = AbortSignal.timeout(3_000);
         const chamber = getChamber(company.chamber.code);
@@ -27,6 +27,12 @@ export const openDataService = {
       if (!record) {
         return null;
       }
+      const city =
+        record.ciudad ??
+        record.mun_comercial ??
+        record.municipio ??
+        record.municipio_comercial ??
+        record.muncomercial;
       return {
         assets: record.activo_total ?? record.total_activos,
         email:
@@ -39,18 +45,13 @@ export const openDataService = {
           record.tel_com_2,
           record.tel_com_2,
         ].filter((tel): tel is string => !!tel),
-        city:
-          record.ciudad ??
-          record.mun_comercial ??
-          record.municipio ??
-          record.municipio_comercial ??
-          record.muncomercial,
+        city: city?.replace(/^\d+\W+/, ""),
         address:
           record.dir_comercial ??
           record.direccion ??
           record.direccion_comercial ??
           record.dircomercial,
-        zone: record.barrio_comercial,
+        zone: record.barrio_comercial?.replace(/^\d+\W+/, ""),
         size: record.tam_empresa ?? record.tama_o_empresa,
       };
     },

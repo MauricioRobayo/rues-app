@@ -1,4 +1,6 @@
 import { getBusinessEstablishmentsCached } from "@/app/[company]/components/BusinessEstablishments";
+import { openDataRepository } from "@/app/services/openData/repository";
+import { openDataService } from "@/app/services/openData/service";
 import type { CompanyRecordDto } from "@/app/types/CompanyRecordDto";
 import { Text } from "@radix-ui/themes";
 
@@ -16,6 +18,8 @@ export async function companySummary(company: CompanyRecordDto) {
     company.chamber.code,
     company.registrationNumber,
   );
+  const chamberInfo = await openDataService.chambers.getRecord(company);
+
   const establishmentsCount = establishments.length;
 
   let summary = company.name;
@@ -24,9 +28,16 @@ export async function companySummary(company: CompanyRecordDto) {
     summary += ` (${company.shortName})`;
   }
 
-  summary += ` NIT ${company.formattedFullNit}`;
+  summary += ` con NIT ${company.formattedFullNit}`;
 
-  if (company.type) {
+  if (chamberInfo?.size) {
+    const companySize = chamberInfo?.size.toLocaleUpperCase();
+    if (companySize.includes("EMPRESA")) {
+      summary += ` es una ${companySize}`;
+    } else {
+      summary += ` es una ${companySize} EMPRESA`;
+    }
+  } else if (company.type) {
     summary += ` es una ${company.type}`;
   }
 
@@ -43,9 +54,21 @@ export async function companySummary(company: CompanyRecordDto) {
     if (company.isActive) {
       summary += ` y registrada en la cámara de comercio de ${company.chamber.name}`;
     } else {
-      summary += `. Registrada en la cámara de comercio de ${company.chamber.name}.`;
+      summary += `. Registrada en la cámara de comercio de ${company.chamber.name}`;
       return summary;
     }
+  }
+
+  if (chamberInfo?.address) {
+    summary += " .Su dirección comercial";
+    if (chamberInfo?.city) {
+      summary += ` en la ciudad de ${chamberInfo?.city}`;
+    }
+    summary += ` es ${chamberInfo?.address}`;
+  }
+
+  if (chamberInfo?.phoneNumbers?.[0]) {
+    summary += ` y su teléfono de contacto es ${chamberInfo?.phoneNumbers[0]}`;
   }
 
   if (company.economicActivities && company.economicActivities.length > 0) {

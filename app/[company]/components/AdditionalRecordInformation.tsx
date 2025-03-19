@@ -13,19 +13,18 @@ export async function AdditionalRecordInformation({
 }: {
   company: CompanyRecordDto;
 }) {
-  const record = await openDataService.chamber.getChamberRecord(company);
+  const record = await openDataService.chambers.getRecord(company);
 
   if (!record) {
     return null;
   }
 
-  const city = record.city?.replace(/^\d+\W+/, "");
   const contactDetails = [
     {
       label: "Municipio comercial",
-      value: city,
+      value: record.city,
     },
-    { label: "Barrio comercial", value: record.zone?.replace(/^\d+\W+/, "") },
+    { label: "Barrio comercial", value: record.zone },
     {
       label: "Dirección comercial",
       value:
@@ -39,7 +38,7 @@ export async function AdditionalRecordInformation({
                   height={400}
                   width="100%"
                   mode="place"
-                  q={`${record.address},${city},Colombia`}
+                  q={`${record.address},${record.city},Colombia`}
                 />
               </ToggleContent>
             </Box>
