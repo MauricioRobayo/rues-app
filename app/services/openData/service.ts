@@ -33,7 +33,7 @@ export const openDataService = {
         record.municipio ??
         record.municipio_comercial ??
         record.muncomercial;
-      const size = record.tam_empresa ?? record.tama_o_empresa;
+      const size = record.tam_empresa ?? record.tama_o_empresa ?? record.tama_o;
       return {
         assets: record.activo_total ?? record.total_activos,
         email:
@@ -42,10 +42,15 @@ export const openDataService = {
           record.correo_comercial ??
           record.correo_electronico,
         phoneNumbers: [
-          record.tel_com_1 ?? record.tel_comercial ?? record.telcom1,
+          record.tel_com_1 ??
+            record.tel_comercial ??
+            record.telcom1 ??
+            record.telefono_comercial,
           record.tel_com_2,
           record.tel_com_2,
-        ].filter((tel): tel is string => !!tel),
+        ]
+          .filter((tel): tel is string => !!tel)
+          .map((tel) => tel.replace(/\D/g, "")),
         city: city?.replace(/^\d+\W+/, ""),
         address:
           record.dir_comercial ??

@@ -7,11 +7,7 @@ import { Box, Grid } from "@radix-ui/themes";
 
 export const revalidate = false;
 
-export function CompanyRecordDetails({
-  company,
-}: {
-  company: CompanyRecordDto;
-}) {
+export function CompanyRecordDetails({ record }: { record: CompanyRecordDto }) {
   return (
     <Box>
       <Grid
@@ -21,19 +17,17 @@ export function CompanyRecordDetails({
         flow="row-dense"
       >
         <Box>
-          <CompanyRecordDescription company={company} />
-          {company.isActive && (
+          <CompanyRecordDescription company={record} />
+          {record.isActive && (
             <BusinessEstablishments
-              chamberCode={company.chamber.code}
-              registrationNumber={company.registrationNumber}
+              chamberCode={record.chamber.code}
+              registrationNumber={record.registrationNumber}
             />
           )}
         </Box>
         <Box>
-          {company.isActive && (
-            <AdditionalRecordInformation company={company} />
-          )}
-          <CommerceChamber code={company.chamber.code} />
+          {record.isMain && <AdditionalRecordInformation company={record} />}
+          <CommerceChamber code={record.chamber.code} />
         </Box>
       </Grid>
     </Box>

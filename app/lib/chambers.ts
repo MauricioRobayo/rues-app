@@ -13,7 +13,7 @@ interface Chamber {
   openDataSet?: {
     id: string;
     recordKey: keyof CompanyRecordDto;
-    queryKey: "matricula" | "nit" | "identificacion";
+    queryKey: "matricula" | "nit" | "identificacion" | "mat";
   };
 }
 export const chambers: Record<string, Chamber> = {
@@ -415,6 +415,11 @@ export const chambers: Record<string, Chamber> = {
     certificateUrl:
       "https://sii.confecamaras.co/vista/plantilla/certificados.php?empresa=39",
     url: "http://ccvalledupar.org.co/",
+    openDataSet: {
+      id: "8e32-q73y",
+      queryKey: "mat",
+      recordKey: "registrationNumber",
+    },
   },
   "40": {
     code: "40",
@@ -427,6 +432,11 @@ export const chambers: Record<string, Chamber> = {
     certificateUrl:
       "https://sii.confecamaras.co/vista/plantilla/certificados.php?empresa=40",
     url: "http://ccv.org.co/",
+    openDataSet: {
+      id: "6tk6-g6zd",
+      recordKey: "registrationNumber",
+      queryKey: "matricula",
+    },
   },
   "41": {
     code: "41",
