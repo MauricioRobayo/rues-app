@@ -10,7 +10,6 @@ export async function LegalRepresentative({
     idType?: string;
   };
 }) {
-  console.dir(legalRepresentative, { depth: Infinity });
   const id = Number(legalRepresentative.id);
   return (
     <Flex direction="column" gap="0">

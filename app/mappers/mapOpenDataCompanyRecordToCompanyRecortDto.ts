@@ -53,7 +53,6 @@ export function mapOpenDataCompanyRecordToCompanyRecordDto(
 }
 
 function getLegalRepresentative(data: OpenDataCompanyRecord) {
-  console.dir(data, { depth: Infinity });
   return data.representante_legal
     ? ({
         name: data.representante_legal,
