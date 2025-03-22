@@ -1,24 +1,26 @@
 import { numberFormatter } from "@/app/lib/formatters";
 import { Flex, Text } from "@radix-ui/themes";
 
-export async function LegalRepresentatives({
-  legalRepresentatives,
+export async function LegalRepresentative({
+  legalRepresentative,
 }: {
-  legalRepresentatives: {
+  legalRepresentative: {
     name: string;
-    type: string;
     id?: string;
     idType?: string;
-  }[];
+  };
 }) {
-  const legalRepresentative = legalRepresentatives[0];
+  console.dir(legalRepresentative, { depth: Infinity });
+  const id = Number(legalRepresentative.id);
   return (
     <Flex direction="column" gap="0">
       <Text>{legalRepresentative.name}</Text>
       {legalRepresentative.id ? (
         <Text size="1" color="gray">
           {legalRepresentative.idType}{" "}
-          {numberFormatter.format(Number(legalRepresentative.id))}
+          {Number.isNaN(id)
+            ? legalRepresentative.id
+            : numberFormatter.format(Number(legalRepresentative.id))}
         </Text>
       ) : null}
     </Flex>

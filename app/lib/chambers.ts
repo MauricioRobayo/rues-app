@@ -29,7 +29,7 @@ export const chambers: Record<string, Chamber> = {
       "https://sii.confecamaras.co/vista/plantilla/certificados.php?empresa=10",
     url: "http://www.camaracartago.org/",
     openDataSet: {
-      id: "2rd9-kmzf",
+      id: "dvkz-vw2v",
       queryKey: "matricula",
       recordKey: "registrationNumber",
     },

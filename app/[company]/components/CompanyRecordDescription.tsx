@@ -3,7 +3,7 @@ import { Bidder } from "@/app/[company]/components/Bidder";
 import { CopyButton } from "@/app/[company]/components/CopyButton";
 import { DataList } from "@/app/[company]/components/DataList";
 import { EconomicActivities } from "@/app/[company]/components/EconomicActivities";
-import { LegalRepresentatives } from "@/app/[company]/components/LegalRepresentatives";
+import { LegalRepresentative } from "@/app/[company]/components/LegalRepresentative";
 import { CompanyStatusBadge } from "@/app/components/CompanyStatusBadge";
 import type { CompanyRecordDto } from "@/app/types/CompanyRecordDto";
 import { Code, Flex, Heading, Section } from "@radix-ui/themes";
@@ -86,13 +86,11 @@ export function CompanyRecordDescription({
     },
     {
       label: "Representante legal",
-      value:
-        company.legalRepresentatives &&
-        company.legalRepresentatives.length > 0 ? (
-          <LegalRepresentatives
-            legalRepresentatives={company.legalRepresentatives}
-          />
-        ) : null,
+      value: company.legalRepresentative ? (
+        <LegalRepresentative
+          legalRepresentative={company.legalRepresentative}
+        />
+      ) : null,
     },
   ];
   return (

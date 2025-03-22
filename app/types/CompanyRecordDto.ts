@@ -12,12 +12,11 @@ export interface CompanyRecordDto {
   isActive: boolean;
   lastRenewalYear: number | null;
   type?: string;
-  legalRepresentatives?: {
-    type: "principal" | "suplente";
+  legalRepresentative: {
     name: string;
     id?: string;
     idType?: string;
-  }[];
+  } | null;
   cancellationDate?: string | null;
   registrationDate: string | null;
   renewalDate: string | null;
