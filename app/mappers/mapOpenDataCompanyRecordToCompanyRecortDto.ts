@@ -2,7 +2,7 @@ import { formatDetailsDate } from "@/app/lib/formatDetailsDate";
 import { formatNit } from "@/app/lib/formatNit";
 import { parseEconomicActivities } from "@/app/lib/parseEconomicActivities";
 import { slugifyCompanyName } from "@/app/lib/slugifyComponentName";
-import { legalEntity } from "@/app/services/openData/constants";
+import { companyStatus, legalEntity } from "@/app/services/openData/constants";
 import type { OpenDataCompanyRecord } from "@/app/services/openData/types";
 import type { CompanyRecordDto as CompanyRecordDto } from "@/app/types/CompanyRecordDto";
 import { getVerificationDigit } from "nit-verifier";
@@ -32,7 +32,7 @@ export function mapOpenDataCompanyRecordToCompanyRecordDto(
       ciiu3: data.ciiu3,
       ciiu4: data.ciiu4,
     }),
-    isActive: !data.fecha_cancelacion,
+    isActive: isCompanyRecordActive(data),
     lastRenewalYear: Number(data.ultimo_ano_renovado),
     type: data.tipo_sociedad,
     legalRepresentative: getLegalRepresentative(data),
@@ -61,4 +61,11 @@ function getLegalRepresentative(data: OpenDataCompanyRecord) {
         idType: data.clase_identificacion_rl,
       } as const)
     : null;
+}
+
+function isCompanyRecordActive(data: OpenDataCompanyRecord) {
+  if (data.fecha_cancelacion || /cancel/i.test(data.estado_matricula)) {
+    return false;
+  }
+  return true;
 }
