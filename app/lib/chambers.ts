@@ -13,7 +13,7 @@ interface Chamber {
   openDataSet?: {
     id: string;
     recordKey: keyof CompanyRecordDto;
-    queryKey: "matricula" | "nit" | "identificacion" | "mat";
+    queryKey: string;
   };
 }
 export const chambers: Record<string, Chamber> = {
@@ -292,8 +292,8 @@ export const chambers: Record<string, Chamber> = {
     url: "https://camarachoco.org.co/",
     openDataSet: {
       id: "drwf-rmb8",
-      recordKey: "registrationNumber",
-      queryKey: "matricula",
+      recordKey: "nit",
+      queryKey: "id_comer",
     },
   },
   "30": {
