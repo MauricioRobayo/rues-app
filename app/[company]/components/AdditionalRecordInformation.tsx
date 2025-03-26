@@ -6,14 +6,15 @@ import { currencyFormatter } from "@/app/lib/formatters";
 import { openDataService } from "@/app/services/openData/service";
 import type { CompanyRecordDto } from "@/app/types/CompanyRecordDto";
 import { GoogleMapsEmbed } from "@next/third-parties/google";
-import { Box, Flex, Heading, Section } from "@radix-ui/themes";
+import { Box, Flex, Heading, type BoxProps } from "@radix-ui/themes";
 import { cache } from "react";
 
 export async function AdditionalRecordInformation({
   company,
+  ...boxProps
 }: {
   company: CompanyRecordDto;
-}) {
+} & BoxProps) {
   const record = await getChamberRecordCached(company);
 
   if (!record) {
@@ -81,24 +82,24 @@ export async function AdditionalRecordInformation({
   );
 
   return (
-    <>
+    <Box {...boxProps}>
       {shouldShowContactDetails && (
-        <Section size="2" id="informacion-de-contacto">
+        <Box>
           <Heading as="h3" size="4" mb="4">
             Información de Contacto
           </Heading>
           <DataList items={contactDetails} />
-        </Section>
+        </Box>
       )}
       {shouldShowFinancialInformation && (
-        <Section size="2" id="informacion-financiera">
+        <Box>
           <Heading as="h3" size="4" mb="4">
             Información Financiera
           </Heading>
           <DataList items={financialDetails} />
-        </Section>
+        </Box>
       )}
-    </>
+    </Box>
   );
 }
 

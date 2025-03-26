@@ -1,10 +1,9 @@
 import { Link } from "@/app/components/Link";
 import { Logo } from "@/app/components/Logo";
 import { Nit } from "@/app/components/Nit";
-import { PageContainer } from "@/app/components/PageContainer";
 import { Recaptcha } from "@/app/components/Recaptcha";
 import { GoogleTagManager } from "@next/third-parties/google";
-import { Box, Flex, Text, Theme } from "@radix-ui/themes";
+import { Box, Container, Flex, Section, Text, Theme } from "@radix-ui/themes";
 import type { Metadata } from "next";
 import NextTopLoader from "nextjs-toploader";
 import { Email } from "react-obfuscate-email";
@@ -30,8 +29,12 @@ export default function RootLayout({
         <Theme accentColor="blue">
           <NextTopLoader showSpinner={false} />
           <Flex direction="column" style={{ height: "100vh" }}>
-            <Box style={{ background: "var(--blue-a2)" }}>
-              <PageContainer wide py="4">
+            <Box
+              style={{ background: "var(--blue-a2)" }}
+              px={{ initial: "4", sm: "0" }}
+              py="4"
+            >
+              <Container>
                 <Flex dir="row" justify="between">
                   <header>
                     <div>
@@ -44,24 +47,26 @@ export default function RootLayout({
                     <Nit />
                   </Text>
                 </Flex>
-              </PageContainer>
+              </Container>
             </Box>
             <main className="flex-grow">{children}</main>
             <Box
               className="bg-[var(--mauve-12)] text-white [&_a]:text-current"
               asChild
-              py="8"
+              px={{ initial: "4", sm: "0" }}
             >
-              <footer>
-                <PageContainer wide>
-                  <Flex align="center" direction="column" gap="2">
-                    <Email email="info@registronit.com" />
-                    <Link href="/politica-de-privacidad" prefetch={false}>
-                      Política de Privacidad
-                    </Link>
-                  </Flex>
-                </PageContainer>
-              </footer>
+              <Section size="2">
+                <Container asChild>
+                  <footer>
+                    <Flex align="center" direction="column" gap="2">
+                      <Email email="info@registronit.com" />
+                      <Link href="/politica-de-privacidad" prefetch={false}>
+                        Política de Privacidad
+                      </Link>
+                    </Flex>
+                  </footer>
+                </Container>
+              </Section>
             </Box>
           </Flex>
         </Theme>

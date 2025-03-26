@@ -1,6 +1,6 @@
 import { DataList } from "@/app/[company]/components/DataList";
 import { getChamber } from "@/app/lib/chambers";
-import { Heading, Link, Section } from "@radix-ui/themes";
+import { Box, Heading, Link, Section } from "@radix-ui/themes";
 
 export function CommerceChamber({ code }: { code: string }) {
   const chamber = getChamber(code);
@@ -41,11 +41,11 @@ export function CommerceChamber({ code }: { code: string }) {
   ];
 
   return (
-    <Section size="2" id="camara-de-comercio">
+    <Box>
       <Heading as="h3" size="4" mb="2">
         Cámara de Comercio
       </Heading>
       <DataList items={details} />
-    </Section>
+    </Box>
   );
 }

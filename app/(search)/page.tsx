@@ -1,24 +1,25 @@
 import { Search } from "@/app/(search)/components/Search";
 import Providers from "@/app/(search)/providers";
-import { PageContainer } from "@/app/components/PageContainer";
-import { Flex, Text } from "@radix-ui/themes";
-import { Suspense } from "react";
+import { Container, Flex, Section, Text } from "@radix-ui/themes";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import { Suspense } from "react";
 
 export default function Page() {
   return (
-    <PageContainer my="8">
-      <Flex direction="column" gap="4">
-        <Text size="4">
-          Consultar información empresarial por NIT o Razón Social.
-        </Text>
-        <Suspense>
-          <Providers>
-            <Search />
-            <ReactQueryDevtools initialIsOpen />
-          </Providers>
-        </Suspense>
-      </Flex>
-    </PageContainer>
+    <Container size="2">
+      <Section>
+        <Flex direction="column" gap="4">
+          <Text size="4">
+            Consultar información empresarial por NIT o Razón Social.
+          </Text>
+          <Suspense>
+            <Providers>
+              <Search />
+              <ReactQueryDevtools initialIsOpen />
+            </Providers>
+          </Suspense>
+        </Flex>
+      </Section>
+    </Container>
   );
 }

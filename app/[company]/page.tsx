@@ -7,13 +7,19 @@ import {
 import { RetrievedOn } from "@/app/[company]/components/RetrievedOn";
 import { UserReport } from "@/app/[company]/components/UserReport";
 import { CompanyStatusBadge } from "@/app/components/CompanyStatusBadge";
-import { PageContainer } from "@/app/components/PageContainer";
 import { BASE_URL } from "@/app/lib/constants";
 import { parseCompanyPathSegment } from "@/app/lib/parseCompanyPathSegment";
 import { slugifyCompanyName } from "@/app/lib/slugifyComponentName";
 import { validateNit } from "@/app/lib/validateNit";
 import { openDataService } from "@/app/services/openData/service";
-import { Box, Flex, Heading, Separator } from "@radix-ui/themes";
+import {
+  Box,
+  Flex,
+  Heading,
+  Separator,
+  Container,
+  Section,
+} from "@radix-ui/themes";
 import type { Metadata } from "next";
 import { notFound, permanentRedirect } from "next/navigation";
 import { cache } from "react";
@@ -60,17 +66,29 @@ export default async function page({ params }: PageProps) {
 
   return (
     <Box>
-      <Box mb="8">
-        <article itemScope itemType="https://schema.org/Organization">
-          <CompanyHeader company={data.mainRecord} />
-          <PageContainer wide mt={{ initial: "6", sm: "8" }}>
-            <CompanySummary company={data.mainRecord} />
+      <Box style={{ position: "sticky", top: 0, background: "white" }}>
+        <Container mx={{ initial: "4", sm: "0" }}>
+          <Section size={{ initial: "1", sm: "2" }}>
+            <CompanyHeader company={data.mainRecord} />
+          </Section>
+        </Container>
+        <Separator size="4" />
+      </Box>
+      <Container mx={{ initial: "4", sm: "0" }}>
+        <Section size={{ initial: "1", sm: "2" }} asChild>
+          <article itemScope itemType="https://schema.org/Organization">
+            <CompanySummary
+              company={data.mainRecord}
+              mb={{ initial: "6", sm: "8" }}
+            />
             <CompanyRecordDetails record={data.mainRecord} />
-          </PageContainer>
-        </article>
-        {data.remainingRecords.length > 0 && (
-          <PageContainer wide>
-            <Separator size="4" my="4" />
+          </article>
+        </Section>
+      </Container>
+      {data.remainingRecords.length > 0 && (
+        <Container mx={{ initial: "4", sm: "0" }}>
+          <Separator size="4" />
+          <Section size={{ initial: "1", sm: "2" }}>
             <Heading as="h4" mb="4">
               Registros Anteriores ({data.remainingRecords.length})
             </Heading>
@@ -100,21 +118,19 @@ export default async function page({ params }: PageProps) {
                 </details>
               ))}
             </Flex>
-          </PageContainer>
-        )}
-        <PageContainer wide>
-          <Box my="4">
-            <RetrievedOn retrievedOn={data.retrievedOn} />
-          </Box>
-        </PageContainer>
-      </Box>
+          </Section>
+        </Container>
+      )}
+      <RetrievedOn retrievedOn={data.retrievedOn} />
       <aside>
-        <Box style={{ background: "var(--blue-a2)" }} py="6">
-          <PageContainer wide>
-            <Flex direction="column" gap="4" align="center">
-              <UserReport slug={data.mainRecord.slug} />
-            </Flex>
-          </PageContainer>
+        <Box style={{ background: "var(--blue-a2)" }}>
+          <Section size="2">
+            <Container>
+              <Flex direction="column" gap="4" align="center">
+                <UserReport slug={data.mainRecord.slug} />
+              </Flex>
+            </Container>
+          </Section>
         </Box>
       </aside>
     </Box>

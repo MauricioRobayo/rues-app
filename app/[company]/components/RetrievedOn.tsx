@@ -3,7 +3,7 @@
 import { useIsClient } from "@/app/hooks/useIsClient";
 import { useRevalidatePath } from "@/app/hooks/useRevalidatePath";
 import { SymbolIcon } from "@radix-ui/react-icons";
-import { Flex, IconButton, Text } from "@radix-ui/themes";
+import { Flex, IconButton, Text, Container, Section } from "@radix-ui/themes";
 import { formatDistanceToNow } from "date-fns";
 import { es } from "date-fns/locale";
 import { useSearchParams } from "next/navigation";
@@ -23,21 +23,25 @@ export function RetrievedOn({ retrievedOn }: { retrievedOn: number }) {
     return null;
   }
   return (
-    <Flex direction="row" gap="2" align="center" justify="start">
-      <Text size="1" color="gray">
-        {isPending
-          ? "Actualizando información…"
-          : `Información actualizada ${distanceToNow}.`}
-      </Text>
-      <IconButton
-        aria-label="Actualizar"
-        loading={isPending}
-        onClick={onClickHandler}
-        variant="ghost"
-        size="1"
-      >
-        <SymbolIcon />
-      </IconButton>
-    </Flex>
+    <Container>
+      <Section size="1">
+        <Flex direction="row" gap="2" align="center" justify="start">
+          <Text size="1" color="gray">
+            {isPending
+              ? "Actualizando información…"
+              : `Información actualizada ${distanceToNow}.`}
+          </Text>
+          <IconButton
+            aria-label="Actualizar"
+            loading={isPending}
+            onClick={onClickHandler}
+            variant="ghost"
+            size="1"
+          >
+            <SymbolIcon />
+          </IconButton>
+        </Flex>
+      </Section>
+    </Container>
   );
 }

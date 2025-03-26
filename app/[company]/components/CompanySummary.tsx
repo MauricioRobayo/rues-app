@@ -1,15 +1,20 @@
 import { getChamberRecordCached } from "@/app/[company]/components/AdditionalRecordInformation";
 import { getBusinessEstablishmentsCached } from "@/app/[company]/components/BusinessEstablishments";
 import type { CompanyRecordDto } from "@/app/types/CompanyRecordDto";
-import { Text } from "@radix-ui/themes";
+import { Text, Box, type BoxProps } from "@radix-ui/themes";
 
 export async function CompanySummary({
   company,
+  ...boxProps
 }: {
   company: CompanyRecordDto;
-}) {
+} & BoxProps) {
   const summary = await companySummary(company);
-  return <Text>{summary}</Text>;
+  return (
+    <Box {...boxProps}>
+      <Text>{summary}</Text>
+    </Box>
+  );
 }
 
 export async function companySummary(company: CompanyRecordDto) {

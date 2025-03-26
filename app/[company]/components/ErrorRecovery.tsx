@@ -1,21 +1,29 @@
 "use client";
 
-import { PageContainer } from "@/app/components/PageContainer";
 import { useRevalidatePath } from "@/app/hooks/useRevalidatePath";
-import { Box, Button, Flex, Heading } from "@radix-ui/themes";
+import {
+  Box,
+  Button,
+  Container,
+  Flex,
+  Heading,
+  Section,
+} from "@radix-ui/themes";
 
 export function ErrorRecovery({ reset }: { reset?: () => void }) {
   const [isPending, onClickHandler] = useRevalidatePath({ reset });
   return (
-    <PageContainer wide py={{ initial: "6", sm: "8" }}>
-      <Flex direction="column" gap="4">
-        <Heading as="h2">Algo ha salido mal :(</Heading>
-        <Box>
-          <Button onClick={onClickHandler} loading={isPending}>
-            Volver a intentar
-          </Button>
-        </Box>
-      </Flex>
-    </PageContainer>
+    <Container mx={{ initial: "4", sm: "0" }}>
+      <Section size={{ initial: "1", sm: "2" }}>
+        <Flex direction="column" gap="4">
+          <Heading as="h2">Algo ha salido mal :(</Heading>
+          <Box>
+            <Button onClick={onClickHandler} loading={isPending}>
+              Volver a intentar
+            </Button>
+          </Box>
+        </Flex>
+      </Section>
+    </Container>
   );
 }

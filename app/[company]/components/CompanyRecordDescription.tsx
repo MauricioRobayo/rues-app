@@ -6,7 +6,7 @@ import { EconomicActivities } from "@/app/[company]/components/EconomicActivitie
 import { LegalRepresentative } from "@/app/[company]/components/LegalRepresentative";
 import { CompanyStatusBadge } from "@/app/components/CompanyStatusBadge";
 import type { CompanyRecordDto } from "@/app/types/CompanyRecordDto";
-import { Code, Flex, Heading, Section } from "@radix-ui/themes";
+import { Box, Code, Flex, Heading } from "@radix-ui/themes";
 
 export function CompanyRecordDescription({
   company,
@@ -94,11 +94,11 @@ export function CompanyRecordDescription({
     },
   ];
   return (
-    <Section size={{ initial: "1", sm: "2" }} id="detalles-de-la-empresa">
+    <Box>
       <Heading as="h3" size="4" mb="2">
         Detalles de la Empresa
       </Heading>
       <DataList items={details} />
-    </Section>
+    </Box>
   );
 }

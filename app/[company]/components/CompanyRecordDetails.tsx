@@ -13,6 +13,7 @@ export function CompanyRecordDetails({ record }: { record: CompanyRecordDto }) {
       <Grid
         columns={{ initial: "1", sm: "2" }}
         gapX="8"
+        gapY="6"
         width="auto"
         flow="row-dense"
       >
@@ -22,11 +23,17 @@ export function CompanyRecordDetails({ record }: { record: CompanyRecordDto }) {
             <BusinessEstablishments
               chamberCode={record.chamber.code}
               registrationNumber={record.registrationNumber}
+              mt={{ initial: "6", sm: "8" }}
             />
           )}
         </Box>
         <Box>
-          {record.isMain && <AdditionalRecordInformation company={record} />}
+          {record.isMain && (
+            <AdditionalRecordInformation
+              company={record}
+              mb={{ initial: "6", sm: "8" }}
+            />
+          )}
           <CommerceChamber code={record.chamber.code} />
         </Box>
       </Grid>

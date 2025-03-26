@@ -3,16 +3,17 @@ import { DataList } from "@/app/[company]/components/DataList";
 import { EconomicActivities } from "@/app/[company]/components/EconomicActivities";
 import { ExpandableList } from "@/app/[company]/components/ExpandableList";
 import { openDataService } from "@/app/services/openData/service";
-import { Flex, Heading, Section, Text } from "@radix-ui/themes";
+import { Box, Flex, Heading, Text, type BoxProps } from "@radix-ui/themes";
 import { cache } from "react";
 
 export async function BusinessEstablishments({
   chamberCode,
   registrationNumber,
+  ...boxProps
 }: {
   chamberCode: string;
   registrationNumber: string;
-}) {
+} & BoxProps) {
   const establishments = await getBusinessEstablishmentsCached(
     chamberCode,
     registrationNumber,
@@ -81,7 +82,7 @@ export async function BusinessEstablishments({
   }
 
   return (
-    <Section size="2" id="establecimientos-comerciales">
+    <Box {...boxProps}>
       <Heading as="h3" size="4" mb="4">
         Establecimientos Comerciales ({businessEstablishments.length})
       </Heading>
@@ -106,7 +107,7 @@ export async function BusinessEstablishments({
           />
         </ul>
       </Flex>
-    </Section>
+    </Box>
   );
 }
 
