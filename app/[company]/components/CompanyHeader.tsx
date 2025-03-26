@@ -1,7 +1,7 @@
 import { CopyButton } from "@/app/[company]/components/CopyButton";
 import { CompanyStatusBadge } from "@/app/components/CompanyStatusBadge";
 import type { CompanyRecordDto } from "@/app/types/CompanyRecordDto";
-import { Flex, Heading, Section } from "@radix-ui/themes";
+import { Flex, Heading } from "@radix-ui/themes";
 
 export function CompanyHeader({ company }: { company: CompanyRecordDto }) {
   return (
