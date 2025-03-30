@@ -1,4 +1,4 @@
-import { DataList, Code } from "@radix-ui/themes";
+import { DataList, Code, Link } from "@radix-ui/themes";
 
 export function EconomicActivities({
   activities,
@@ -9,14 +9,16 @@ export function EconomicActivities({
     <ol>
       {activities.map((item) => (
         <li key={item.label}>
-          <DataList.Root orientation="horizontal">
-            <DataList.Item>
-              <DataList.Label minWidth="0">
-                <Code>{item.code}</Code>
-              </DataList.Label>
-              <DataList.Value>{item.description}</DataList.Value>
-            </DataList.Item>
-          </DataList.Root>
+          <Link href={`https://www.ciiu.co/${item.code}`}>
+            <DataList.Root orientation="horizontal">
+              <DataList.Item>
+                <DataList.Label minWidth="0">
+                  <Code>{item.code}</Code>
+                </DataList.Label>
+                <DataList.Value>{item.description}</DataList.Value>
+              </DataList.Item>
+            </DataList.Root>
+          </Link>
         </li>
       ))}
     </ol>
