@@ -1,5 +1,5 @@
 import { revalidateTagAction } from "@/app/[company]/actions";
-import { getRecaptchaToken, Action } from "@/app/lib/getRecapchaToken";
+import { getRecaptchaToken, Action } from "@/app/lib/getRecaptchaToken";
 import { useState, useTransition } from "react";
 
 export function useRevalidateTag({ tag }: { tag: string }) {

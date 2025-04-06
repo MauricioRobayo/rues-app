@@ -1,6 +1,6 @@
 "use server";
 
-import { Action } from "@/app/lib/getRecapchaToken";
+import { Action } from "@/app/lib/getRecaptchaToken";
 import { verifyRecaptcha } from "@/app/lib/verifyRecaptcha";
 import { openDataService } from "@/app/services/openData/service";
 import { unstable_cache } from "next/cache";

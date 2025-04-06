@@ -1,4 +1,4 @@
-import type { Action } from "@/app/lib/getRecapchaToken";
+import type { Action } from "@/app/lib/getRecaptchaToken";
 
 const projectID = process.env.GCP_PROJECT_ID ?? "";
 const secretKey = process.env.RECAPTCHA_SECRET_KEY ?? "";

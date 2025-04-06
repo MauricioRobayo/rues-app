@@ -1,7 +1,7 @@
 "use server";
 
 import { BASE_URL } from "@/app/lib/constants";
-import { Action } from "@/app/lib/getRecapchaToken";
+import { Action } from "@/app/lib/getRecaptchaToken";
 import { verifyRecaptcha } from "@/app/lib/verifyRecaptcha";
 import { Octokit } from "@octokit/rest";
 import { revalidatePath, revalidateTag } from "next/cache";

@@ -1,9 +1,9 @@
 "use client";
 
-import { getRecaptchaToken } from "@/app/lib/getRecapchaToken";
+import { getRecaptchaToken } from "@/app/lib/getRecaptchaToken";
 import { Button, Callout, Flex, Text, TextArea } from "@radix-ui/themes";
 import { useActionState, useId, useState } from "react";
-import { Action } from "@/app/lib/getRecapchaToken";
+import { Action } from "@/app/lib/getRecaptchaToken";
 import { userReportAction } from "@/app/[company]/actions";
 import { CheckCircledIcon } from "@radix-ui/react-icons";
 
