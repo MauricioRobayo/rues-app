@@ -66,7 +66,7 @@ export default async function page({ params }: PageProps) {
 
   return (
     <Box>
-      <Box style={{ position: "sticky", top: 0, background: "white" }}>
+      <Box className="sticky top-0 z-10 bg-white">
         <Container mx={{ initial: "4", sm: "0" }}>
           <Section size={{ initial: "1", sm: "2" }}>
             <CompanyHeader company={data.mainRecord} />
