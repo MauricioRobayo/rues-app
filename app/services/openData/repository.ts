@@ -19,7 +19,7 @@ export const openDataRepository = {
       return openDataClient.companyRecords({
         query: new URLSearchParams({
           nit,
-          $order: "fecha_matricula DESC,fecha_renovacion DESC",
+          $order: "fecha_renovacion DESC",
         }),
         signal,
       });
