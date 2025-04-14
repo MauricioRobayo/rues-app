@@ -16,7 +16,6 @@ export function mapOpenDataCompanyRecordToCompanyRecordDto(
     name: data.razon_social,
     nit: Number(data.nit),
     formattedFullNit: formatNit(data.nit, { showDecimalSeparator: true }),
-    fullNit: formatNit(data.nit, { showDecimalSeparator: false }),
     slug: `${slugifyCompanyName(data.razon_social)}-${data.nit}`,
     bidderId: Number(data.inscripcion_proponente)
       ? String(Number(data.inscripcion_proponente))

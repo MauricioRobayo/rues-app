@@ -18,7 +18,10 @@ export const openDataService = {
           {
             dataSetId: chamber.openDataSet.id,
             key: chamber.openDataSet.queryKey,
-            id: String(company[chamber.openDataSet.recordKey]),
+            id:
+              typeof chamber.openDataSet.recordKey === "function"
+                ? chamber.openDataSet.recordKey(company)
+                : String(company[chamber.openDataSet.recordKey]),
           },
           { signal },
         );

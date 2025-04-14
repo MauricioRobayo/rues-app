@@ -12,7 +12,7 @@ interface Chamber {
   url: string;
   openDataSet?: {
     id: string;
-    recordKey: keyof CompanyRecordDto;
+    recordKey: keyof CompanyRecordDto | ((record: CompanyRecordDto) => string);
     queryKey: string;
   };
 }
@@ -586,6 +586,11 @@ export const chambers: Record<string, Chamber> = {
     certificateUrl:
       "https://sii.confecamaras.co/vista/plantilla/certificados.php?empresa=52",
     url: "http://www.ccmmna.org.co/",
+    openDataSet: {
+      id: "wciv-q8d6",
+      recordKey: (record) => `${record.nit}${record.verificationDigit}`,
+      queryKey: "nit",
+    },
   },
   "53": {
     code: "53",
@@ -718,7 +723,7 @@ export const chambers: Record<string, Chamber> = {
     url: "http://www.camaradirecta.com/",
     openDataSet: {
       id: "wf53-j577",
-      recordKey: "fullNit",
+      recordKey: (record) => `${record.nit}-${record.verificationDigit}`,
       queryKey: "nit",
     },
   },
