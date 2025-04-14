@@ -11,11 +11,16 @@ export default function PhoneNumbers({
   return (
     <Flex direction="column" gap="2" asChild>
       <ul>
-        {phoneNumbers?.map((phoneNumber, index) => (
-          <li key={index}>
-            <Link href={`tel:${phoneNumber}`}>{phoneNumber}</Link>
-          </li>
-        ))}
+        {phoneNumbers?.map((phoneNumber, index) => {
+          if (phoneNumber.trim()) {
+            return (
+              <li key={index}>
+                <Link href={`tel:${phoneNumber}`}>{phoneNumber}</Link>
+              </li>
+            );
+          }
+          return null;
+        })}
       </ul>
     </Flex>
   );

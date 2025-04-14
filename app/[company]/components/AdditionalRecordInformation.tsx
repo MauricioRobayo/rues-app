@@ -84,7 +84,7 @@ export async function AdditionalRecordInformation({
   return (
     <Box {...boxProps}>
       {shouldShowContactDetails && (
-        <Box>
+        <Box mb={{ initial: "6", sm: "8" }}>
           <Heading as="h3" size="4" mb="4">
             Información de Contacto
           </Heading>
