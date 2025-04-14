@@ -62,6 +62,7 @@ export const openDataService = {
           record.dircomercial,
         zone: record.barrio_comercial?.replace(/^\d+\W+/, ""),
         size: size?.toLocaleUpperCase(),
+        employees: record.personal,
       };
     },
   },

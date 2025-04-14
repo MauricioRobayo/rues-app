@@ -74,6 +74,10 @@ export async function AdditionalRecordInformation({
         ? null
         : currencyFormatter.format(Number(record.assets)),
     },
+    {
+      label: "Total empleados",
+      value: record.employees,
+    },
   ];
 
   const shouldShowContactDetails = contactDetails.some(({ value }) => !!value);

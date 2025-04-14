@@ -89,4 +89,5 @@ export interface OpenDataChamberRecord {
   telcom1?: string;
   tel_comercial?: string;
   telefono_comercial?: string;
+  personal?: number;
 }
