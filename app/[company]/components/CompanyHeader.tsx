@@ -7,7 +7,7 @@ export function CompanyHeader({ company }: { company: CompanyRecordDto }) {
   return (
     <header>
       <Flex direction="column" gap="1">
-        <Heading itemProp="name" color="blue">
+        <Heading itemProp="name" color="blue" className="line-clamp-3">
           {company.name}
         </Heading>
         <Flex
