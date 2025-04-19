@@ -3,7 +3,7 @@ import { Flex, Heading, Text, Container, Section } from "@radix-ui/themes";
 
 export default function NotFound() {
   return (
-    <Container size="2">
+    <Container size="2" mx="4">
       <Section>
         <Flex direction="column" gap="4">
           <Heading as="h2">No hay nada acá :(</Heading>
