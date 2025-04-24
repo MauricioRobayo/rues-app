@@ -1,4 +1,5 @@
 import { DataList } from "@/app/[company]/components/DataList";
+import { getLargestCompanyRecordCached } from "@/app/[company]/components/FinancialInformation";
 import PhoneNumbers from "@/app/[company]/components/PhoneNumbers";
 import { ToggleContent } from "@/app/[company]/components/ToogleContent";
 import { Link } from "@/app/components/Link";
@@ -15,7 +16,10 @@ export async function AdditionalRecordInformation({
 }: {
   company: CompanyRecordDto;
 } & BoxProps) {
-  const record = await getChamberRecordCached(company);
+  const [record, financialRecords] = await Promise.all([
+    getChamberRecordCached(company),
+    getLargestCompanyRecordCached(company.nit),
+  ]);
 
   if (!record) {
     return null;
@@ -81,9 +85,9 @@ export async function AdditionalRecordInformation({
   ];
 
   const shouldShowContactDetails = contactDetails.some(({ value }) => !!value);
-  const shouldShowFinancialInformation = financialDetails.some(
-    ({ value }) => !!value,
-  );
+  const shouldShowFinancialInformation =
+    (financialRecords ?? []).length === 0 &&
+    financialDetails.some(({ value }) => !!value);
 
   return (
     <Box {...boxProps}>
