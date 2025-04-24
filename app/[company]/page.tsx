@@ -128,7 +128,7 @@ export default async function page({ params }: PageProps) {
       <aside>
         <Box style={{ background: "var(--blue-a2)" }}>
           <Section size="2">
-            <Container>
+            <Container mx={{ initial: "4", sm: "0" }}>
               <Flex direction="column" gap="4" align="center">
                 <UserReport slug={data.mainRecord.slug} />
               </Flex>
