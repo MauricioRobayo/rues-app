@@ -4,6 +4,7 @@ import {
   companySummary,
   CompanySummary,
 } from "@/app/[company]/components/CompanySummary";
+import { getLargestCompanyRecordCached } from "@/app/[company]/components/FinancialInformation";
 import { RetrievedOn } from "@/app/[company]/components/RetrievedOn";
 import { UserReport } from "@/app/[company]/components/UserReport";
 import { CompanyStatusBadge } from "@/app/components/CompanyStatusBadge";
@@ -56,6 +57,8 @@ export async function generateMetadata({
 
 export default async function page({ params }: PageProps) {
   const { company } = await params;
+  // preload financial data
+  getLargestCompanyRecordCached(parseCompanyPathSegment(company).nit);
   const { isError, data } = await getPageData(company);
 
   if (isError) {

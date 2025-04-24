@@ -1,8 +1,10 @@
 import { getChamber } from "@/app/lib/chambers";
-import { mapOpenDataCompanyRecordToCompanyRecordDto } from "@/app/mappers/mapOpenDataCompanyRecordToCompanyRecortDto";
+import { mapOpenDataCompanyRecordToCompanyRecordDto } from "@/app/mappers/mapOpenDataCompanyRecordToCompanyRecordDto";
 import { mapOpenDataEstablishmentToBusinessEstablishmentDto } from "@/app/mappers/mapOpenDataEstablishmentToBusinessEstablishmentDto";
+import { mapOpenDataLargestCompanyRecordToFinancialRecordDto } from "@/app/mappers/mapOpenDataLargestCompanyRecordToFinancialRecordDto";
 import { openDataRepository } from "@/app/services/openData/repository";
 import type { CompanyRecordDto } from "@/app/types/CompanyRecordDto";
+import type { FinancialRecordDto } from "@/app/types/FinancialRecordDto";
 import pRetry from "p-retry";
 
 export const openDataService = {
@@ -214,11 +216,59 @@ export const openDataService = {
       );
     },
   },
+  largestCompanies: {
+    async get(nit: number): Promise<FinancialRecordDto[] | null> {
+      try {
+        const companyResponse = await pRetry(() => fetchLargestCompanies(nit), {
+          retries: 3,
+          onFailedAttempt: (error) => {
+            console.log(
+              `Attempt ${error.attemptNumber} failed. There are ${error.retriesLeft} retries left.`,
+            );
+          },
+        });
+        if (!companyResponse.data) {
+          return null;
+        }
+        return companyResponse.data
+          .map(mapOpenDataLargestCompanyRecordToFinancialRecordDto)
+          .toSorted((a, b) => b.reportingYear - a.reportingYear);
+      } catch (error) {
+        console.error(error);
+        return null;
+      }
+    },
+  },
 };
 
 async function fetchCompanyRecords(nit: string) {
   const signal = AbortSignal.timeout(3_000);
   const companyResponse = await openDataRepository.companyRecords.get(nit, {
+    signal,
+  });
+
+  if (companyResponse.code === 404) {
+    return {
+      status: "success",
+      data: null,
+    } as const;
+  }
+
+  if (companyResponse.status === "error") {
+    throw new Error(
+      `openDataService.fetchCompany failed ${JSON.stringify(companyResponse)}`,
+    );
+  }
+
+  return {
+    data: companyResponse.data,
+    status: "success",
+  } as const;
+}
+
+async function fetchLargestCompanies(nit: number) {
+  const signal = AbortSignal.timeout(3_000);
+  const companyResponse = await openDataRepository.largestCompanies.get(nit, {
     signal,
   });
 

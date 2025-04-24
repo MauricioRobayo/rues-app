@@ -4,6 +4,7 @@ import {
   idType,
 } from "@/app/services/openData/constants";
 import type {
+  OpenDataLargestCompanyRecord,
   OpenDataCompanyRecord,
   OpenDataEstablishment,
 } from "@/app/services/openData/types";
@@ -11,6 +12,7 @@ import type {
 const OpenDataSet = {
   COMPANIES: "c82u-588k",
   ESTABLISHMENTS: "nb3d-v3n7",
+  LARGEST_COMPANIES: "6cat-2gcs",
 } as const;
 
 // If you change this where clause, please make sure to recompute the
@@ -40,6 +42,7 @@ export const openDataClient = {
     }),
   ),
   establishments: openDataFetchFactory(OpenDataSet.ESTABLISHMENTS),
+  largestCompanies: openDataFetchFactory(OpenDataSet.LARGEST_COMPANIES),
   api: openDataFetch,
 };
 
@@ -49,6 +52,11 @@ interface OpenDataOptions {
   signal?: AbortSignal;
 }
 
+function openDataFetchFactory(
+  dataSetId: (typeof OpenDataSet)["LARGEST_COMPANIES"],
+): <T = OpenDataLargestCompanyRecord[]>(
+  options: Omit<OpenDataOptions, "dataSetId">,
+) => ReturnType<typeof openDataFetch<T>>;
 function openDataFetchFactory(
   dataSetId: (typeof OpenDataSet)["COMPANIES"],
   defaultQuery?: URLSearchParams,

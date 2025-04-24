@@ -97,4 +97,14 @@ export const openDataRepository = {
       });
     },
   },
+  largestCompanies: {
+    get(nit: number, { signal }: { signal?: AbortSignal } = {}) {
+      return openDataClient.largestCompanies({
+        query: new URLSearchParams({
+          nit: String(nit),
+        }),
+        signal,
+      });
+    },
+  },
 };

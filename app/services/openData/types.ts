@@ -91,3 +91,20 @@ export interface OpenDataChamberRecord {
   telefono_comercial?: string;
   personal?: number;
 }
+
+export interface OpenDataLargestCompanyRecord {
+  nit: string;
+  raz_n_social: string;
+  supervisor: string;
+  regi_n: string;
+  departamento_domicilio: string;
+  ciudad_domicilio: string;
+  ciiu: string;
+  macrosector: string;
+  ingresos_operacionales: string;
+  ganancia_p_rdida: string;
+  total_activos: string;
+  total_pasivos: string;
+  total_patrimonio: string;
+  a_o_de_corte: string;
+}
