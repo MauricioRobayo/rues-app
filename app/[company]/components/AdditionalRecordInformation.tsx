@@ -121,23 +121,25 @@ export async function AdditionalRecordInformation({
           <Heading as="h3" size="4" mb="4">
             Información Financiera
           </Heading>
-          {financialDetails && <DataList items={financialDetails} />}
-          <Flex asChild direction="column" gap="2">
-            {financialData && (
-              <ul>
-                {financialData.map((data) => (
-                  <li key={data.year}>
-                    <details name="establecimiento-comercial">
-                      <Text asChild>
-                        <summary>Año de corte {data.year}</summary>
-                      </Text>
-                      <Flex my="4" pl="4" direction="column" gap="4">
-                        <DataList items={data.details} />
-                      </Flex>
-                    </details>
-                  </li>
-                ))}
-              </ul>
+          <Flex direction="column" gap="5">
+            {financialDetails && <DataList items={financialDetails} />}
+            {financialData && financialData.length > 0 && (
+              <Flex asChild direction="column" gap="2">
+                <ul>
+                  {financialData.map((data) => (
+                    <li key={data.year}>
+                      <details name="establecimiento-comercial">
+                        <Text asChild>
+                          <summary>Año de corte {data.year}</summary>
+                        </Text>
+                        <Flex my="4" pl="4" direction="column" gap="4">
+                          <DataList items={data.details} />
+                        </Flex>
+                      </details>
+                    </li>
+                  ))}
+                </ul>
+              </Flex>
             )}
           </Flex>
         </Box>
