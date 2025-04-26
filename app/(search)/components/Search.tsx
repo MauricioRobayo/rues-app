@@ -3,7 +3,7 @@
 import { SearchName } from "@/app/(search)/components/SearchName";
 import { SearchNit } from "@/app/(search)/components/SearchNit";
 import { Box, Tabs } from "@radix-ui/themes";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import { useState } from "react";
 
 const tabs = {
@@ -18,12 +18,11 @@ export function Search() {
   const searchParams = useSearchParams();
   const companyName = searchParams.get(tabs.companyName);
   const tab = companyName !== null ? tabs.companyName : tabs.nit;
-  const router = useRouter();
   return (
     <Tabs.Root
       value={tab}
       onValueChange={(tab) => {
-        const query = `?${tab}=${selectedValues[tab]}`;
+        const query = `?${tab}=${selectedValues[tab] ?? ""}`;
         const currentValues = Object.fromEntries(
           Object.values(tabs).map((t) => [
             t,
@@ -31,7 +30,7 @@ export function Search() {
           ]),
         );
         setSelectedValues(currentValues);
-        router.push(query);
+        window.history.pushState(null, "", query);
       }}
     >
       <Tabs.List>
