@@ -1,5 +1,4 @@
 import { DataList } from "@/app/[company]/components/DataList";
-import { getLargestCompanyRecordCached } from "@/app/[company]/components/FinancialInformation";
 import PhoneNumbers from "@/app/[company]/components/PhoneNumbers";
 import { ToggleContent } from "@/app/[company]/components/ToogleContent";
 import { Link } from "@/app/components/Link";
@@ -7,7 +6,7 @@ import { currencyFormatter } from "@/app/lib/formatters";
 import { openDataService } from "@/app/services/openData/service";
 import type { CompanyRecordDto } from "@/app/types/CompanyRecordDto";
 import { GoogleMapsEmbed } from "@next/third-parties/google";
-import { Box, Flex, Heading, type BoxProps } from "@radix-ui/themes";
+import { Text, Box, Flex, Heading, type BoxProps } from "@radix-ui/themes";
 import { cache } from "react";
 
 export async function AdditionalRecordInformation({
@@ -21,11 +20,7 @@ export async function AdditionalRecordInformation({
     getLargestCompanyRecordCached(company.nit),
   ]);
 
-  if (!record) {
-    return null;
-  }
-
-  const contactDetails = [
+  const contactDetails = record && [
     {
       label: "Municipio comercial",
       value: record.city,
@@ -70,7 +65,7 @@ export async function AdditionalRecordInformation({
     },
   ];
 
-  const financialDetails = [
+  const financialDetails = record && [
     { label: "Tamaño de la empresa", value: record.size },
     {
       label: "Total activos",
@@ -84,10 +79,32 @@ export async function AdditionalRecordInformation({
     },
   ];
 
-  const shouldShowContactDetails = contactDetails.some(({ value }) => !!value);
+  const financialData =
+    financialRecords &&
+    financialRecords.map((record) => ({
+      year: record.reportingYear,
+      details: [
+        { label: "Supervisor", value: record.supervisor },
+        { label: "Región", value: record.region },
+        { label: "Departamento", value: record.state },
+        { label: "Ciudad", value: record.city },
+        { label: "Macrosector", value: record.macroSector },
+        {
+          label: "Ingresos operacionales",
+          value: record.operatingIncome,
+        },
+        { label: "Ganancia o pérdida neta", value: record.netProfitOrLoss },
+        { label: "Total activos", value: record.totalAssets },
+        { label: "Total pasivos", value: record.totalLiabilities },
+        { label: "Total patrimonio", value: record.totalEquity },
+      ],
+    }));
+
+  const shouldShowContactDetails =
+    contactDetails && contactDetails.some(({ value }) => !!value);
   const shouldShowFinancialInformation =
-    (financialRecords ?? []).length === 0 &&
-    financialDetails.some(({ value }) => !!value);
+    (financialRecords && financialRecords.length > 0) ||
+    (financialDetails && financialDetails.some(({ value }) => !!value));
 
   return (
     <Box {...boxProps}>
@@ -104,7 +121,25 @@ export async function AdditionalRecordInformation({
           <Heading as="h3" size="4" mb="4">
             Información Financiera
           </Heading>
-          <DataList items={financialDetails} />
+          {financialDetails && <DataList items={financialDetails} />}
+          <Flex asChild direction="column" gap="2">
+            {financialData && (
+              <ul>
+                {financialData.map((data) => (
+                  <li key={data.year}>
+                    <details name="establecimiento-comercial">
+                      <Text asChild>
+                        <summary>Año de corte {data.year}</summary>
+                      </Text>
+                      <Flex my="4" pl="4" direction="column" gap="4">
+                        <DataList items={data.details} />
+                      </Flex>
+                    </details>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </Flex>
         </Box>
       )}
     </Box>
@@ -112,3 +147,6 @@ export async function AdditionalRecordInformation({
 }
 
 export const getChamberRecordCached = cache(openDataService.chambers.getRecord);
+export const getLargestCompanyRecordCached = cache(
+  openDataService.largestCompanies.get,
+);

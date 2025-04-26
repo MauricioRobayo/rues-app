@@ -35,10 +35,6 @@ export function CompanyRecordDetails({ record }: { record: CompanyRecordDto }) {
               mb={{ initial: "6", sm: "8" }}
             />
           )}
-          <FinancialInformation
-            nit={record.nit}
-            mb={{ initial: "6", sm: "8" }}
-          />
           <CommerceChamber code={record.chamber.code} />
         </Box>
       </Grid>
