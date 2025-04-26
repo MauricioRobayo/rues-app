@@ -1,10 +1,10 @@
+import { getLargestCompanyRecordCached } from "@/app/[company]/components/AdditionalRecordInformation";
 import { CompanyHeader } from "@/app/[company]/components/CompanyHeader";
 import { CompanyRecordDetails } from "@/app/[company]/components/CompanyRecordDetails";
 import {
   companySummary,
   CompanySummary,
 } from "@/app/[company]/components/CompanySummary";
-import { getLargestCompanyRecordCached } from "@/app/[company]/components/FinancialInformation";
 import { RetrievedOn } from "@/app/[company]/components/RetrievedOn";
 import { UserReport } from "@/app/[company]/components/UserReport";
 import { CompanyStatusBadge } from "@/app/components/CompanyStatusBadge";
@@ -15,11 +15,11 @@ import { validateNit } from "@/app/lib/validateNit";
 import { openDataService } from "@/app/services/openData/service";
 import {
   Box,
+  Container,
   Flex,
   Heading,
-  Separator,
-  Container,
   Section,
+  Separator,
 } from "@radix-ui/themes";
 import type { Metadata } from "next";
 import { notFound, permanentRedirect } from "next/navigation";

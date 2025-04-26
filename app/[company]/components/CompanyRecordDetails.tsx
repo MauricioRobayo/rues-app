@@ -2,7 +2,6 @@ import { AdditionalRecordInformation } from "@/app/[company]/components/Addition
 import { BusinessEstablishments } from "@/app/[company]/components/BusinessEstablishments";
 import { CommerceChamber } from "@/app/[company]/components/Chamber";
 import { CompanyRecordDescription } from "@/app/[company]/components/CompanyRecordDescription";
-import { FinancialInformation } from "@/app/[company]/components/FinancialInformation";
 import type { CompanyRecordDto } from "@/app/types/CompanyRecordDto";
 import { Box, Grid } from "@radix-ui/themes";
 
