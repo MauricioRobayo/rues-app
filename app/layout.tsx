@@ -8,6 +8,7 @@ import type { Metadata } from "next";
 import NextTopLoader from "nextjs-toploader";
 import { Email } from "react-obfuscate-email";
 import "./globals.css";
+import { AdSense } from "@/app/components/AdSense";
 
 const siteKey = process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY ?? "";
 
@@ -25,6 +26,7 @@ export default function RootLayout({
     <html lang="es-CO">
       <Recaptcha siteKey={siteKey} language="es-419" />
       <GoogleTagManager gtmId={process.env.NEXT_PUBLIC_GTM_ID ?? ""} />
+      <AdSense />
       <body>
         <Theme accentColor="blue">
           <NextTopLoader showSpinner={false} color="var(--blue-9)" />
