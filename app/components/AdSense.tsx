@@ -8,6 +8,9 @@ export function AdSense() {
   if (shouldShowAds) {
     return (
       <Script
+        id="adsense-script"
+        strategy="afterInteractive"
+        async
         src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7218488611142089"
         crossOrigin="anonymous"
       />
