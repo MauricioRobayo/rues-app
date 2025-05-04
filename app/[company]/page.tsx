@@ -57,8 +57,6 @@ export async function generateMetadata({
 
 export default async function page({ params }: PageProps) {
   const { company } = await params;
-  // preload financial data
-  getLargestCompanyRecordCached(parseCompanyPathSegment(company).nit);
   const { isError, data } = await getPageData(company);
 
   if (isError) {
@@ -146,6 +144,9 @@ const getPageData = cache(async (company: string) => {
   if (!validateNit(nit)) {
     notFound();
   }
+
+  // preload financial data
+  getLargestCompanyRecordCached(nit);
 
   const response = await openDataService.companyRecords.get(String(nit));
 
