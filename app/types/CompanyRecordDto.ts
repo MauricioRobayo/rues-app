@@ -23,6 +23,7 @@ export interface CompanyRecordDto {
   rawRegistrationDate: string | null;
   rawCancellationDate?: string | null;
   isLegalEntity?: boolean;
+  legalEntity: string;
   registrationNumber: string;
   shortName?: string;
   status: string;

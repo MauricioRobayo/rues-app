@@ -43,6 +43,7 @@ export function mapOpenDataCompanyRecordToCompanyRecordDto(
     rawCancellationDate: data.fecha_cancelacion,
     isLegalEntity:
       data.codigo_organizacion_juridica !== legalEntity.PERSONA_NATURAL,
+    legalEntity: data.organizacion_juridica,
     registrationNumber: data.matricula || "",
     shortName: data.sigla,
     status: data.estado_matricula,

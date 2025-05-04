@@ -57,6 +57,7 @@ export function CompanyRecordDescription({
       label: "Sigla",
       value: company.shortName,
     },
+    { label: "Organización jurídica", value: company.legalEntity },
     { label: "Tipo de sociedad", value: company.type },
     { label: "Categoría de la matrícula", value: company.category },
     { label: "Fecha de matrícula", value: company.registrationDate },
