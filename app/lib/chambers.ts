@@ -196,6 +196,11 @@ export const chambers: Record<string, Chamber> = {
     certificateUrl:
       "https://sii.confecamaras.co/vista/plantilla/certificados.php?empresa=22",
     url: "http://www.ccmonteria.org.co/",
+    openDataSet: {
+      id: "vhw2-3yzu",
+      recordKey: (record) => `${record.nit}${record.verificationDigit}`,
+      queryKey: "nit",
+    },
   },
   "23": {
     code: "23",
