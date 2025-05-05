@@ -1,7 +1,10 @@
 import { BASE_URL, MAX_URLS_PER_SITEMAP } from "@/app/lib/constants";
 import { slugifyCompanyName } from "@/app/lib/slugifyComponentName";
 import { openDataService } from "@/app/services/openData/service";
-import { getTotalSitemaps } from "@/app/sitemap/getTotalSitemaps";
+import {
+  getTotalSitemaps,
+  sitemapInclusionCriteria,
+} from "@/app/sitemap/getTotalSitemaps";
 import { NextResponse } from "next/server";
 
 export const dynamic = "force-static";
@@ -35,15 +38,12 @@ export async function GET(
     const data = await openDataService.companyRecords.getAll({
       offset: sitemapId * MAX_URLS_PER_SITEMAP,
       limit: MAX_URLS_PER_SITEMAP,
+      where: sitemapInclusionCriteria,
     });
 
     const companies = data.map((company) => {
       const companySlug = slugifyCompanyName(company.name);
-      const url = `${BASE_URL}/${companySlug}-${company.nit}`;
-      return {
-        url,
-        lastModified: company.updatedDate ?? "",
-      };
+      return { url: `${BASE_URL}/${companySlug}-${company.nit}` };
     });
 
     const sitemap = await buildSitemap(companies);
@@ -60,17 +60,13 @@ export async function GET(
   }
 }
 
-async function buildSitemap(
-  companies: { url: string; lastModified?: string }[],
-) {
+async function buildSitemap(companies: { url: string }[]) {
   let xml = '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">';
 
-  for (const { url, lastModified } of companies) {
+  for (const { url } of companies) {
     xml += "<url>";
     xml += `<loc>${url}</loc>`;
-    if (lastModified) {
-      xml += `<lastmod>${lastModified}</lastmod>`;
-    }
+    xml += `<lastmod>${new Date().toISOString().slice(0, 10)}</lastmod>`;
     xml += "</url>";
   }
 

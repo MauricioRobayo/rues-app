@@ -114,10 +114,13 @@ export const openDataService = {
         return { error, status: "error" } as const;
       }
     },
-    count() {
+    count(
+      options: Parameters<typeof openDataRepository.companyRecords.count>[0],
+    ) {
       return pRetry(
         async () => {
-          const response = await openDataRepository.companyRecords.count();
+          const response =
+            await openDataRepository.companyRecords.count(options);
           if (response.status === "error") {
             console.error(response);
             throw new Error("Fetch company count failed");
@@ -151,9 +154,8 @@ export const openDataService = {
             throw new Error("openDataRepository.companies.getAll failed");
           }
           return response.data.map((record) => ({
-            nit: record.nit,
-            name: record.MAX_razon_social,
-            updatedDate: record.MAX_fecha_actualizacion,
+            nit: record.numero_identificacion,
+            name: record.razon_social,
           }));
         },
         {

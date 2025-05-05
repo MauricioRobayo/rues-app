@@ -14,9 +14,11 @@ export function mapOpenDataCompanyRecordToCompanyRecordDto(
   return {
     isMain: index === 0,
     name: data.razon_social,
-    nit: Number(data.nit),
-    formattedFullNit: formatNit(data.nit, { showDecimalSeparator: true }),
-    slug: `${slugifyCompanyName(data.razon_social)}-${data.nit}`,
+    nit: Number(data.numero_identificacion),
+    formattedFullNit: formatNit(data.numero_identificacion, {
+      showDecimalSeparator: true,
+    }),
+    slug: `${slugifyCompanyName(data.razon_social)}-${data.numero_identificacion}`,
     bidderId: Number(data.inscripcion_proponente)
       ? String(Number(data.inscripcion_proponente))
       : null,
@@ -47,7 +49,7 @@ export function mapOpenDataCompanyRecordToCompanyRecordDto(
     registrationNumber: data.matricula || "",
     shortName: data.sigla,
     status: data.estado_matricula,
-    verificationDigit: getVerificationDigit(data.nit),
+    verificationDigit: getVerificationDigit(data.numero_identificacion),
     idType: data.clase_identificacion,
   };
 }

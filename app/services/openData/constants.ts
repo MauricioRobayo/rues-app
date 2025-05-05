@@ -61,6 +61,11 @@ export const legalEntity = {
     "43",
 };
 
+export const registryCategoryCode = {
+  PERSONA_NATURAL: "00",
+  SOCIEDAD_O_PERSONA_JURIDICA_PRINCIPAL_O_ESAL: "01",
+};
+
 export const companyType = {
   NO_APLICA: "00",
   SOCIEDAD_CIVIL: "01",

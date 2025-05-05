@@ -18,8 +18,12 @@ export const openDataRepository = {
     get(nit: string, { signal }: { signal?: AbortSignal } = {}) {
       return openDataClient.companyRecords({
         query: new URLSearchParams({
-          nit,
-          $order: "fecha_cancelacion DESC,fecha_renovacion DESC",
+          $order: "fecha_cancelacion DESC",
+          $where: [
+            `numero_identificacion='${nit}'`,
+            "razon_social IS NOT NULL",
+            "nit!='0'",
+          ].join(" AND "),
         }),
         signal,
       });
@@ -28,51 +32,47 @@ export const openDataRepository = {
       limit,
       offset,
       signal,
+      where,
     }: {
       limit: number;
       offset: number;
       signal?: AbortSignal;
+      where: string[];
     }) {
       const query = new URLSearchParams({
         $limit: String(limit),
         $offset: String(offset),
-        $group: "nit",
-        $select: "nit,MAX(razon_social),MAX(fecha_actualizacion)",
+        $select: "numero_identificacion,razon_social",
+        $where: where.join(" AND "),
       });
       return openDataClient.companyRecords<
         {
-          nit: string;
-          MAX_fecha_actualizacion: string;
-          MAX_razon_social: string;
+          numero_identificacion: string;
+          razon_social: string;
         }[]
       >({
         query,
         signal,
       });
     },
-    count() {
-      // This timeouts every time and it is called for each
-      // sitemap id, so all (2K+) sitemaps fail with timeouts
-      return {
-        status: "success",
-        data: [
-          {
-            // manually recompute if something changes
-            count: "4955942",
-          },
-        ],
-      };
-      // return openDataClient.companyRecords<{ COUNT: string }[]>({
-      //   query: new URLSearchParams({
-      //     $select: "COUNT(DISTINCT nit) as count",
-      //   }),
-      // });
+    count({ where }: { where: string[] }) {
+      return openDataClient.companyRecords<{ count: string }[]>({
+        query: new URLSearchParams({
+          $select: "COUNT(numero_identificacion) as count",
+          $where: where.join(" AND "),
+        }),
+      });
     },
     search(query: string, { limit = 25 }: { limit?: number } = {}) {
       return openDataClient.companyRecords({
         query: new URLSearchParams({
           $q: query,
           $limit: String(limit),
+          $where: [
+            "numero_identificacion IS NOT NULL",
+            "razon_social IS NOT NULL",
+            "nit!='0'",
+          ].join(" AND "),
         }),
       });
     },
