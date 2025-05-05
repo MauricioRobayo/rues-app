@@ -1,6 +1,13 @@
 import { openDataClient } from "@/app/services/openData/client";
 import type { OpenDataChamberRecord } from "@/app/services/openData/types";
 
+// There are records with valid numero_identificacion and nit = null, e.g. 11202170.
+// There are records with nit = 0, which are broken we cannot show "NIT 0".
+// When excluding nit != 0 it will not match records where nit is null or missing
+// because nulls are excluded from both equality and inequality comparisons.
+// We must explicitly include nit IS NULL and nit != 0
+export const validNit = "(nit IS NULL OR nit != '0')";
+
 export const openDataRepository = {
   chambers: {
     getRecord(
@@ -22,7 +29,7 @@ export const openDataRepository = {
           $where: [
             `numero_identificacion='${nit}'`,
             "razon_social IS NOT NULL",
-            "nit!='0'",
+            validNit,
           ].join(" AND "),
         }),
         signal,
@@ -71,7 +78,7 @@ export const openDataRepository = {
           $where: [
             "numero_identificacion IS NOT NULL",
             "razon_social IS NOT NULL",
-            "nit!='0'",
+            validNit,
           ].join(" AND "),
         }),
       });
