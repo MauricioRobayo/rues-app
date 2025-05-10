@@ -1,7 +1,6 @@
 "use client";
 
 import { Link } from "@/app/components/Link";
-import { BASE_URL } from "@/app/lib/constants";
 import { formatNit } from "@/app/lib/formatNit";
 import { validateNit } from "@/app/lib/validateNit";
 import {
@@ -22,10 +21,12 @@ import {
   TextField,
 } from "@radix-ui/themes";
 import { useQuery } from "@tanstack/react-query";
+import { isValid } from "date-fns";
 import Form from "next/form";
 import { useSearchParams } from "next/navigation";
 import { getVerificationDigit } from "nit-verifier";
 import { useState, type ChangeEvent } from "react";
+import { twMerge } from "tailwind-merge";
 
 export function SearchNit() {
   const searchParams = useSearchParams();
@@ -52,6 +53,7 @@ export function SearchNit() {
     const selectedNit = e.target.value.slice(0, 10);
     setValue(selectedNit);
   };
+
   return (
     <Flex direction="column" gap="4">
       <Flex asChild gap="2">
@@ -122,20 +124,20 @@ export function SearchNit() {
       {isValidNit && data?.nit === value ? (
         <>
           {data?.ok && (
-            <Flex direction="column" gap="2">
+            <Box>
               <Text>
                 El NIT{" "}
                 <Link href={`/${value}`}>
                   <Strong>{fullNit}</Strong>
                 </Link>{" "}
                 es válido y la información empresarial correspondiente puede ser
-                consultada en:
+                consultada en:{" "}
               </Text>
-              <Link href={`/${value}`} underline="always">
-                <Text>{BASE_URL}/</Text>
-                <Strong>{value}</Strong>
-              </Link>
-            </Flex>
+              <NitInformationalLink
+                nit={isValidNit ? value : "899999068"}
+                highlightNit={isValidNit}
+              />
+            </Box>
           )}
           {data?.status === 404 && (
             <Text>
@@ -149,15 +151,43 @@ export function SearchNit() {
           <InfoCircledIcon />
         </Callout.Icon>
         <Callout.Text>
-          Consulte cualquier NIT agregándolo directamente a la URL:{" "}
-          <Link href="/899999068" prefetch={false}>
-            www.registronit.com/
-            <Strong asChild>
-              <Code variant="ghost">899999068</Code>
-            </Strong>
-          </Link>
+          Consulte cualquier NIT agregándolo directamente al enlace, sin signos
+          de puntuación ni dígito de verificación:{" "}
+          <NitInformationalLink
+            nit={isValidNit ? value : "899999068"}
+            highlightNit={isValidNit}
+          />
         </Callout.Text>
       </Callout.Root>
     </Flex>
+  );
+}
+
+function NitInformationalLink({
+  nit,
+  highlightNit = false,
+}: {
+  nit: string;
+  highlightNit: boolean;
+}) {
+  return (
+    <Link href={nit} prefetch={false} underline="hover">
+      <Text asChild className="tracking-wide">
+        <Code variant="ghost">
+          registronit.com/
+          <Text
+            className={twMerge(
+              "underline decoration-wavy",
+              highlightNit ? "decoration-2" : "decoration-1",
+            )}
+            weight={highlightNit ? "bold" : "regular"}
+            color={highlightNit ? "blue" : undefined}
+            as="span"
+          >
+            {nit}
+          </Text>
+        </Code>
+      </Text>
+    </Link>
   );
 }
