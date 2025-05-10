@@ -106,6 +106,10 @@ export async function AdditionalRecordInformation({
     (financialRecords && financialRecords.length > 0) ||
     (financialDetails && financialDetails.some(({ value }) => !!value));
 
+  if (!shouldShowContactDetails && !shouldShowFinancialInformation) {
+    return null;
+  }
+
   return (
     <Box {...boxProps}>
       {shouldShowContactDetails && (
