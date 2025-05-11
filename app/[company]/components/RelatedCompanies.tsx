@@ -17,7 +17,6 @@ import {
   Container,
   Flex,
   Heading,
-  ScrollArea,
   Section,
   Text,
 } from "@radix-ui/themes";
