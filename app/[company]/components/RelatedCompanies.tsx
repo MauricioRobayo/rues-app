@@ -30,22 +30,11 @@ export async function RelatedCompanies({
   economicActivities: EconomicActivity[];
   chamberCode: string;
 }) {
-  const relatedCompanies = await openDataService.companyRecords.getAll({
-    limit: 100,
-    where: [
-      isComercialCompany,
-      isActiveCompany,
-      isLegalEntity,
-      isValidId,
-      isValidName,
-      isValidNit,
-      `codigo_camara = '${chamberCode}'`,
-      `numero_identificacion != '${nit}'`,
-      `cod_ciiu_act_econ_pri IN (${economicActivities.map(({ code }) => `'${code}'`).join(",")})`,
-    ],
-    order: "ultimo_ano_renovado DESC",
+  const relatedCompanies = await getRelatedCompanies({
+    nit,
+    economicActivities,
+    chamberCode,
   });
-
   const sortedRelatedCompanies = relatedCompanies.toSorted((a, b) => {
     const originalCodes = economicActivities.map((ea) => ea.code);
 
@@ -107,4 +96,39 @@ export async function RelatedCompanies({
       </aside>
     </Container>
   );
+}
+
+async function getRelatedCompanies({
+  chamberCode,
+  nit,
+  economicActivities,
+}: {
+  chamberCode: string;
+  nit: number;
+  economicActivities: EconomicActivity[];
+}) {
+  if (economicActivities.length === 0) {
+    return [];
+  }
+  try {
+    const relatedCompanies = await openDataService.companyRecords.getAll({
+      limit: 100,
+      where: [
+        isComercialCompany,
+        isActiveCompany,
+        isLegalEntity,
+        isValidId,
+        isValidName,
+        isValidNit,
+        `codigo_camara = '${chamberCode}'`,
+        `numero_identificacion != '${nit}'`,
+        `cod_ciiu_act_econ_pri IN (${economicActivities.map(({ code }) => `'${code}'`).join(",")})`,
+      ],
+      order: "ultimo_ano_renovado DESC",
+    });
+    return relatedCompanies;
+  } catch (err) {
+    console.error(err);
+    return [];
+  }
 }
