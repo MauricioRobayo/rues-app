@@ -1,3 +1,5 @@
+import { ShareButton } from "@/app/[company]/components/ShareButton";
+import { AdSense } from "@/app/components/AdSense";
 import { Link } from "@/app/components/Link";
 import { Logo } from "@/app/components/Logo";
 import { Nit } from "@/app/components/Nit";
@@ -8,7 +10,6 @@ import type { Metadata } from "next";
 import NextTopLoader from "nextjs-toploader";
 import { Email } from "react-obfuscate-email";
 import "./globals.css";
-import { AdSense } from "@/app/components/AdSense";
 
 const siteKey = process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY ?? "";
 
@@ -45,9 +46,12 @@ export default function RootLayout({
                       </Link>
                     </div>
                   </header>
-                  <Text color="blue" weight="bold">
-                    <Nit />
-                  </Text>
+                  <Flex gap="2" align="center">
+                    <Text color="blue" weight="bold">
+                      <Nit />
+                    </Text>
+                    <ShareButton />
+                  </Flex>
                 </Flex>
               </Container>
             </Box>
