@@ -1,20 +1,22 @@
 import { MAX_URLS_PER_SITEMAP } from "@/app/lib/constants";
 import {
-  companyStatus,
-  companyType,
-  registryCategoryCode,
-} from "@/app/services/openData/constants";
-import { validNit } from "@/app/services/openData/repository";
+  isActiveCompany,
+  isComercialCompany,
+  isLegalEntity,
+  isValidId,
+  isValidName,
+  isValidNit,
+} from "@/app/services/openData/repository";
 import { openDataService } from "@/app/services/openData/service";
 import { unstable_cache } from "next/cache";
 
 export const sitemapInclusionCriteria = [
-  `codigo_tipo_sociedad='${companyType.SOCIEDAD_COMERCIAL}'`,
-  `codigo_estado_matricula='${companyStatus.ACTIVA}'`,
-  `codigo_categoria_matricula='${registryCategoryCode.SOCIEDAD_O_PERSONA_JURIDICA_PRINCIPAL_O_ESAL}'`,
-  "numero_identificacion IS NOT NULL",
-  "razon_social IS NOT NULL",
-  validNit,
+  isComercialCompany,
+  isActiveCompany,
+  isLegalEntity,
+  isValidId,
+  isValidName,
+  isValidNit,
 ];
 
 export const getTotalSitemaps = unstable_cache(

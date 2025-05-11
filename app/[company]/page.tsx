@@ -5,6 +5,7 @@ import {
   companySummary,
   CompanySummary,
 } from "@/app/[company]/components/CompanySummary";
+import { RelatedCompanies } from "@/app/[company]/components/RelatedCompanies";
 import { RetrievedOn } from "@/app/[company]/components/RetrievedOn";
 import { UserReport } from "@/app/[company]/components/UserReport";
 import { CompanyStatusBadge } from "@/app/components/CompanyStatusBadge";
@@ -123,6 +124,11 @@ export default async function page({ params }: PageProps) {
         </Container>
       )}
       <RetrievedOn retrievedOn={data.retrievedOn} />
+      <RelatedCompanies
+        chamberCode={data.mainRecord.chamber.code}
+        economicActivities={data.mainRecord.economicActivities}
+        nit={data.mainRecord.nit}
+      />
       <aside>
         <Box style={{ background: "var(--blue-a2)" }}>
           <Section size="2">

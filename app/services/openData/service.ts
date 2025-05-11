@@ -1,4 +1,6 @@
 import { getChamber } from "@/app/lib/chambers";
+import { formatNit } from "@/app/lib/formatNit";
+import { parseEconomicActivities } from "@/app/lib/parseEconomicActivities";
 import { mapOpenDataCompanyRecordToCompanyRecordDto } from "@/app/mappers/mapOpenDataCompanyRecordToCompanyRecordDto";
 import { mapOpenDataEstablishmentToBusinessEstablishmentDto } from "@/app/mappers/mapOpenDataEstablishmentToBusinessEstablishmentDto";
 import { mapOpenDataLargestCompanyRecordToFinancialRecordDto } from "@/app/mappers/mapOpenDataLargestCompanyRecordToFinancialRecordDto";
@@ -155,7 +157,14 @@ export const openDataService = {
           }
           return response.data.map((record) => ({
             nit: record.numero_identificacion,
+            fullNit: formatNit(record.numero_identificacion),
             name: record.razon_social,
+            economicActivities: parseEconomicActivities({
+              ciiu1: record.cod_ciiu_act_econ_pri,
+              ciiu2: record.cod_ciiu_act_econ_sec,
+              ciiu3: record.ciiu3,
+              ciiu4: record.ciiu4,
+            }),
           }));
         },
         {

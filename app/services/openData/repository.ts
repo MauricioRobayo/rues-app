@@ -1,12 +1,24 @@
 import { openDataClient } from "@/app/services/openData/client";
+import {
+  companyStatus,
+  companyType,
+  idType,
+  registryCategoryCode,
+} from "@/app/services/openData/constants";
 import type { OpenDataChamberRecord } from "@/app/services/openData/types";
 
 // There are records with valid numero_identificacion and nit = null, e.g. 11202170.
 // There are records with nit = 0, which are broken we cannot show "NIT 0".
 // When excluding nit != 0 it will not match records where nit is null or missing
 // because nulls are excluded from both equality and inequality comparisons.
-// We must explicitly include nit IS NULL and nit != 0
-export const validNit = "(nit IS NULL OR nit != '0')";
+// We must explicitly include nit IS NULL and nit != '0'
+export const isValidNit = "(nit IS NULL OR nit != '0')";
+
+export const isComercialCompany = `codigo_tipo_sociedad='${companyType.SOCIEDAD_COMERCIAL}'`;
+export const isActiveCompany = `codigo_estado_matricula='${companyStatus.ACTIVA}'`;
+export const isLegalEntity = `codigo_categoria_matricula='${registryCategoryCode.SOCIEDAD_O_PERSONA_JURIDICA_PRINCIPAL_O_ESAL}'`;
+export const isValidId = `numero_identificacion IS NOT NULL AND codigo_clase_identificacion != '${idType.SIN_IDENTIFICACION}'`;
+export const isValidName = "razon_social IS NOT NULL";
 
 export const openDataRepository = {
   chambers: {
@@ -28,8 +40,8 @@ export const openDataRepository = {
           $order: "fecha_cancelacion DESC",
           $where: [
             `numero_identificacion='${nit}'`,
-            "razon_social IS NOT NULL",
-            validNit,
+            isValidName,
+            isValidNit,
           ].join(" AND "),
         }),
         signal,
@@ -37,25 +49,35 @@ export const openDataRepository = {
     },
     getAll({
       limit,
-      offset,
+      offset = 0,
+      order,
       signal,
       where,
     }: {
       limit: number;
-      offset: number;
+      offset?: number;
       signal?: AbortSignal;
+      order?: string;
       where: string[];
     }) {
       const query = new URLSearchParams({
         $limit: String(limit),
         $offset: String(offset),
-        $select: "numero_identificacion,razon_social",
+        $select:
+          "numero_identificacion,razon_social,cod_ciiu_act_econ_pri,cod_ciiu_act_econ_sec,ciiu3,ciiu4",
         $where: where.join(" AND "),
       });
+      if (order) {
+        query.set("$order", order);
+      }
       return openDataClient.companyRecords<
         {
           numero_identificacion: string;
           razon_social: string;
+          cod_ciiu_act_econ_pri: string;
+          cod_ciiu_act_econ_sec: string;
+          ciiu3: string;
+          ciiu4: string;
         }[]
       >({
         query,
@@ -75,11 +97,7 @@ export const openDataRepository = {
         query: new URLSearchParams({
           $q: query,
           $limit: String(limit),
-          $where: [
-            "numero_identificacion IS NOT NULL",
-            "razon_social IS NOT NULL",
-            validNit,
-          ].join(" AND "),
+          $where: [isValidId, isValidName, isValidNit].join(" AND "),
         }),
       });
     },

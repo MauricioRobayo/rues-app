@@ -487,6 +487,7 @@ export const ciiuDict: Record<string, string> = {
   "8511": "Educación de la primera infancia",
   "8512": "Educación preescolar",
   "8513": "Educación básica primaria",
+  "8523": "Educación media técnica y de formación laboral",
   "8530": "Establecimientos que combinan diferentes niveles de educación",
   "8541": "Educación técnica profesional",
   "8542": "Educación tecnológica",
