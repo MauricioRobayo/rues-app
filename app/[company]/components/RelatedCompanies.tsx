@@ -68,8 +68,8 @@ export async function RelatedCompanies({
       <Separator size="4" />
       <Section size={{ initial: "1", sm: "2" }}>
         <Heading as="h4" mb="4">
-          Empresas Relacionadas Registradas en {chamber.name} (
-          {topRelatedCompanies.length})
+          Empresas similares registradas en {chamber.name} (
+          {relatedCompanies.length > 100 ? "100+" : relatedCompanies.length})
         </Heading>
         <Flex direction="column" asChild gap="2">
           <ul>
