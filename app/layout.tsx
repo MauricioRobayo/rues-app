@@ -46,12 +46,7 @@ export default function RootLayout({
                       </Link>
                     </div>
                   </header>
-                  <Flex gap="2" align="center">
-                    <Text color="blue" weight="bold">
-                      <Nit />
-                    </Text>
-                    <ShareButton />
-                  </Flex>
+                  <Nit />
                 </Flex>
               </Container>
             </Box>

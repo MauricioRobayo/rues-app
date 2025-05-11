@@ -2,6 +2,8 @@
 
 import { formatNit } from "@/app/lib/formatNit";
 import { usePathname } from "next/navigation";
+import { Flex, Text } from "@radix-ui/themes";
+import { ShareButton } from "@/app/[company]/components/ShareButton";
 
 export function Nit({
   options,
@@ -14,5 +16,12 @@ export function Nit({
     return null;
   }
   const nit = Number(pathname.replace(/.*-/g, ""));
-  return <div>{formatNit(nit, options)}</div>;
+  return (
+    <Flex gap="2" align="center">
+      <Text color="blue" weight="bold">
+        <div>{formatNit(nit, options)}</div>
+      </Text>
+      <ShareButton />
+    </Flex>
+  );
 }
