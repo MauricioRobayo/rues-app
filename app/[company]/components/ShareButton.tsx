@@ -15,17 +15,23 @@ export function ShareButton() {
     return null;
   }
 
-  const handleClick = () => {
-    const description =
-      document
-        .querySelector('meta[name="description"]')
-        ?.getAttribute("content") || "";
+  const handleClick = async () => {
+    try {
+      const description =
+        document
+          .querySelector('meta[name="description"]')
+          ?.getAttribute("content") || "";
 
-    navigator.share({
-      title: document.title,
-      text: description,
-      url: window.location.href,
-    });
+      await navigator.share({
+        title: document.title,
+        text: description,
+        url: window.location.href,
+      });
+    } catch (error) {
+      if (error instanceof Error && error.name !== "AbortError") {
+        console.error("Error sharing:", error);
+      }
+    }
   };
 
   return (
