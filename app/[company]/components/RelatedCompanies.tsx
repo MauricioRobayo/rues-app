@@ -59,7 +59,7 @@ export async function RelatedCompanies({
     <Container mx={{ initial: "4", lg: "0" }} asChild>
       <aside>
         <Heading as="h3" size="5">
-          Empresas Activas Relacionadas
+          Empresas Relacionadas
         </Heading>
         <Section size={{ initial: "1", sm: "2" }}>
           <Flex direction="column" asChild gap="4">
