@@ -312,6 +312,11 @@ export const chambers: Record<string, Chamber> = {
     certificateUrl:
       "https://sii.confecamaras.co/vista/plantilla/certificados.php?empresa=30",
     url: "https://www.camaraguajira.org/",
+    openDataSet: {
+      id: "3hix-y8er",
+      recordKey: "registrationNumber",
+      queryKey: "matricula",
+    },
   },
   "31": {
     code: "31",
