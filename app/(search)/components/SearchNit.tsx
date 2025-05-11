@@ -170,7 +170,7 @@ function NitInformationalLink({
   highlightNit: boolean;
 }) {
   return (
-    <Link href={nit} prefetch={false} underline="hover">
+    <Link href={nit} prefetch={false} underline="none">
       <Text asChild className="tracking-wide">
         <Code variant="ghost">
           registronit.com/
