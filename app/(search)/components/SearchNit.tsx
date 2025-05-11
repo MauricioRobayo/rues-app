@@ -8,8 +8,10 @@ import {
   CrossCircledIcon,
   InfoCircledIcon,
   MagnifyingGlassIcon,
+  OpenInNewWindowIcon,
 } from "@radix-ui/react-icons";
 import {
+  AccessibleIcon,
   Box,
   Button,
   Callout,
@@ -170,23 +172,24 @@ function NitInformationalLink({
   highlightNit: boolean;
 }) {
   return (
-    <Link href={nit} prefetch={false} underline="none">
-      <Text asChild className="tracking-wide">
-        <Code variant="ghost">
-          registronit.com/
-          <Text
-            className={twMerge(
-              "underline decoration-wavy",
-              highlightNit ? "decoration-2" : "decoration-1",
-            )}
-            weight={highlightNit ? "bold" : "regular"}
-            color={highlightNit ? "blue" : undefined}
-            as="span"
-          >
-            {nit}
-          </Text>
-        </Code>
-      </Text>
+    <Link href={nit} prefetch={false} target="_blank">
+      <Code variant="ghost" className="tracking-wide">
+        registronit.com/
+        <Text
+          className={twMerge(
+            "underline decoration-wavy underline-offset-4",
+            highlightNit ? "decoration-2" : "decoration-1",
+          )}
+          weight={highlightNit ? "bold" : "regular"}
+          color={highlightNit ? "blue" : undefined}
+          as="span"
+        >
+          {nit}
+        </Text>
+        <AccessibleIcon label="Abrir en una nueva ventana">
+          <OpenInNewWindowIcon className="inline" />
+        </AccessibleIcon>
+      </Code>
     </Link>
   );
 }

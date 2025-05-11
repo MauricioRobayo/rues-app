@@ -63,7 +63,7 @@ export async function RelatedCompanies({
         <Heading as="h4" mb="4">
           Empresas Relacionadas ({relatedCompanies.length})
         </Heading>
-        <Flex direction="column" asChild gap="4">
+        <Flex direction="column" asChild gap="2">
           <ul>
             {sortedRelatedCompanies.map((company) => {
               const companySlug = `${slugifyCompanyName(company.name)}-${company.nit}`;
