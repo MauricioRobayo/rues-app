@@ -68,14 +68,14 @@ export default async function page({ params }: PageProps) {
   return (
     <Box>
       <Box className="sticky top-0 z-10 bg-white">
-        <Container mx={{ initial: "4", sm: "0" }}>
+        <Container mx={{ initial: "4", lg: "0" }}>
           <Section size={{ initial: "1", sm: "2" }}>
             <CompanyHeader company={data.mainRecord} />
           </Section>
         </Container>
         <Separator size="4" />
       </Box>
-      <Container mx={{ initial: "4", sm: "0" }}>
+      <Container mx={{ initial: "4", lg: "0" }}>
         <Section size={{ initial: "1", sm: "2" }} asChild>
           <article itemScope itemType="https://schema.org/Organization">
             <CompanySummary
@@ -87,7 +87,7 @@ export default async function page({ params }: PageProps) {
         </Section>
       </Container>
       {data.remainingRecords.length > 0 && (
-        <Container mx={{ initial: "4", sm: "0" }}>
+        <Container mx={{ initial: "4", lg: "0" }}>
           <Separator size="4" />
           <Section size={{ initial: "1", sm: "2" }}>
             <Heading as="h4" mb="4">
@@ -126,7 +126,7 @@ export default async function page({ params }: PageProps) {
       <aside>
         <Box style={{ background: "var(--blue-a2)" }}>
           <Section size="2">
-            <Container mx={{ initial: "4", sm: "0" }}>
+            <Container mx={{ initial: "4", lg: "0" }}>
               <Flex direction="column" gap="4" align="center">
                 <UserReport slug={data.mainRecord.slug} />
               </Flex>

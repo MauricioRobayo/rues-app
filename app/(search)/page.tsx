@@ -6,7 +6,7 @@ import { Suspense } from "react";
 
 export default function Page() {
   return (
-    <Container size="2" mx={{ initial: "4", sm: "0" }}>
+    <Container size="2" mx={{ initial: "4", lg: "0" }}>
       <Section>
         <Flex direction="column" gap="4">
           <Text size="4">

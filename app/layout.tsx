@@ -33,7 +33,7 @@ export default function RootLayout({
           <Flex direction="column" style={{ height: "100vh" }}>
             <Box
               style={{ background: "var(--blue-a2)" }}
-              px={{ initial: "4", sm: "0" }}
+              px={{ initial: "4", lg: "0" }}
               py="4"
             >
               <Container>
@@ -55,7 +55,7 @@ export default function RootLayout({
             <Box
               className="bg-[var(--mauve-12)] text-white [&_a]:text-current"
               asChild
-              px={{ initial: "4", sm: "0" }}
+              px={{ initial: "4", lg: "0" }}
             >
               <Section size="2">
                 <Container asChild>
