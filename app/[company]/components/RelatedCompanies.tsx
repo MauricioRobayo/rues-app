@@ -18,6 +18,7 @@ import {
   Flex,
   Heading,
   Section,
+  Separator,
   Text,
 } from "@radix-ui/themes";
 
@@ -56,44 +57,43 @@ export async function RelatedCompanies({
   }
 
   return (
-    <Container mx={{ initial: "4", lg: "0" }} asChild>
-      <aside>
-        <Heading as="h3" size="5">
+    <Container mx={{ initial: "4", lg: "0" }}>
+      <Separator size="4" />
+      <Section size={{ initial: "1", sm: "2" }}>
+        <Heading as="h4" mb="4">
           Empresas Relacionadas ({relatedCompanies.length})
         </Heading>
-        <Section size={{ initial: "1", sm: "2" }}>
-          <Flex direction="column" asChild gap="4">
-            <ul>
-              {sortedRelatedCompanies.map((company) => {
-                const companySlug = `${slugifyCompanyName(company.name)}-${company.nit}`;
-                return (
-                  <li key={company.nit}>
-                    <Card>
-                      <Flex direction="column">
-                        <Text size="4" weight="bold">
-                          <Link href={companySlug} prefetch={false}>
-                            {company.name}
-                          </Link>
-                        </Text>
-                        <Text color="gray">NIT: {company.fullNit}</Text>
-                        <Flex wrap="wrap" gap="1" className="overflow-x-auto">
-                          {company.economicActivities.map(
-                            (economicActivity, index) => (
-                              <Box key={`${economicActivity.code}-${index}`}>
-                                <Badge>{economicActivity.description}</Badge>
-                              </Box>
-                            ),
-                          )}
-                        </Flex>
+        <Flex direction="column" asChild gap="4">
+          <ul>
+            {sortedRelatedCompanies.map((company) => {
+              const companySlug = `${slugifyCompanyName(company.name)}-${company.nit}`;
+              return (
+                <li key={company.nit}>
+                  <Card>
+                    <Flex direction="column">
+                      <Text size="4" weight="bold">
+                        <Link href={companySlug} prefetch={false}>
+                          {company.name}
+                        </Link>
+                      </Text>
+                      <Text color="gray">NIT: {company.fullNit}</Text>
+                      <Flex wrap="wrap" gap="1" className="overflow-x-auto">
+                        {company.economicActivities.map(
+                          (economicActivity, index) => (
+                            <Box key={`${economicActivity.code}-${index}`}>
+                              <Badge>{economicActivity.description}</Badge>
+                            </Box>
+                          ),
+                        )}
                       </Flex>
-                    </Card>
-                  </li>
-                );
-              })}
-            </ul>
-          </Flex>
-        </Section>
-      </aside>
+                    </Flex>
+                  </Card>
+                </li>
+              );
+            })}
+          </ul>
+        </Flex>
+      </Section>
     </Container>
   );
 }
