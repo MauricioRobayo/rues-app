@@ -1,11 +1,10 @@
-import { ShareButton } from "@/app/[company]/components/ShareButton";
 import { AdSense } from "@/app/components/AdSense";
 import { Link } from "@/app/components/Link";
 import { Logo } from "@/app/components/Logo";
 import { Nit } from "@/app/components/Nit";
 import { Recaptcha } from "@/app/components/Recaptcha";
 import { GoogleTagManager } from "@next/third-parties/google";
-import { Box, Container, Flex, Section, Text, Theme } from "@radix-ui/themes";
+import { Box, Container, Flex, Section, Theme } from "@radix-ui/themes";
 import type { Metadata } from "next";
 import NextTopLoader from "nextjs-toploader";
 import { Email } from "react-obfuscate-email";

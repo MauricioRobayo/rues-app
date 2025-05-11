@@ -125,7 +125,7 @@ export default async function page({ params }: PageProps) {
       )}
       <RetrievedOn retrievedOn={data.retrievedOn} />
       <RelatedCompanies
-        chamberCode={data.mainRecord.chamber.code}
+        chamber={data.mainRecord.chamber}
         economicActivities={data.mainRecord.economicActivities}
         nit={data.mainRecord.nit}
       />

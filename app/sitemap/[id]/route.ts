@@ -39,11 +39,14 @@ export async function GET(
       offset: sitemapId * MAX_URLS_PER_SITEMAP,
       limit: MAX_URLS_PER_SITEMAP,
       where: sitemapInclusionCriteria,
+      select: ["numero_identificacion", "razon_social"],
     });
 
     const companies = data.map((company) => {
-      const companySlug = slugifyCompanyName(company.name);
-      return { url: `${BASE_URL}/${companySlug}-${company.nit}` };
+      const companySlug = slugifyCompanyName(company.razon_social);
+      return {
+        url: `${BASE_URL}/${companySlug}-${company.numero_identificacion}`,
+      };
     });
 
     const sitemap = await buildSitemap(companies);

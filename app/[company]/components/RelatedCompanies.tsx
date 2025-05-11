@@ -1,5 +1,9 @@
 import { Link } from "@/app/components/Link";
-import type { EconomicActivity } from "@/app/lib/parseEconomicActivities";
+import { formatNit } from "@/app/lib/formatNit";
+import {
+  parseEconomicActivities,
+  type EconomicActivity,
+} from "@/app/lib/parseEconomicActivities";
 import { slugifyCompanyName } from "@/app/lib/slugifyComponentName";
 import {
   isActiveCompany,
@@ -25,47 +29,51 @@ import {
 export async function RelatedCompanies({
   nit,
   economicActivities,
-  chamberCode,
+  chamber,
 }: {
   nit: number;
   economicActivities: EconomicActivity[];
-  chamberCode: string;
+  chamber: { name: string; code: string };
 }) {
   const relatedCompanies = await getRelatedCompanies({
     nit,
     economicActivities,
-    chamberCode,
-  });
-  const sortedRelatedCompanies = relatedCompanies.toSorted((a, b) => {
-    const originalCodes = economicActivities.map((ea) => ea.code);
-
-    const score = (companyCodes: string[]) => {
-      return originalCodes.reduce((total, code, index) => {
-        const weight = originalCodes.length - index; // first = highest weight
-        return companyCodes.includes(code) ? total + weight : total;
-      }, 0);
-    };
-
-    const aScore = score(a.economicActivities.map((ea) => ea.code));
-    const bScore = score(b.economicActivities.map((ea) => ea.code));
-
-    return bScore - aScore;
+    chamberCode: chamber.code,
   });
 
   if (relatedCompanies.length === 0) {
     return null;
   }
 
+  const topRelatedCompanies = relatedCompanies
+    .toSorted((a, b) => {
+      const originalCodes = economicActivities.map((ea) => ea.code);
+
+      const score = (companyCodes: string[]) => {
+        return originalCodes.reduce((total, code, index) => {
+          const weight = originalCodes.length - index; // first = highest weight
+          return companyCodes.includes(code) ? total + weight : total;
+        }, 0);
+      };
+
+      const aScore = score(a.economicActivities.map((ea) => ea.code));
+      const bScore = score(b.economicActivities.map((ea) => ea.code));
+
+      return bScore - aScore;
+    })
+    .slice(0, 100);
+
   return (
     <Container mx={{ initial: "4", lg: "0" }}>
       <Separator size="4" />
       <Section size={{ initial: "1", sm: "2" }}>
         <Heading as="h4" mb="4">
-          Empresas Relacionadas ({relatedCompanies.length})
+          Empresas Relacionadas Registradas en {chamber.name} (
+          {topRelatedCompanies.length})
         </Heading>
         <Flex direction="column" asChild gap="2">
           <ul>
-            {sortedRelatedCompanies.map((company) => {
+            {topRelatedCompanies.map((company) => {
               const companySlug = `${slugifyCompanyName(company.name)}-${company.nit}`;
               return (
                 <li key={company.nit}>
@@ -112,7 +120,6 @@ async function getRelatedCompanies({
   }
   try {
     const relatedCompanies = await openDataService.companyRecords.getAll({
-      limit: 100,
       where: [
         isComercialCompany,
         isActiveCompany,
@@ -125,8 +132,26 @@ async function getRelatedCompanies({
         `cod_ciiu_act_econ_pri IN (${economicActivities.map(({ code }) => `'${code}'`).join(",")})`,
       ],
       order: "ultimo_ano_renovado DESC",
+      select: [
+        "numero_identificacion",
+        "razon_social",
+        "cod_ciiu_act_econ_pri",
+        "cod_ciiu_act_econ_sec",
+        "ciiu3",
+        "ciiu4",
+      ],
     });
-    return relatedCompanies;
+    return relatedCompanies.map((record) => ({
+      nit: record.numero_identificacion,
+      fullNit: formatNit(record.numero_identificacion),
+      name: record.razon_social,
+      economicActivities: parseEconomicActivities({
+        ciiu1: record.cod_ciiu_act_econ_pri,
+        ciiu2: record.cod_ciiu_act_econ_sec,
+        ciiu3: record.ciiu3,
+        ciiu4: record.ciiu4,
+      }),
+    }));
   } catch (err) {
     console.error(err);
     return [];

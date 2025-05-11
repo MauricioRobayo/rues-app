@@ -1,10 +1,9 @@
 import { getChamber } from "@/app/lib/chambers";
-import { formatNit } from "@/app/lib/formatNit";
-import { parseEconomicActivities } from "@/app/lib/parseEconomicActivities";
 import { mapOpenDataCompanyRecordToCompanyRecordDto } from "@/app/mappers/mapOpenDataCompanyRecordToCompanyRecordDto";
 import { mapOpenDataEstablishmentToBusinessEstablishmentDto } from "@/app/mappers/mapOpenDataEstablishmentToBusinessEstablishmentDto";
 import { mapOpenDataLargestCompanyRecordToFinancialRecordDto } from "@/app/mappers/mapOpenDataLargestCompanyRecordToFinancialRecordDto";
 import { openDataRepository } from "@/app/services/openData/repository";
+import type { OpenDataCompanyRecord } from "@/app/services/openData/types";
 import type { CompanyRecordDto } from "@/app/types/CompanyRecordDto";
 import type { FinancialRecordDto } from "@/app/types/FinancialRecordDto";
 import pRetry from "p-retry";
@@ -144,28 +143,21 @@ export const openDataService = {
         },
       );
     },
-    getAll(
-      options: Parameters<typeof openDataRepository.companyRecords.getAll>[0],
+    getAll<T extends (keyof OpenDataCompanyRecord)[]>(
+      options: Omit<
+        Parameters<typeof openDataRepository.companyRecords.getAll>[0],
+        "select"
+      > & { select: T },
     ) {
       return pRetry(
         async () => {
           const response =
-            await openDataRepository.companyRecords.getAll(options);
+            await openDataRepository.companyRecords.getAll<T>(options);
           if (response.status === "error") {
             console.error(JSON.stringify(response, null, 2));
             throw new Error("openDataRepository.companies.getAll failed");
           }
-          return response.data.map((record) => ({
-            nit: record.numero_identificacion,
-            fullNit: formatNit(record.numero_identificacion),
-            name: record.razon_social,
-            economicActivities: parseEconomicActivities({
-              ciiu1: record.cod_ciiu_act_econ_pri,
-              ciiu2: record.cod_ciiu_act_econ_sec,
-              ciiu3: record.ciiu3,
-              ciiu4: record.ciiu4,
-            }),
-          }));
+          return response.data;
         },
         {
           retries: 5,

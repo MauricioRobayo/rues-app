@@ -5,7 +5,10 @@ import {
   idType,
   registryCategoryCode,
 } from "@/app/services/openData/constants";
-import type { OpenDataChamberRecord } from "@/app/services/openData/types";
+import type {
+  OpenDataChamberRecord,
+  OpenDataCompanyRecord,
+} from "@/app/services/openData/types";
 
 // There are records with valid numero_identificacion and nit = null, e.g. 11202170.
 // There are records with nit = 0, which are broken we cannot show "NIT 0".
@@ -47,38 +50,38 @@ export const openDataRepository = {
         signal,
       });
     },
-    getAll({
+    getAll<T extends (keyof OpenDataCompanyRecord)[]>({
       limit,
       offset = 0,
       order,
       signal,
       where,
+      select,
     }: {
-      limit: number;
+      limit?: number;
       offset?: number;
       signal?: AbortSignal;
       order?: string;
       where: string[];
+      select?: T;
     }) {
       const query = new URLSearchParams({
-        $limit: String(limit),
-        $offset: String(offset),
-        $select:
-          "numero_identificacion,razon_social,cod_ciiu_act_econ_pri,cod_ciiu_act_econ_sec,ciiu3,ciiu4",
         $where: where.join(" AND "),
       });
+      if (offset) {
+        query.set("$offset", String(offset));
+      }
+      if (limit) {
+        query.set("$limit", String(limit));
+      }
+      if (select) {
+        query.set("$select", select.join(","));
+      }
       if (order) {
         query.set("$order", order);
       }
       return openDataClient.companyRecords<
-        {
-          numero_identificacion: string;
-          razon_social: string;
-          cod_ciiu_act_econ_pri: string;
-          cod_ciiu_act_econ_sec: string;
-          ciiu3: string;
-          ciiu4: string;
-        }[]
+        Pick<OpenDataCompanyRecord, T[number]>[]
       >({
         query,
         signal,
