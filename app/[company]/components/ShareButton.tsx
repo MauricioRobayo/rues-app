@@ -1,10 +1,9 @@
 "use client";
 
-import { Share2Icon } from "@radix-ui/react-icons";
 import { IconButton } from "@radix-ui/themes";
-import { useEffect, useState } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 
-export function ShareButton() {
+export function ShareButton({ children }: { children: ReactNode }) {
   const [hasShare, setHasShare] = useState(false);
 
   useEffect(() => {
@@ -12,7 +11,7 @@ export function ShareButton() {
   }, []);
 
   if (!hasShare) {
-    return null;
+    return children;
   }
 
   const handleClick = async () => {
@@ -36,7 +35,7 @@ export function ShareButton() {
 
   return (
     <IconButton variant="ghost" onClick={handleClick}>
-      <Share2Icon />
+      {children}
     </IconButton>
   );
 }
