@@ -19,7 +19,7 @@ export function Nit({
   const nit = Number(pathname.replace(/.*-/g, ""));
   return (
     <ShareButton>
-      <Flex gap="2" align="center">
+      <Flex gap="1" align="center">
         <Text color="blue" weight="bold">
           <div>{formatNit(nit, options)}</div>
         </Text>
