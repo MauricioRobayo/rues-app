@@ -134,5 +134,23 @@ export const openDataRepository = {
         signal,
       });
     },
+    getRandom(count = 1, { signal }: { signal?: AbortSignal } = {}) {
+      // https://www.datos.gov.co/resource/6cat-2gcs.json?$select=count(distinct%20nit)
+      const totalUniqueNits = 13045;
+      const limit = Math.min(1000, count);
+
+      const randomOffset = Math.floor(
+        Math.random() * (totalUniqueNits - limit),
+      );
+
+      return openDataClient.largestCompanies<{ nit: string }[]>({
+        query: new URLSearchParams({
+          $offset: String(randomOffset),
+          $limit: String(limit),
+          $select: "distinct nit",
+        }),
+        signal,
+      });
+    },
   },
 };

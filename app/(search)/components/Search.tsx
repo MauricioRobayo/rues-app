@@ -11,7 +11,7 @@ const tabs = {
   nit: "nit",
 };
 
-export function Search() {
+export function Search({ randomCompanyNit }: { randomCompanyNit: string }) {
   const [selectedValues, setSelectedValues] = useState<
     Record<string, string | null>
   >({});
@@ -40,7 +40,7 @@ export function Search() {
       <Box pt="3">
         <Tabs.Content value="nit" asChild>
           <Box py={{ initial: "6", sm: "8" }}>
-            <SearchNit />
+            <SearchNit randomCompanyNit={randomCompanyNit} />
           </Box>
         </Tabs.Content>
         <Tabs.Content value="razon-social" asChild>

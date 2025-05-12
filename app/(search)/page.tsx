@@ -1,10 +1,14 @@
 import { Search } from "@/app/(search)/components/Search";
 import Providers from "@/app/(search)/providers";
+import { openDataService } from "@/app/services/openData/service";
 import { Container, Flex, Section, Text } from "@radix-ui/themes";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { Suspense } from "react";
 
-export default function Page() {
+export const revalidate = 14400; // Every 4 hours
+
+export default async function Page() {
+  const randomCompanyNit = await getRandomCompanyNit();
   return (
     <Container size="2" mx={{ initial: "4", lg: "0" }}>
       <Section>
@@ -14,7 +18,7 @@ export default function Page() {
           </Text>
           <Suspense>
             <Providers>
-              <Search />
+              <Search randomCompanyNit={randomCompanyNit} />
               <ReactQueryDevtools initialIsOpen />
             </Providers>
           </Suspense>
@@ -22,4 +26,10 @@ export default function Page() {
       </Section>
     </Container>
   );
+}
+
+async function getRandomCompanyNit() {
+  const randomRecords = await openDataService.largestCompanies.getRandom(10);
+
+  return randomRecords.at(0)?.nit ?? "899999068";
 }

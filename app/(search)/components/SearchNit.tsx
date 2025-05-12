@@ -27,7 +27,7 @@ import { getVerificationDigit } from "nit-verifier";
 import { useState, type ChangeEvent } from "react";
 import { twMerge } from "tailwind-merge";
 
-export function SearchNit() {
+export function SearchNit({ randomCompanyNit }: { randomCompanyNit: string }) {
   const searchParams = useSearchParams();
   const nit = searchParams.get("nit") ?? "";
   const [value, setValue] = useState(nit);
@@ -153,7 +153,7 @@ export function SearchNit() {
           Consulte cualquier NIT agregándolo directamente al enlace, sin signos
           de puntuación ni dígito de verificación:{" "}
           <NitInformationalLink
-            nit={isValidNit ? value : "899999068"}
+            nit={isValidNit ? value : randomCompanyNit}
             highlightNit={isValidNit}
           />
         </Callout.Text>

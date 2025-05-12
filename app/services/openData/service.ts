@@ -241,6 +241,46 @@ export const openDataService = {
         return null;
       }
     },
+    async getRandom(count = 1) {
+      try {
+        const randomRecords = await pRetry(
+          async () => {
+            const signal = AbortSignal.timeout(3_000);
+            const companyResponse =
+              await openDataRepository.largestCompanies.getRandom(count, {
+                signal,
+              });
+
+            if (companyResponse.status === "error") {
+              throw new Error(
+                `openDataService.fetchCompany failed ${JSON.stringify(companyResponse)}`,
+              );
+            }
+
+            return {
+              data: companyResponse.data,
+              status: "success",
+            } as const;
+          },
+          {
+            retries: 3,
+            onFailedAttempt: (error) => {
+              console.log(
+                `Attempt ${error.attemptNumber} failed. There are ${error.retriesLeft} retries left.`,
+              );
+            },
+          },
+        );
+
+        if (!randomRecords.data) {
+          return [];
+        }
+        return randomRecords.data;
+      } catch (error) {
+        console.error(error);
+        return [];
+      }
+    },
   },
 };
 
