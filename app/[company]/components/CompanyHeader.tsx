@@ -9,13 +9,14 @@ export function CompanyHeader({ company }: { company: CompanyRecordDto }) {
   return (
     <header>
       <Flex direction="column" gap="1">
-        <Box>
-          <ShareButton>
-            <Heading itemProp="name" color="blue" className="line-clamp-3">
-              {company.name} <Share2Icon className="inline size-4" />
-            </Heading>
-          </ShareButton>
-        </Box>
+        <Heading
+          itemProp="name"
+          color="blue"
+          className="line-clamp-2"
+          wrap="balance"
+        >
+          {company.name}
+        </Heading>
         <Flex
           align={{ initial: "start", sm: "center" }}
           gap="2"

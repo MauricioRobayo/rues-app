@@ -1,9 +1,9 @@
 "use client";
 
-import { IconButton } from "@radix-ui/themes";
-import { useEffect, useState, type ReactNode } from "react";
+import { Button, type ButtonProps } from "@radix-ui/themes";
+import { useEffect, useState } from "react";
 
-export function ShareButton({ children }: { children: ReactNode }) {
+export function ShareButton(props: ButtonProps) {
   const [hasShare, setHasShare] = useState(false);
 
   useEffect(() => {
@@ -11,7 +11,7 @@ export function ShareButton({ children }: { children: ReactNode }) {
   }, []);
 
   if (!hasShare) {
-    return children;
+    return props.children;
   }
 
   const handleClick = async () => {
@@ -34,8 +34,6 @@ export function ShareButton({ children }: { children: ReactNode }) {
   };
 
   return (
-    <IconButton variant="ghost" onClick={handleClick}>
-      {children}
-    </IconButton>
+    <Button {...props} onClick={handleClick} aria-label="Compartir empresa" />
   );
 }

@@ -37,7 +37,7 @@ export default function RootLayout({
               py="4"
             >
               <Container>
-                <Flex dir="row" justify="between">
+                <Flex dir="row" justify="between" align="baseline">
                   <header>
                     <div>
                       <Link underline="none" href="/">
