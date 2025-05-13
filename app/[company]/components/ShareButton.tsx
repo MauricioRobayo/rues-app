@@ -1,18 +1,48 @@
 "use client";
 
-import { Button, type ButtonProps } from "@radix-ui/themes";
+import { Button, IconButton, type ButtonProps } from "@radix-ui/themes";
 import { useEffect, useState } from "react";
 
 export function ShareButton(props: ButtonProps) {
+  const { handleClick, hasShare } = useShare();
+
+  if (!hasShare) {
+    return props.children;
+  }
+
+  return (
+    <Button
+      {...props}
+      onClick={handleClick}
+      aria-label="Compartir"
+      title="Compartir"
+    />
+  );
+}
+
+export function ShareIconButton(props: ButtonProps) {
+  const { handleClick, hasShare } = useShare();
+
+  if (!hasShare) {
+    return props.children;
+  }
+
+  return (
+    <IconButton
+      {...props}
+      onClick={handleClick}
+      aria-label="Compartir"
+      title="Compartir"
+    />
+  );
+}
+
+function useShare() {
   const [hasShare, setHasShare] = useState(false);
 
   useEffect(() => {
     setHasShare(typeof navigator !== "undefined" && !!navigator.share);
   }, []);
-
-  if (!hasShare) {
-    return props.children;
-  }
 
   const handleClick = async () => {
     try {
@@ -32,8 +62,8 @@ export function ShareButton(props: ButtonProps) {
       }
     }
   };
-
-  return (
-    <Button {...props} onClick={handleClick} aria-label="Compartir empresa" />
-  );
+  if (hasShare) {
+    return { handleClick, hasShare } as const;
+  }
+  return { hasShare } as const;
 }

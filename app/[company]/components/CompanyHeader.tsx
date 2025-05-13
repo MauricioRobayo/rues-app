@@ -1,5 +1,8 @@
 import { CopyButton } from "@/app/[company]/components/CopyButton";
-import { ShareButton } from "@/app/[company]/components/ShareButton";
+import {
+  ShareButton,
+  ShareIconButton,
+} from "@/app/[company]/components/ShareButton";
 import { CompanyStatusBadge } from "@/app/components/CompanyStatusBadge";
 import type { CompanyRecordDto } from "@/app/types/CompanyRecordDto";
 import { Share2Icon } from "@radix-ui/react-icons";
@@ -26,7 +29,9 @@ export function CompanyHeader({ company }: { company: CompanyRecordDto }) {
             <Heading as="h2" size="4" weight="regular">
               NIT: <span itemProp="taxID">{company.formattedFullNit}</span>
             </Heading>
-            <CopyButton value={company.nit} />
+            <ShareIconButton variant="ghost">
+              <Share2Icon />
+            </ShareIconButton>
           </Flex>
           <CompanyStatusBadge isActive={company.isActive} variant="long" />
         </Flex>
