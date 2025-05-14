@@ -7,7 +7,7 @@ export function Logo() {
       <Text size="4" className="uppercase">
         Registro
       </Text>
-      <Text size="4" weight="bold">
+      <Text size="4" className="font-extrabold">
         NIT
       </Text>
     </div>
