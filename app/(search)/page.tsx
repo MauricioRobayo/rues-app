@@ -29,7 +29,10 @@ export default async function Page() {
 }
 
 async function getRandomCompanyNit() {
-  const randomRecords = await openDataService.largestCompanies.getRandom(10);
+  const fallbackNit = "899999068"; // Ecopetrol
+  const randomRecords = await openDataService.largestCompanies.getRandom(25);
+  const companyNits =
+    await openDataService.companyRecords.validateNits(randomRecords);
 
-  return randomRecords.at(0)?.nit ?? "899999068";
+  return companyNits.at(0) ?? fallbackNit;
 }

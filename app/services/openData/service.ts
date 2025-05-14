@@ -70,6 +70,30 @@ export const openDataService = {
     },
   },
   companyRecords: {
+    async validateNits(nits: string[]) {
+      return pRetry(
+        async () => {
+          const signal = AbortSignal.timeout(3_000);
+          const response = await openDataRepository.companyRecords.validateNits(
+            nits,
+            { signal },
+          );
+          if (response.status === "error") {
+            console.error(response);
+            throw new Error("Fetch company count failed");
+          }
+          return response.data.map(({ nit }) => nit);
+        },
+        {
+          retries: 3,
+          onFailedAttempt: (error) => {
+            console.log(
+              `Attempt ${error.attemptNumber} failed. There are ${error.retriesLeft} retries left.`,
+            );
+          },
+        },
+      );
+    },
     async get(nit: string): Promise<
       | {
           status: "success";
@@ -258,7 +282,7 @@ export const openDataService = {
             }
 
             return {
-              data: companyResponse.data,
+              data: companyResponse.data.map(({ nit }) => nit),
               status: "success",
             } as const;
           },

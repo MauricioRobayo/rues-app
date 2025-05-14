@@ -104,6 +104,18 @@ export const openDataRepository = {
         }),
       });
     },
+    validateNits(nits: string[], { signal }: { signal?: AbortSignal } = {}) {
+      return openDataClient.companyRecords<{ nit: string }[]>({
+        query: new URLSearchParams({
+          $select: "numero_identificacion as nit",
+          $where: [
+            `numero_identificacion IN (${nits.map((nit) => `'${nit}'`).join(",")})`,
+            isActiveCompany,
+          ].join(" AND "),
+        }),
+        signal,
+      });
+    },
   },
   establishments: {
     get(
