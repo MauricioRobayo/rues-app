@@ -1,6 +1,11 @@
 "use client";
 
-import { Button, IconButton, type ButtonProps } from "@radix-ui/themes";
+import {
+  Button,
+  IconButton,
+  Tooltip,
+  type ButtonProps,
+} from "@radix-ui/themes";
 import { useEffect, useState } from "react";
 
 export function ShareButton(props: ButtonProps) {
@@ -11,12 +16,9 @@ export function ShareButton(props: ButtonProps) {
   }
 
   return (
-    <Button
-      {...props}
-      onClick={handleClick}
-      aria-label="Compartir"
-      title="Compartir"
-    />
+    <Tooltip content="Compartir">
+      <Button {...props} onClick={handleClick} aria-label="Compartir" />
+    </Tooltip>
   );
 }
 
@@ -28,12 +30,9 @@ export function ShareIconButton(props: ButtonProps) {
   }
 
   return (
-    <IconButton
-      {...props}
-      onClick={handleClick}
-      aria-label="Compartir"
-      title="Compartir"
-    />
+    <Tooltip content="Compartir">
+      <IconButton {...props} onClick={handleClick} aria-label="Compartir" />
+    </Tooltip>
   );
 }
 
