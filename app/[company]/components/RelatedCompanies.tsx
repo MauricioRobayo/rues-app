@@ -15,8 +15,6 @@ import {
 } from "@/app/services/openData/repository";
 import { openDataService } from "@/app/services/openData/service";
 import {
-  Badge,
-  Box,
   Card,
   Container,
   Flex,
@@ -78,22 +76,29 @@ export async function RelatedCompanies({
               return (
                 <li key={company.nit}>
                   <Card>
-                    <Flex direction="column">
-                      <Text size="4" weight="bold">
-                        <Link href={companySlug} prefetch={false}>
-                          {company.name}
-                        </Link>
-                      </Text>
-                      <Text color="gray">NIT: {company.fullNit}</Text>
-                      <Flex wrap="wrap" gap="1" className="overflow-x-auto">
-                        {company.economicActivities.map(
-                          (economicActivity, index) => (
-                            <Box key={`${economicActivity.code}-${index}`}>
-                              <Badge>{economicActivity.description}</Badge>
-                            </Box>
-                          ),
-                        )}
+                    <Flex direction="column" gap="2">
+                      <Flex direction="column">
+                        <Text size="4" weight="bold" wrap="balance">
+                          <Link href={companySlug} prefetch={false}>
+                            {company.name}
+                          </Link>
+                        </Text>
+                        <Text>NIT: {company.fullNit}</Text>
                       </Flex>
+                      <Heading as="h5" size="2" weight="regular">
+                        Actividad Económica:
+                      </Heading>
+                      <Text size="2">
+                        <ol className="list-inside list-decimal">
+                          {company.economicActivities.map(
+                            (economicActivity, index) => (
+                              <li key={`${economicActivity.code}-${index}`}>
+                                {economicActivity.description}
+                              </li>
+                            ),
+                          )}
+                        </ol>
+                      </Text>
                     </Flex>
                   </Card>
                 </li>
