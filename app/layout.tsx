@@ -25,7 +25,7 @@ export default function RootLayout({
   return (
     <html lang="es-CO">
       <Recaptcha siteKey={siteKey} language="es-419" />
-      <GoogleTagManager gtmId={process.env.NEXT_PUBLIC_GTM_ID ?? ""} />
+      <GoogleTagManager gtmId="GTM-T75KJKC8" />
       <AdSense />
       <body>
         <Theme accentColor="blue">
