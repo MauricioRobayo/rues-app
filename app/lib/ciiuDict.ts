@@ -193,6 +193,7 @@ export const ciiuDict: Record<string, string> = {
   "3512": "Transmisión de energía eléctrica",
   "3513": "Distribución de energía eléctrica",
   "3514": "Comercialización de energía eléctrica",
+  "3320": "Instalación especializada de maquinaria y equipo industrial",
   "3600": "Captación, tratamiento y distribución de agua",
   "3700": "Evacuación y tratamiento de aguas residuales",
   "3811": "Recolección de desechos no peligrosos",
