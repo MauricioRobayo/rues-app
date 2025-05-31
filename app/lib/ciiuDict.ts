@@ -179,6 +179,7 @@ export const ciiuDict: Record<string, string> = {
   "3240": "Fabricación de juegos, juguetes y rompecabezas",
   "3250":
     "Fabricación de instrumentos, aparatos y materiales médicos y odontológicos (incluido mobiliario)",
+  "3290": "Otras industrias manufactureras n.c.p.",
   "3311":
     "Mantenimiento y reparación especializado de productos elaborados en metal",
   "3312": "Mantenimiento y reparación especializado de maquinaria y equipo",
@@ -249,6 +250,7 @@ export const ciiuDict: Record<string, string> = {
     "Comercio al por mayor de productos químicos básicos, cauchos y plásticos en formas primarias y productos químicos de uso agropecuario",
   "4665": "Comercio al por mayor de desperdicios, desechos y chatarra",
   "4669": "Comercio al por mayor de otros productos n.c.p.",
+  "4690": "Comercio al por mayor no especializado",
   "4711":
     "Comercio al por menor en establecimientos no especializados con surtido compuesto principalmente por alimentos, bebidas (alcohólicas y no alcohólicas) o tabaco",
   "4719":
